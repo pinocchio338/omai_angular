@@ -1,0 +1,135 @@
+<div class="main-container page-container" *ngIf='dataLoaded'>
+      <app-toolbar></app-toolbar>
+    <mat-toolbar> 
+        <mat-toolbar-row class="navbar">
+            <button mat-icon-button class="slider-button" (click)="goBack()" >
+                <img src="assets/arrow-left.png">                
+            </button>
+            <span class="group-name">
+                {{selectedClientName}}
+            </span>
+            <span class="sites-label"> / </span>
+            <span class="sites-label"> Users </span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div class='card-wrapper'>
+        <div class="user-card-section">
+            <mat-card class="user-card">
+                <div class="card-text-label">Add User</div>
+                <form [formGroup]="userForm" #frmUser='ngForm' (submit)="submitForm()">
+                    <div class="user-image-container" [ngClass]="{'noImage':!imageUrl}" (click)="changeImage()">
+                        <img *ngIf="imageUrl"  [src]="imageUrl" alt="user-image" class="user-image">
+                        <input type="file" hidden #userImage (change)="uploadPhoto($event)">
+                    </div>
+                <div class="text-label">Name<span class="mand">*</span></div>
+                <input type="text" formControlName="userName" class="form-control text-box" id="userName" name="userName"
+                placeholder="Name">
+                <div class="error error-msg" *ngIf="(userName.invalid && frmUser.submitted) || (userName.touched && userName.invalid)">Please Enter Valid Name   </div>
+                <div class="text-label">Email<span class="mand">*</span></div>
+                <input type="email" formControlName="email" class="form-control text-box" id="email" name="email"
+                 placeholder="Email">
+                 <div class="error error-msg" *ngIf="(email.invalid && frmUser.submitted) || (email.touched && email.invalid)">Please Enter Valid Email  </div>
+                 <div class="text-label">Email to Text<span class="mand">*</span></div>
+                <input type="email" formControlName="emailtotext" class="form-control text-box" id="emailtotext" name="emailtotext"
+                 placeholder="Email to Text">
+                 <div class="error error-msg" *ngIf="(emailtotext.invalid && frmUser.submitted) || (emailtotext.touched && emailtotext.invalid)">Please Enter Valid Email  </div>
+               
+                 
+                 <div class="text-label">phone<span class="mand">*</span></div>
+                <input type="text" formControlName="phone"  maxlength="17" appPhoneMask   class="form-control text-box" id="licenseamt" name="licenseamt"
+                placeholder="Phone Number">
+                <div class="error error-msg" *ngIf="(phone.invalid && frmUser.submitted) || (phone.touched && phone.invalid)">Please Enter Valid Phone </div>
+               
+
+                <div class="text-label">Address Line 1<span class="mand">*</span></div>
+                <input type="text" formControlName="addressLine1" class="form-control text-box" id="addressLine1" name="addressLine1"
+                placeholder="Street Address">
+                <div class="error error-msg" *ngIf="(addressLine1.invalid && frmUser.submitted) || (addressLine1.touched && addressLine1.invalid)">Please Enter Valid Address Line 1</div>
+               
+                <div class="text-label">Address Line 2</div>
+                <input type="text" formControlName="addressLine2" class="form-control text-box" id="addressLine2" name="addressLine2"
+                placeholder="Apartment, Suite, Unit">
+
+                <div class="text-label">Zip Code<span class="mand">*</span></div>
+                <input type="text" formControlName="zipCode" class="form-control text-box" id="zipCode" name="zipCode"
+                placeholder=" Zip Code">
+                <div class="error error-msg" *ngIf="(zipCode.invalid && frmUser.submitted) || (zipCode.touched && zipCode.invalid)">Please Enter Valid Zip Code  </div>
+               
+                <div class="text-label">City<span class="mand">*</span></div>
+                <input type="text" formControlName="city" class="form-control text-box" id="city" name="city"
+                placeholder="City">
+                <div class="error error-msg" *ngIf="(city.invalid && frmUser.submitted) || (city.touched && city.invalid)">Please Enter Valid City   </div>
+               
+                <div class="text-label">State<span class="mand">*</span></div>
+                <input type="text" formControlName="state" class="form-control text-box" id="state" name="state"
+                placeholder="State">
+                <div class="error error-msg" *ngIf="(state.invalid && frmUser.submitted) || (state.touched && state.invalid)">Please Enter Valid State  </div>
+               
+                <div class="text-label">Country<span class="mand">*</span></div>
+                <select class="form-control text-box" formControlName="country">
+                    <option value="United States Of America" selected>United States Of America</option>
+                </select>
+
+               
+                <div class="dividerline"></div>
+                <div class="in-place-field">
+                   
+                    <label for="address" class="side site-associated" style="margin-top:24px;">Sites Associated With</label>
+                    <mat-form-field appearance="outline" style="width: 256px;padding-top:8px;">
+                        <mat-label>Site Associated</mat-label>
+                        <mat-select [formControl]="siteAssociated" multiple>
+                          <mat-select-trigger>
+                            {{siteAssociated.value ? siteAssociated.value[0] : ''}}
+                            <span *ngIf="siteAssociated.value?.length > 1" class="example-additional-selection">
+                              (+{{siteAssociated.value.length - 1}} {{siteAssociated.value?.length === 2 ? 'other' : 'others'}})
+                            </span>
+                          </mat-select-trigger>
+                          <mat-option *ngFor="let site of siteList" [value]="site.name">{{site.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    <span class="error" *ngIf="siteAssociated.touched && siteAssociated.invalid">Please Enter Valid SiteAssociated.</span>
+                    
+                </div>
+                <div class="dividerline"></div>
+
+                <div class="user-item">
+                    <span class="text-content">DUT User<span class="mand">*</span></span>
+                    <div>
+                        <mat-radio-group
+                            aria-labelledby="example-radio-group-label"
+                            class="example-radio-group"
+                            formControlName="dutUser"
+                            >
+                            <mat-radio-button class="example-radio-button text-content" *ngFor="let item of dutUser" [value]="item.value">
+                                {{item.label}}
+                            </mat-radio-button>
+                    </mat-radio-group>
+                    </div>
+                </div>
+                <div class="dividerline"></div>
+                <div class="user-item">
+                    <span class="text-content">Alert Level<span class="mand">*</span></span>
+                    <div>
+                        <mat-radio-group
+                            aria-labelledby="example-radio-group-label"
+                            class="example-radio-group text-content"
+                            formControlName="alertLevel"
+                            >
+                            <mat-radio-button class="example-radio-button text-content" *ngFor="let type of alertype" [value]="type">
+                                {{type}}
+                            </mat-radio-button>
+                    </mat-radio-group>
+                    </div>
+                </div>
+                <div class="add-user-btn-section">
+                    <button class="btn-border" (click)="goBack()">
+                    Cancel</button>
+                    <input type="submit" class="btn-bg-blue" value="Done">
+                </div>
+            </form>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<app-loader *ngIf='!dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

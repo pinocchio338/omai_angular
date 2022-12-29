@@ -1,0 +1,83 @@
+<app-toolbar *ngIf='!token' [currentPage]="dashboards"></app-toolbar>
+<mat-toolbar style="height: 42px !important; min-height:unset!important;">
+  <mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+      <span>
+          <!-- <button mat-icon-button *ngIf="!token" class="slider-button" (click)="goBack()">
+              <img src="assets/arrow-left.png">
+          </button> -->
+          <!-- <span class="selected-client-name">
+              {{selectedSite}} / Dashboards
+          </span>
+          <span class="sites-label"> / </span> -->
+          <span class="selected-client-name">Site Performances </span>
+      </span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="main-container">
+    <mat-card class="dashboard-container">
+        <div class="base-dashboard">
+            <div class="dashboard-controls">
+            <mat-label>Current</mat-label>
+            <!-- <mat-form-field appearance="outline" > -->
+                <select class="text-input" [disabled]="!selectedClientSites || selectedClientSites.length<=1" [(ngModel)]="baseSite" (change)="getDashboards('base')">
+                  <option value="none" selected disabled hidden>
+                    Site Name
+                  </option>
+                  <option *ngFor="let site of selectedClientSites" [value]="site.sortKey" >
+                    {{site.name}}
+                  </option>
+                </select>
+              <!-- </mat-form-field> -->
+
+              <!-- <mat-form-field appearance="outline" > -->
+                <select class="text-input" [(ngModel)]="baseDashboard" [disabled]="!baseDashboards || !baseDashboards.length" (change)="showDashboard('base')">
+                  <option *ngFor="let dashboard of baseDashboards" [value]="dashboard.sortKey" >
+                    {{dashboard.name}}
+                  </option>
+                </select>
+              <!-- </mat-form-field> -->
+            </div>
+            <!-- {{baseDashboardData ? baseDashboardData.name : ''}} -->
+            <div *ngIf="selectedClientSites && selectedClientSites.length<=1" class="error-message">
+              No site to compare with
+            </div>
+
+            <div class="dashboard-div" *ngIf="baseDashboardData">
+
+                <iframe *ngFor="let component of baseDashboardData.components"[src]="(component.url)"
+                [ngClass]="baseDashboardData.components.length==1? 'single-graph' : 'multi-graph'"></iframe>
+            </div>
+        </div>
+        <div class="compared-dashboard">
+            <div class="dashboard-controls">
+                <mat-label>Compare With</mat-label>
+                <!-- <mat-form-field appearance="outline" > -->
+                    <select class="text-input" [disabled]="!selectedClientSites || selectedClientSites.length<=1" [(ngModel)]="comparedSite" (change)="getDashboards('compare')">
+                      <option value="none" selected disabled hidden>
+                        Site Name
+                      </option>
+                      <option *ngFor="let site of selectedClientSites" [value]="site.sortKey" >
+                        {{site.name}}
+                      </option>
+                    </select>
+                  <!-- </form-field> -->
+    
+                  <!-- <form-field appearance="outline" > -->
+                    <select class="text-input" [(ngModel)]="comparedDashboard" [disabled]="!comparedDashboards || !comparedDashboards.length" (change)="showDashboard('compare')">
+                      <option *ngFor="let dashboard of comparedDashboards" [value]="dashboard.sortKey" >
+                        {{dashboard.name}}
+                      </option>
+                    </select>
+                  <!-- </mat-form-field> -->
+                </div>
+                <!-- {{comparedDashboardData ? comparedDashboardData.name : ''}} -->
+                <div class="dashboard-div" *ngIf="comparedDashboardData">
+
+                    <iframe *ngFor="let component of comparedDashboardData.components" [src]="(component.url)" 
+                    [ngClass]="comparedDashboardData.components.length==1? 'single-graph' : 'multi-graph'"></iframe>
+                </div>
+        </div>
+      </mat-card>
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

@@ -1,0 +1,195 @@
+<div class="container-fluid">
+    <form  [formGroup]="finishForm" (ngSubmit)="onSubmitFinishForm($event);" method="post" novalidate>
+        
+       
+        <mat-card  class="review-info-card">
+            <div class="review-info-box">
+                <img src="../../../../assets/review-icon.png">
+                <span class="review-info"> Please review the information you provided are correct</span>
+            </div>
+        </mat-card>
+        <div class="margin-cardbox">
+            
+            <mat-card class="sites-section">
+                <div class="sites-item-label">
+                    <span class="card-label"> Subscription</span>
+                     <img src="../../../assets/edit_icon.png" (click)="move(0)">
+                </div>
+                <div class="subscription-img">  
+                     <img src="{{clientLogo || 'assets/sample-site-image.png'}}" style="object-fit: cover; width:100%; height:100%;">
+                     <!-- <div class='user-image' [style.background-image]="'url('+getPhoto(clientLogo)+')'"></div> -->
+
+                    </div>
+                <div class="sites-item">
+                    <span class="sites-text-label">Name</span>
+                    <span class="subsciption-name-value"> {{ subscription_name }} </span>
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="sites-text-label">E-mail</span>
+                    <span>{{ subscription_email }} </span>
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="sites-text-label">Payment Terms</span>
+                    <span>{{ subscription_paymentterms }} Days </span>
+                </div>
+                <div class="dividerline"></div>
+                
+                <div class="sites-item">
+                    <span class="sites-text-label">Address</span>
+                    <span>{{subscription_address }} <br>
+                        {{ subscription_address1  }}<br>
+                        {{ addressCity   }} <br>
+                        {{addressState  + '   ' +  addressZipCode}} <br>
+                        {{ addressCountry}}  </span>
+                </div>
+                <div class="dividerline"></div>
+
+     
+
+                <div class="sites-item">
+                    <span class="sites-text-label"> licensed For</span>
+                    <div class="selected-site-stats">
+                        <div class="selected-site-stats-item">                                                
+                            <img class="selected-site-stat-icon" src='assets/map-pin.png'>                                        
+                            <span class='stat-count'>{{ subscription_sites }} Sites</span>
+                        </div>
+                        <div class="selected-site-stats-item">                                                
+                            <img class="selected-site-stat-icon" src='assets/users.png'>                                        
+                            <span class='stat-count'>{{ subscription_users }} Users</span>
+                        </div>
+                        <div class="selected-site-stats-item">                                                
+                            <img class="selected-site-stat-icon" src='assets/pie-chart.png'>                                        
+                            <span class='stat-count'>{{ subscription_dasboards }} Dash</span>
+                        </div>
+                        <div class="selected-site-stats-item">                                                
+                            <img class="selected-site-stat-icon" src='assets/bell.png'>                                        
+                            <span class='stat-count'>{{ subscription_alerts }} Alerts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="sites-text-label">licensed Value</span>
+                    <span>$ {{ subscription_licenseValue }}</span>
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="sites-text-label">Subscription End Date</span>
+                    <span> {{ subscriptionEndDate | date}} </span>
+                </div>
+            </mat-card>
+        </div>
+        <div class=" margin-cardbox">
+            <mat-card class=" sites-section">
+
+                <div class="sites-item-label">
+                    <span class="card-label">Site ({{ siteList.length}})</span>
+
+                     <img src="../../../assets/edit_icon.png" (click)="move(1)">
+                 </div>
+                  <!-- list of sites -->
+                  <div class="sites-item" *ngFor="let item of siteList">
+                    <!-- <img src="{{ item.siteImage }}" class="site_img"> -->
+                    <img *ngIf="item.siteImage!= ''" src="{{ item.siteImage }}"  class="site_img">
+                    <img *ngIf="item.siteImage== ''" src="assets/sample-site-image.png"  class="site_img">
+                   
+                    <div>
+                        <div style="color: var(--text);margin-bottom: 8px;"> {{ item.name }}</div>
+                        <div style="color: var(--text-light);margin-bottom: 8px;">{{ item.customSiteId }} </div>
+                        <div style="color: var(--text-light);margin-bottom: 8px;">{{ item.email }}</div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class=" margin-cardbox">
+            <mat-card class="sites-section">
+                <div class="sites-item-label">
+                    <!-- <div><h4>User groups(2)</h4></div>  -->
+                    <span class="card-label">User Groups ({{ usergroupList.length }})</span>
+                     <img src="../../../assets/edit_icon.png" style="float: right;" (click)="move(2)">
+                 </div>
+    
+                <div class="user-group-cards"  *ngFor="let item of usergroupList">
+                      <div class="user-group-title">{{ item.display_name }}</div>
+                      <div class="user-group-type"> Default group  </div>
+                      <!-- <div class="user-group-access">Dashboard</div> -->
+                      <div class="user-group-box-content">
+                        <div>
+                            <div class="user-group-access" >Dashboard</div>  
+                            <img src="./../../../assets/home.jpg">
+                            <span *ngIf="item.permissions.dashboard.view" class="can-view"> V</span>
+                            <span *ngIf="item.permissions.dashboard.add"  class="can-add" > A</span>
+                            <span *ngIf="item.permissions.dashboard.edit"  class="can-edit"  > E</span>
+                            <span  *ngIf="item.permissions.dashboard.delete" class="can-delete" > D</span>
+                        </div>
+                        <div>
+                            <div class="user-group-access">User Groups</div>  
+                            <img src="./../../../assets/home.jpg">
+                            <span *ngIf="item.permissions.userGroups.view" class="can-view"> V</span>
+                            <span *ngIf="item.permissions.userGroups.add"  class="can-add" > A</span>
+                            <span *ngIf="item.permissions.userGroups.edit"  class="can-edit"  > E</span>
+                            <span  *ngIf="item.permissions.userGroups.delete" class="can-delete" > D</span>
+                        </div>
+                        <div>
+                            <div class="user-group-access">Users</div>  
+                            <img src="./../../../assets/home.jpg">
+                            <span *ngIf="item.permissions.users.view" class="can-view"> V</span>
+                            <span *ngIf="item.permissions.users.add"  class="can-add" > A</span>
+                            <span *ngIf="item.permissions.users.edit"  class="can-edit"  > E</span>
+                            <span  *ngIf="item.permissions.users.delete" class="can-delete" > D</span>
+                           </div>
+                      
+                    </div>
+                    <!-- <div style="margin-top:4px;">
+                         <img src="./../../../assets/home.jpg">
+                         <span  class="can-view"> V</span>
+                         <span  class="can-add"> A</span>
+                         <span  class="can-edit"> E</span>
+                         <span   class="can-delete"> D</span>
+                    </div> -->
+                </div>
+                <div class="usergroup-item-label-icon">
+                    <span  class="can-view">V : Can View</span>
+                    <span  class="can-add" >A : Can Add</span>
+                    <span  class="can-edit"  >E : Can Edit</span>
+                    <span   class="can-delete" >D : Can Delete</span>
+                 </div>
+            </mat-card>
+        </div>
+        <div class=" margin-cardbox">
+            <mat-card class=" sites-section">
+                <div class="sites-item-label">
+                    <span class="card-label">User ({{ userList.length}})</span>
+                    <img src="../../../assets/edit_icon.png" (click)="move(3)">
+                </div>
+    
+                <div class="user-item" *ngFor="let item of userList" style="margin-bottom: 20px;">
+                    <img *ngIf="item.photo!= ''" src="{{ item.photo }}"  class="user_img">
+                    <img *ngIf="item.photo== ''" src="assets/sample-site-image.png"  class="user_img">
+                    <div>
+                        <div class="user-name"> {{ item.name }}</div>
+                        <div class="user-email" ><a>{{ item.email }}</a></div>
+                        <div class="user-phone">{{ item.phone }} </div>
+                        <div class="user-type">   </div>
+                    </div>
+                </div>
+    
+            </mat-card>
+        </div>
+        <div class=" margin-cardbox">
+                <mat-card  class="sites-section-skip">
+                    <div class="selected-site-stats-item">
+                        <button class="btn-border" (click)="goBack()">Cancel</button>
+                        <button class="btn-add-client"  (click)="activateClient()">Finish</button>
+                    </div>  
+                </mat-card>
+        </div>
+        </form>
+        </div>
+        <app-loader *ngIf = 'dataLoaded'></app-loader>
+        <app-server-error-popup [message]="errorString"></app-server-error-popup>
+
+
+            

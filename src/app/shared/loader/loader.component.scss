@@ -1,0 +1,46 @@
+.loader-wrapper{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    place-content: center;
+    background-color: var(--background);
+   // z-index: 999!important;
+}
+
+.logo{
+    width: 84px;
+    height: 84px;
+    /* background: red; */
+    display: grid;
+    place-content: center;
+    border-radius: 50%;
+    border: 3px solid var(--succsess);
+    animation: progress 3s infinite 0s linear;
+    img{
+        width: 52px;
+        height: 52px;
+    }
+   
+}
+
+
+@keyframes progress{
+    0%{
+        transform: rotateY(0deg);
+        }
+    100%{
+        transform: rotateY(360deg);
+        }
+}
+
+@keyframes progressReverse{
+    0%{
+        transform: rotateY(0deg);
+        }
+    100%{
+        transform: rotateY(-360deg);
+        }
+}

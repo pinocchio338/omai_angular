@@ -1,0 +1,360 @@
+<div class="container-fluid">        
+        <div class="margin-cardbox">
+                <mat-card  class="sites-section-skip">
+                    <div class="sites-item-skip">
+                        <span style="font-size:12px; margin: auto 0;"> Site details can also be added later by site admin. </span>
+                        <button type="button" class="btn-border-skip"  mat-button matStepperNext >Skip</button>
+                    </div>  
+                </mat-card>            
+        </div>
+            <mat-card class="sites-section">
+            <span class="card-label"> Sites ({{ siteList.length }}) </span>
+            <button  *ngIf="isShowAddbtn" class="btn add-site-btn"  (click)="addSite()"><img src="./../../../assets/plus_icon.jpg" class="add-site-plus-icon"  >Add Site</button>
+            <form *ngIf="isShowAddsection"  [formGroup]="sitesForm" (ngSubmit)="onSubmitSitesForm($event);" method="post" style="width:100%" novalidate>
+               <mat-card  class="addSite-section">
+                <div class="sites-item-label">
+                   <span  class="sub-card-label">Add Site</span>
+                    <img src="../../../assets/cross.jpg" (click)="closeForm()">
+                </div>
+                <div class="sites-item">
+                    <span  class="text-label">Site Name<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z0-9 ]*" autocomplete="off" type="text"  class="form-control text-box"  minlength="0" maxlength="100" id="siteName" name="siteName"
+                    formControlName="siteName" placeholder="Site Name"> 
+                    <div></div>
+                        <div *ngIf="isFormSubmitted && f.siteName.errors" class="error-block">
+                            <div *ngIf="f.siteName.errors.required">Site Name is required</div>
+                            <div *ngIf="!f.siteName.errors.required">{{getMessage('siteName',' Site Name')}}</div>
+                        </div>
+                
+
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Site ID<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z0-9 ]*" autocomplete="off" type="text"  class="form-control text-box"  minlength="0" maxlength="15" id="siteId" name="siteId"
+                    formControlName="siteId" placeholder="Site Id"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.siteId.errors" class="error-block">
+                        <div *ngIf="f.siteId.errors.required">Site Id is required</div>
+                        <div *ngIf="!f.siteId.errors.required"> {{getMessage('siteId',' Site Id')}}</div>
+                    </div>
+                
+                </div>
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Email<span class="mand">*</span></span>
+                    <input type="text"  class="form-control text-box" id="siteemail"  minlength="0" maxlength="100" name="siteemail"
+                    formControlName="siteemail" pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.siteemail.errors" class="error-block">
+                        <div *ngIf="!isemailId &&  f.siteemail.errors.required">Site Email is required</div>
+                        <div *ngIf="isemailId">Enter Valid Email-Id</div>
+                    </div>
+                </div>
+      
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Address Line 1<span class="mand">*</span></span>
+                    <input type="text"  class="form-control text-box"  minlength="0" maxlength="100" id="address" name="address"
+                    formControlName="address" placeholder="Street, Address"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.address.errors" class="error-block">
+                        <div *ngIf="f.address.errors.required">Address  is required</div>
+                    </div>
+                </div>
+      
+              <div class="dividerline"></div>
+
+                <div class="sites-item">
+                    <span class="text-label">Address Line 2</span>
+                    <input type="text"  class="form-control text-box"  minlength="0" maxlength="100" id="addressline" name="addressline"
+                    formControlName="addressline" placeholder="  Apartment, Suite, Unit"> 
+                </div>
+      
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">ZIP Code<span class="mand">*</span></span>
+                    <input type="text" pattern="\d*" minlength="0" maxlength="5"  oninput="validity.valid||(value='');" class="form-control text-box" id="zipCode" name="zipCode"
+                    formControlName="zipCode" placeholder="  Zip Code"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.zipCode.errors" class="error-block">
+                        <div *ngIf="f.zipCode.errors.required">ZIP Code  is required</div>
+                    </div>
+                </div>
+                
+      
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">City<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  class="form-control text-box"  minlength="0" maxlength="25" id="city" name="city"
+                    formControlName="city" placeholder="City"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.city.errors" class="error-block">
+                        <div *ngIf="f.city.errors.required">City  is required</div>
+                        <div *ngIf="!f.city.errors.required">    {{getMessage('city','City')}} </div>
+                    </div>
+                </div>
+
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">State<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  class="form-control text-box"  minlength="0" maxlength="25" id="state" name="state"
+                    formControlName="state" placeholder="State"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.state.errors" class="error-block">
+                        <div *ngIf="f.state.errors.required">State  is required</div>
+                        <div *ngIf="!f.state.errors.required"> {{getMessage('state','State')}} </div>
+                    </div>
+                </div>
+     
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Country<span class="mand">*</span></span>
+                    <select class="form-control text-box"  formControlName="country">
+                        <option value="United States Of America" selected>United States Of America</option>
+                    </select>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.country.errors" class="error-block">
+                        <div *ngIf="f.country.errors.required">Country  is required</div>
+                    </div>
+                </div>
+
+                <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Site Image</span>
+                    <input type="file" id="file"  accept="image/x-png,image/jpeg" (change)="handleFileInput($event)">
+                    <div></div>
+                    <div>{{ fileToUpload }}</div>
+                </div>
+   
+              <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Location</span>
+                  
+
+                    <div class="search-wrapper" >
+                      <!-- <input type="text"  class="form-control text-box"  minlength="0" maxlength="30" id="location" name="location"
+                      formControlName="location" placeholder="select location"> -->
+                      <input type="text" class="form-control text-box"  formControlName="location"  pattern="^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$" id="location" maxlength="100"  placeholder="34.052235, -118.243683 *">
+
+                      <!-- <img src="../../../../assets/location-icon.jpg"> -->
+
+                  </div>
+                  <div></div>
+                  <div *ngIf="isFormSubmitted && f.location.errors" class="error-block">
+                      <div *ngIf="!f.location.errors.required">{{getMessage('location',' Site Location')}}</div>
+                  </div>
+                </div>
+
+              <!-- <div class="dividerline"></div>
+                <div class="sites-item">
+                    <span class="text-label">Drop Box Link</span>
+                    <input type="text"   minlength="0" maxlength="300" class="form-control text-box" id="dropboxLink" name="dropboxLink"
+                    formControlName="dropboxLink" placeholder="Drop Brox Link"> 
+                </div> -->
+              <div class="dividerline"></div>
+              <div style="width: 100%; display: inline-table;">
+                <button type="button" (click)="isAddressValid('New')" class="btn-bg-blue" >Save</button>
+              </div>
+            </mat-card>  
+            </form>
+
+            <form *ngIf="isShowUpdateAddsection"  [formGroup]="updatesitesForm" (ngSubmit)="onSubmitUpdatedUserForm($event);" method="post" style="width:100%" novalidate>
+
+            <mat-card class="addSite-section">
+
+              <div class="sites-item-label">
+                 <span  class="sub-card-label">Update Site</span>
+                  <img src="../../../assets/cross.jpg" (click)="closeUpateForm()">
+              </div>
+              <div class="sites-item">
+                  <span class="text-label">Site Name<span class="mand">*</span></span>
+                  <input  (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z0-9 ]*" autocomplete="off" type="text"  class="form-control text-box" id="editSiteName" name="editSiteName"
+                  formControlName="editSiteName" placeholder="Site Name">
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editSiteName.errors" class="error-block">
+                      <div *ngIf="f1.editSiteName.errors.required">Site Name is required</div>
+                      <div *ngIf="!Sf1.editSiteName.errors.required">  {{getMessageUpdate('editSiteName','Site Name')}}</div>
+                  </div> 
+                
+              </div>
+
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Site ID<span class="mand">*</span></span>
+                  <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z0-9 ]*" autocomplete="off" type="text"  class="form-control text-box" id="editSiteId" name="editSiteId"
+                  formControlName="editSiteId" placeholder="Enter Site Id"> 
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editSiteId.errors" class="error-block">
+                    <div *ngIf="f1.editSiteId.errors.required">Site Name is required</div>
+                    <div *ngIf="!f1.editSiteId.errors.required">   {{getMessageUpdate('editSiteId','Site ID')}}  </div>
+                </div> 
+                </div>
+           
+
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Email<span class="mand">*</span></span>
+                  <input type="text"  class="form-control text-box" id="editSiteemail" name="editSiteemail"
+                  formControlName="editSiteemail"  pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email"> 
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editSiteemail.errors" class="error-block">
+                    <div *ngIf="!isupdateemailId &&  f1.editSiteemail.errors.required">Site Email is required</div>
+                    <div *ngIf="isupdateemailId">Enter Valid Email-Id</div>
+                </div>
+                  <!-- <div *ngIf="isupdateFormSubmitted && f1.editSiteemail && f1.editSiteemail.errors" class="error-block">
+                      <div *ngIf="!isupdateemailId &&  f1.editSiteemail.errors.required">Site Email is required</div>
+                      <div *ngIf="isupdateemailId">Please Enter Valid Email-Id</div>
+
+                  </div>  -->
+                  <!-- <div class="error-block">
+                    {{getMessageUpdate('editSiteemail','Email')}}
+                </div> -->
+              </div>
+    
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Address Line 1<span class="mand">*</span></span>
+                  <input type="text"  class="form-control text-box" id="editaddress" name="editaddress"
+                  formControlName="editaddress" placeholder="Street, Locality"> 
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editaddress.errors" class="error-block">
+                      <div *ngIf="f1.editaddress.errors.required">Address is required</div>
+                  </div> 
+              </div>
+    
+            <div class="dividerline"></div>
+
+              <div class="sites-item">
+                  <span class="text-label">Address Line 2</span>
+                  <input type="text"  class="form-control text-box" id="editaddressline" name="editaddressline"
+                  formControlName="editaddressline" placeholder=" Area"> 
+              </div>
+    
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">ZIP Code<span class="mand">*</span></span>
+                  <input type="text" pattern="\d*" minlength="0" maxlength="8"  oninput="validity.valid||(value='');" class="form-control text-box" id="editzipCode" name="editzipCode"
+                  formControlName="editzipCode" placeholder="1234">
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editzipCode.errors" class="error-block">
+                      <div *ngIf="f1.editzipCode.errors.required">Zip Code is required</div>
+                  </div>  
+              </div>
+              
+    
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">City<span class="mand">*</span></span>
+                  <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  class="form-control text-box" id="editcity" name="editcity"
+                  formControlName="editcity" placeholder="Enter City">
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editcity.errors" class="error-block">
+                      <div *ngIf="f1.editcity.errors.required">City is required</div>
+                      <div *ngIf="!f1.editcity.errors.required">    {{getMessageUpdate('city','City')}} </div>
+
+                  </div>  
+              </div>
+
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off"  class="text-label">State<span class="mand">*</span></span>
+                  <input type="text"  class="form-control text-box" id="editstate" name="editstate"
+                  formControlName="editstate" placeholder="Enter State"> 
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editstate.errors" class="error-block">
+                      <div *ngIf="f1.editstate.errors.required">State is required</div>
+                      <div *ngIf="!f1.editstate.errors.required">  {{getMessageUpdate('editstate','State')}} </div>
+                  </div>  
+              </div>
+   
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Country<span class="mand">*</span></span>
+                  <!-- <input type="text"  class="form-control text-box" id="country" name="country"
+                  formControlName="country" placeholder="Start typing for suggestion">  -->
+                  <select class="form-control text-box" formControlName="editcountry">
+                      <option value="United States Of America" selected>United States Of America</option>
+                  </select>
+                  <div></div>
+                  <div *ngIf="isupdateFormSubmitted && f1.editcountry.errors" class="error-block">
+                      <div *ngIf="f1.editcountry.errors.required">Country is required</div>
+                  </div>  
+            
+              </div>
+
+              <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Site Image</span>
+                  <!-- <input type="text"  class="form-control text-box" id="country" name="country"
+                  formControlName="country" placeholder="Start typing for suggestion">  -->
+                  <input type="file" id="file" accept="image/x-png,image/gif,image/jpeg" (change)="handleFileInput($event)">
+                  <div></div>
+                  <div>{{ fileToUpload }}</div>
+              </div>
+ 
+            <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Location</span>
+                  <div class="search-wrapper" >
+                    <input type="text"  class="form-control text-box" pattern="^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$" minlength="0" maxlength="100" id="location" id="editlocation" name="editlocation"
+                    formControlName="editlocation" placeholder="select location">
+                </div>
+                <div></div>
+                <div *ngIf="isupdateFormSubmitted && f1.editlocation.errors" class="error-block">
+                    <div *ngIf="!f1.editlocation.errors.required">{{getMessageUpdate('editlocation',' Site Location')}}</div>
+                </div>
+              </div>
+
+            <!-- <div class="dividerline"></div>
+              <div class="sites-item">
+                  <span class="text-label">Drop Box Link</span>
+                  <input type="text"  class="form-control text-box" id="editdropboxLink" name="editdropboxLink"
+                  formControlName="editdropboxLink" placeholder="www.dropbox.com/abc"> 
+  
+              </div> -->
+            <div class="dividerline"></div>
+            <div style="width: 100%; display: inline-table;">
+              <button type="button" (click)="isAddressValid('update')" class="btn-bg-blue">Save Site</button>
+            </div>
+            </mat-card>  
+            </form>
+
+
+            <div style="width: 100%;">
+                <div *ngIf="siteList.length === 0" class="emptybox">
+                    <span class="empty-box-text"> No Sites added yet.</span>  
+                  </div>
+            </div>
+          
+
+            <!-- list of sites -->
+            <div style="margin-bottom: 38px;">
+                <div  *ngFor="let item of siteList" (click)="upadteSite(item)">
+                    <div class="sites-item">
+                        <!-- <img src="{{ item.siteImage }}" class="site_img"> -->
+                        <img *ngIf="item.siteImage!= ''" src="{{ item.siteImage }}" class="site_img">
+                        <img *ngIf="item.siteImage== ''" src="assets/sample-site-image.png" class="site_img">
+                        <div>
+                            <div class="site-list-item-name"> {{ item.name }}</div>
+                            <div class="site-list-item-phoneno text-emphasis">{{ item.customSiteId }} </div>
+                            <div class="site-list-item-email text-content">{{ item.email }}</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+          
+        </mat-card>
+    <div class="row margin-cardbox" >
+            <mat-card  class="sites-section-skip">
+                <div class="selected-site-stats-item">
+                  <button class="btn-border" (click)="goBack()">Cancel</button>
+                    <button class="btn-bg-blue"  (click)="goForword()" >Next</button>
+                </div>  
+            </mat-card>        
+    </div>
+</div>
+<app-loader *ngIf = 'dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>
+  

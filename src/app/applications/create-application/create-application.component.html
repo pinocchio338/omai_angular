@@ -1,0 +1,20 @@
+<div class="main-conteainer">
+    <div class="toolbar">
+        <div class="toolbar-application">
+            <img src="assets/menu-circled-blue.png">
+            <span class="text-heading">New Application</span>
+        </div>
+        <img src="assets/x.png" class="close-icon" (click)="close()">
+    </div>
+    <div class="content">
+        <span>
+            <span>Name</span><span class="mand">*</span>
+        </span>
+        <input class="text-input" [(ngModel)]="appName">
+        <div class="error-text mand" *ngIf="nameError.length>0">{{nameError}}</div>
+        <button class="raised-button confirm-button" (click)="createApplication()">Create</button>
+    </div>
+</div>
+
+<app-loader *ngIf="!isDataLoaded"></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

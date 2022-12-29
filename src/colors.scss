@@ -1,0 +1,258 @@
+// Custom Theming for Angular Material
+@use '@angular/material' as mat;
+// For more information: https://material.angular.io/guide/theming
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+$mat-biogas-primary: (
+    50: #ffffff,
+    100: #dde6f3,
+    200: #b4c9e4,
+    300: #7fa3d1,
+    400: #4C9FF9,
+    500: var(--primary),
+    600: #4072b4,
+    700: #38649d,
+    800: #305687,
+    900: #284770,
+    A100: #ffffff,
+    A200: #dde6f3,
+    A400: #6992c9,
+    A700: #4f5670,
+    contrast: (
+        50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: rgba(black, 0.87),
+        400: rgba(black, 0.87),
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: rgba(black, 0.87),
+        A200: rgba(black, 0.87),
+        A400: rgba(black, 0.87),
+        A700: white,
+    )
+);
+
+:root{
+  --primary : #3894F8;
+  --primary-light : #EBF4FE;
+  --succsess : #37B24D;
+  --success-light : #EBFBEE;
+  --warn : #FD7E14;
+  --warn-light : #FFF4E6;
+  --error: #F03E3E;
+  --error-light : #FFF5F5;
+  --text : #17191C;
+  --text-light :  #868E96;
+  --background: #F8F9FA;
+  --hover-background: #F8F9FA;
+
+  --container-padding: 16px;
+  --container-margin: 16px;
+}
+
+.text-title{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 40px;
+  color: var(--text);
+}
+
+.text-heading{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 21px;
+  line-height: 34px;
+  color: var(--text);
+}
+
+.text-subheading{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 29px;
+  color: var(--text);
+}
+
+.text-content{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text);
+}
+
+.text-emphasis{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  color: #17191C;
+}
+
+.text-subtext{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.raised-button{
+  display: flex;
+  flex-direction: row;  
+  align-items: center;
+  // set padding as needed
+  // padding: 8px 16px;
+  background: var(--primary);
+  border-radius: 4px;
+  width: fit-content;
+  color: #FFFFFF !important;
+  cursor: pointer;
+  border: var(--primary);
+}
+
+.stroked-button{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  // set padding as needed
+  // padding: 8px 16px;
+  background: #F7FBFF;
+  border: 1px solid var(--primary) !important;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 16px;
+  letter-spacing: 0.02em;
+  color:var(--primary);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  text-transform: capitalize;
+  text-align: center;
+
+  img{
+    margin-right: 8px;
+  }
+}
+
+.full-width{
+  width: 100%;
+}
+
+.stroked-button:hover{
+  background: var(--primary-light);
+}
+
+.stroked-button-no-color{
+  color:var(--text);
+  border-color: var(--text-light) !important;
+}
+
+.stroked-button-no-color:hover{
+  background-color: var(--hover-background) !important;
+}
+// input[type=text]{
+//   background: #FFFFFF;
+//   padding: 8px 16px;
+//   border: 1px solid #ADB5BD;
+//   box-sizing: border-box;
+//   border-radius: 4px;
+// }
+
+input, button{
+  outline: unset !important;
+}
+
+input{
+  color: var(--text) !important;
+}
+
+button{
+  text-transform: capitalize;
+}
+
+input::placeholder{
+  text-transform: capitalize;
+}
+
+.image-button{
+  height: fit-content;
+  width: fit-content;
+  padding: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #ADB5BD;
+  border-radius: 4px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  img{
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.left-button{
+  border-right: unset;
+  border-top-right-radius: unset;
+  border-bottom-right-radius: unset;
+}
+
+.right-button{
+  border-left: unset;
+  border-top-left-radius: unset;
+  border-bottom-left-radius: unset;
+}
+
+.text-input{
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 1px solid #ADB5BD;
+  box-sizing: border-box;
+  border-radius: 4px;
+  // margin: 0px 8px;
+  color: #17191C;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.text-input:active, .text-input:focus{
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0px 0px 0px 3px #D7EAFE;
+}
+
+app-server-error-popup{
+  position: absolute;
+  top: 72px;
+  left: 10%;
+  right: 10%;
+  z-index: 9;
+  background-color: var(--error-light);
+  // border: 1px solid var(--warn);
+  border-radius: 8px;
+}

@@ -1,0 +1,218 @@
+<div class="main-container">
+    <div class="contents-wrapper">
+      <mat-grid-list cols="18" rowHeight="100%">
+        <mat-grid-tile colspan="14" [ngClass]="status ? 'left-section' : 'graph-section'" class="padding-14">
+          <div class='site-expanded' color="primary">
+              <mat-card class="site-expanded-card">
+                  <div [ngClass]="status ? 'right-arrow' : 'left-arrow'">
+                    <div class="slider-div" (click)="clickEvent()">
+                        <span *ngIf="!status">
+                            <button mat-icon-button class="slider-button">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                        </span>
+                        <span *ngIf="status">
+                            <button mat-icon-button class="slider-button">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </span>
+                    </div>
+                  </div>
+                  <div #sites class="sites-location-list" *ngFor="let container of containers; let i = index;">
+                      <mat-card class="site-list-item" [ngClass]="(selectedDiv == i) ? 'select-active' : ''">
+                        <div class="delete-clone">
+                          <div class="example-section">
+                            <div class="component-section">
+                              <span id="chartName{{i}}">{{(container.dataview != undefined) ? container.componentName : yAxisData.componentName}}</span>
+                            </div>
+                            <div class="cat action">
+                               <label>
+                                  <mat-checkbox class="example-margin" [ngClass]="(selectedDiv == i) ? 'checked_value' : 'unchecked_value'" [checked]="(selectedDiv == i) ? 'true' : 'false'" (change)="onChangeDemo($event.checked, i)"><i class='fa fa-edit edit-chart'></i></mat-checkbox>
+                               </label>
+                            </div>
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                              <mat-icon>more_horiz</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                              <button mat-menu-item>
+                                <mat-icon>content_copy</mat-icon>
+                                <span>Clone</span>
+                              </button>
+                              <button mat-menu-item (click)="deleteFrame(i)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                              </button>
+                              <button mat-menu-item>
+                                <mat-icon>backup</mat-icon>
+                                <span>export</span>
+                              </button>
+                            </mat-menu>
+                          </div>
+                        </div>
+                        <div [ngClass]="!status ? 'iFrame' : ''" id="myIframe{{i}}" class="myIframe">
+                          <div id="chart{{i}}" class="chart"></div>
+                          <DIV>
+
+                          </DIV>
+                        </div>
+                      </mat-card>
+                  </div>
+                  <button (click)="add()" class="manage-button" mat-stroked-button>
+                    <div>
+                        <mat-icon>add</mat-icon>
+                        <span>New Component</span>
+                    </div>
+                  </button>           
+              </mat-card>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4" class="menu" [ngClass]="status ? 'menu_active' : ''">
+          <mat-card class="container-card sites-list sites-list-card">
+            <div class="sites-drafts">
+              <div class="margin-cardbox">
+                <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+                <mat-card class="license-section ">
+                    
+                    
+                    <div class="">
+                      <span class="card-text-label">Type</span>
+                      <div class="radio-with-Icon">
+                        <p class="radioOption-Item">
+                          <input type="radio" formControlName="graphTypes" id="BannerType1" value="1" class="ng-valid ng-dirty ng-touched ng-empty" aria-invalid="false" style="">
+                          <label for="BannerType1">
+                            <i class="fa fa-line-chart"></i>
+                            Live Line
+                          </label>
+                        </p>
+                        <p class="radioOption-Item">
+                          <input type="radio" formControlName="graphTypes" id="BannerType2" value="2" class="ng-valid ng-dirty ng-touched ng-empty" aria-invalid="false" style="">
+                          <label for="BannerType2">
+                            <i class="fa fa-line-chart"></i>
+                            Static Line
+                          </label>
+                        </p>
+                        <p class="radioOption-Item">
+                          <input type="radio" formControlName="graphTypes" id="BannerType3" value="3" class="ng-valid ng-dirty ng-touched ng-empty" aria-invalid="false" style="">
+                          <label for="BannerType3">
+                            <i class="fa fa-image"></i>
+                            Diagram
+                          </label>
+                        </p>
+                        <p class="radioOption-Item">
+                          <input type="radio" formControlName="graphTypes" id="BannerType4" value="4" class="ng-valid ng-dirty ng-touched ng-empty" aria-invalid="false" style="">
+                          <label for="BannerType4">
+                            <i class="fa fa-table"></i>
+                            Tabuler
+                          </label>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="">
+                      <span class="my-chart">My Chart</span>
+                      <button type="submit" class="join-table stroked-button desktop-button">
+                          Apply
+                      </button>
+                    </div>
+
+                    <div class="dividerline"></div>
+                    <span class="card-label">Component Settings</span>
+                    <div class="form-fields">
+                        <!-- <span class="card-text-label">Component Name</span> -->
+                        <input type="text" class="form-control text-box" formControlName="componentName" placeholder="Component Name">
+                    </div>
+                    <div class="form-fields">
+                        <span class="card-text-label">Data</span>
+                        <select class="form-control text-box"  (change)="selectView($event)" formControlName="dataview">
+                            <option value="All" selected>All</option>
+                            <option *ngFor="let view of graphView" [value]="view.view">{{view.dataView}}</option>
+                        </select>
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="license-item">
+                        <span class="card-text-label1">Y Axis</span>
+                        <input type="text" class="form-control text-box" formControlName="yaxis" placeholder="Wells">
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Color</span>
+                        <input type="color" class="form-control text-box" formControlName="color" placeholder="Choose From Color Options">
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Axis</span>
+                        <input type="text" class="form-control text-box" formControlName="axis" placeholder="Axis">
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Unit</span>
+                        <input type="text" class="form-control text-box" formControlName="unit" placeholder="Unit">
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Legend</span>
+                        <input type="text" class="form-control text-box" formControlName="Legend" placeholder="Legend">
+                    </div>
+                    <div class="">
+                        <span class="card-text-label">Field</span>
+                        <select class="form-control text-box" formControlName="field">
+                            <option *ngFor="let field of selectFieldList" [value]="field.field">{{field.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="license-item">
+                      <span class="card-text-label1">Plot</span>
+                      <select class="form-control text-box" formControlName="plot">
+                          <option value="Left1">Left1</option>
+                          <option value="Right">Right</option>
+                          <option value="Left2">Left2</option>
+                      </select>
+                    </div>
+
+                    <div class="dividerline"></div>
+                    <div class="license-item ">
+                        <span class="card-text-label1">X Axis</span>
+                        <input type="text" class="form-control text-box" formControlName="xaxisLabel" placeholder="Label">
+                    </div>
+                    <div class="">
+                        <span class="card-text-label">Field</span>
+                        <input type="text" class="form-control text-box" formControlName="xaxisField" placeholder="Field">
+                    </div>
+                    <div class="license-item">
+                        <span class="card-text-label1">Legend Position</span>
+                        <select class="form-control text-box" formControlName="legendPos">
+                            <option value="RIGHT">Right</option>
+                            <option value="BOTTOM">Bottom</option>
+                            <option value="TOP">Top</option>
+                        </select>
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Orientation</span>
+                        <input type="text" class="form-control text-box" formControlName="XticksOrientation" placeholder="X Ticks Orientation">
+                    </div>
+                    <div class="license-item ">
+                        <span class="card-text-label">Legend</span>
+                        <input type="text" class="form-control text-box" formControlName="Legend" placeholder="Legend">
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="">
+                        <span class="card-text-label">Filter Type</span>
+                        <select class="form-control text-box">
+                            <option value="view1">Time Filter</option>
+                            <option value="view2">Field 2</option>
+                            <option value="view3">Field 3</option>
+                        </select>
+                    </div>
+                    <div class="">
+                        <select class="form-control text-box">
+                            <option value="view1">Date Range</option>
+                            <option value="view2">Position 2</option>
+                            <option value="view3">Position 3</option>
+                        </select>
+                    </div>
+                </mat-card>
+              </form>
+            </div>
+            </div>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+</div>
+  

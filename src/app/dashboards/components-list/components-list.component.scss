@@ -1,0 +1,24 @@
+.component-item{
+    display: flex;
+    img{
+        margin: 8px 16px;
+    }
+    span{
+        margin: auto 0;
+        flex: 1;
+    }
+}
+
+.components-list{
+    // background: var(--background);
+}
+
+.text-content{
+    flex: 1;
+}
+
+.component-item:hover{
+    cursor: pointer;
+    background-color: var(--background);
+}
+

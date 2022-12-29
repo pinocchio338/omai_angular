@@ -1,0 +1,131 @@
+.main-container{
+    height: calc(100% - 64px);
+    
+}
+
+.dashboard-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    // grid-gap:64px;
+    margin: 32px;
+    height: calc(100% - 16px);
+    box-sizing: border-box;
+}
+
+.mat-card{
+    margin: unset!important;
+}
+.dashboard-div{
+    // display: flex;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-direction: column;
+    height: calc(100% - 70px);
+    margin-top: 16px
+}
+
+.dashboard-controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    grid-gap: 16px;
+    select{
+        flex:1;
+    }
+    *{
+        margin: auto 0;
+    }
+}
+
+.base-dashboard, .compared-dashboard{
+    overflow: auto;
+}
+
+.base-dashboard{
+    padding-right: 32px;
+    border-right: 1px solid var(--background);
+}
+
+.compared-dashboard{
+    padding-left: 32px;
+    border-left: 1px solid var(--background);
+}
+
+.multi-graph{
+    width: 100%;
+    height: 80%;
+}
+
+.single-graph{
+    width: 100%;
+    height: 99%;
+    border: unset !important;
+}
+
+iframe{
+    // margin: 16px 0;
+}
+
+
+mat-toolbar{
+    background-color: white;
+}
+
+.sites-label{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    // display: flex;
+    // align-items: center;
+    color: var(--text);
+}
+
+.slider-button{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: #F1F3F5;
+    margin: auto 0px;
+    border: unset;
+}
+
+.selected-client-name{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.7px;
+    word-spacing: 2px;
+    // display: flex;
+    // align-items: center;
+    // margin-left: 16px;
+    color: var(--text);
+}
+
+
+.error-message{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+@media screen and (max-width:800px){
+    .dashboard-container{
+        display: block;
+    }
+    .main-container{
+        height: 100%;
+    }
+    .base-dashboard,.compared-dashboard{
+        padding:8px;
+        height: 50%;
+    }
+    .mat-card{
+        padding: unset;
+    }
+    // .dash
+}

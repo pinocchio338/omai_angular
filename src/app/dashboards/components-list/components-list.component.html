@@ -1,0 +1,20 @@
+<div class="components-list">
+    <div class="component-item" [mat-dialog-close]="'new-quicksight'">
+        <img src="assets/plus-blue.png">
+        <span class="text-content">Add Graph</span>
+    </div>
+    <div class="component-item" [mat-dialog-close]="'new-graph'">
+        <img src="assets/plus-blue.png">
+        <span class="text-content">Add Chart</span>
+        <!-- <span class="text-content">Add D3-Component</span> -->
+    </div>
+    <mat-divider></mat-divider>
+    <div class="component-item" *ngFor="let component of components; let i= index">
+        <img src="assets/line-chart.png">
+        <span class="text-content" [mat-dialog-close]="component.id">{{component.name}}</span>
+        <!-- <img src="assets/delete_icon.png" class="delete-component-button" (click)="deleteComponent(component.id,i)"> -->
+    </div>
+</div>
+
+<app-loader *ngIf = '!dataLoaded'></app-loader>
+<app-server-error-popup></app-server-error-popup>

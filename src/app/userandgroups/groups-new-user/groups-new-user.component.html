@@ -1,0 +1,30 @@
+<div class="users-header">
+    <div class="circled-icon bge-btn">
+        <img src="assets/icons/user-plus.svg" class="blue-icon">
+    </div>
+    <div class="header-title">
+        New User 
+    </div>
+    <div class="close-btn bge-btn" mat-dialog-close>
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+<div class="user-form scrollable">
+        <div class="form-fields">
+            <div class="in-place-field">
+                <label for="name">Name <span class="mand">*</span></label>
+                <input type="text" class="name" id="name" maxlength="50" autocomplete="off" [(ngModel)]="name" placeholder="Miles Davis">
+
+            </div>
+            
+        </div>
+</div>
+<div class="bottom-btns">
+    <div class="btn-done" (click)="createUser()">
+       <div class="btn">Create</div> 
+    </div>
+</div>
+<div *ngIf="inProcess">
+    <app-loader></app-loader>
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

@@ -1,0 +1,21 @@
+<h1 mat-dialog-title><div class="title">
+    <div class="left-section">
+        <img src="assets/pie-chart-blue.png">
+        <div class="title-text text-heading">New Dashboard</div>
+    </div>
+    <div class="right-section">
+        <img src="assets/x.png" class="close" (click)="cancel()">
+    </div>
+</div></h1>
+<div mat-dialog-content>
+    <div>
+    <span>Name</span><span class="mand">*</span>
+</div>
+<input class="text-input full-width" [(ngModel)]="dashboardName">
+<span class="mand">{{errorText}}</span>
+</div>
+<div mat-dialog-actions>
+  <!-- <button class="stroked-button" (click)="cancel()">Keep It</button> -->
+  <button class="raised-button full-width" (click)="send()" cdkFocusInitial>Create</button>
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

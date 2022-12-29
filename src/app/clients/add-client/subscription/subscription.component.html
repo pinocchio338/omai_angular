@@ -1,0 +1,289 @@
+<div class="container-fluid">
+    <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmitSubscription($event);" method="post" novalidate>
+        <div class="margin-cardbox">
+            <mat-card class="license-section ">
+                <!-- <div *ngIf="editSubscription" >
+                    test
+                </div>  {{subscriptionForm.controls | json}} -->
+                <span class="card-label">License</span>
+                <div class="license-item ">
+                    <span class="card-text-label">License Value (USD)<span class="mand">*</span></span>
+                    <input type="text" pattern="\d*" minlength="0" maxlength="10" oninput="validity.valid||(value='');"
+                        class="form-control text-box" id="licenseamt" name="licenseamt"
+                        formControlName="licenseamt" placeholder=" $ 00.00">
+                  <div></div>
+                  <div *ngIf="isFormSubmitted && f.licenseamt.errors" class="error-block">
+                            <div *ngIf="f.licenseamt.errors.required">License Value is required</div>
+                  </div>
+                </div>
+                <div class="license-item ">
+                    <span class="card-text-label">Payment Terms (In Days)<span class="mand">*</span></span>
+                    <select class="form-control text-box" minlength="0" maxlength="30"  formControlName="paymentterms">
+                        <option  value="" selected>Select Payment Terms</option>
+                        <option *ngFor="let pterm of paymentTermsList" value="{{pterm}}">{{pterm}} Days</option>
+                    </select>
+                  <div></div>
+                  <div *ngIf="isFormSubmitted && f.paymentterms.errors" class="error-block">
+                            <div *ngIf="f.paymentterms.errors.required">Payment Terms is required</div>
+                  </div>
+                </div>
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Sites<span class="mand">*</span></span>
+                    <div class='value-wrapper'>
+                        <button type="button" class="image-button left-button" (click)="minus('sites')" ><img
+                                src="./../../../assets/minus.png"></button>
+
+                        <input type="text" [value]="sitesCount" class="plus-minus-inputbox" pattern="\d*" minlength="0"
+                            maxlength="15" oninput="validity.valid||(value='');" (keyup)="checkAmount('sites')" formControlName="sitesCount" pattern="\d*" minlength="0" maxlength="3" >
+                        <button type="button" class="image-button right-button" (click)="plus('sites')"><img
+                                src="./../../../assets/plus.png"></button>
+                    </div>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.sitesCount.errors" class="error-block">
+                        <div *ngIf="f.sitesCount.errors.required">Sites Count is required</div>
+                    </div>
+                </div>
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Users<span class="mand">*</span></span>
+                    <div class='value-wrapper'>
+                        <button type="button" class="image-button left-button" (click)="minus('users')"><img
+                                src="./../../../assets/minus.png"></button>
+                        <input type="text" [value]="usersCount" (keyup)="checkAmount('users')"  pattern="\d*" minlength="0" maxlength="3" class="plus-minus-inputbox"
+                            formControlName="usersCount"  oninput="validity.valid||(value='');">
+                        <button type="button" class="image-button right-button" (click)="plus('users')"><img
+                                src="./../../../assets/plus.png"></button>
+                    </div>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.usersCount.errors" class="error-block">
+                        <div *ngIf="f.usersCount.errors.required">Users Count is required</div>
+                    </div>
+                </div>
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Dashboards<span class="mand">*</span></span>
+                    <div class='value-wrapper'>
+                        <button type="button" class="image-button left-button" (click)="minus('dashboards')"><img
+                                src="./../../../assets/minus.png"></button>
+                        <input type="text" [value]="dashboardCount" (keyup)="checkAmount('dashboards')" pattern="\d*" minlength="0" maxlength="3" class="plus-minus-inputbox"
+                            formControlName="dashboardCount"  oninput="validity.valid||(value='');">
+                        <button type="button" class="image-button right-button" (click)="plus('dashboards')"><img
+                                src="./../../../assets/plus.png"></button>
+                    </div>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.dashboardCount.errors" class="error-block">
+                        <div *ngIf="f.dashboardCount.errors.required">Dashboards Count is required</div>
+                    </div>
+                </div>
+
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Alerts<span class="mand">*</span></span>
+                    <div class='value-wrapper'>
+                        <button type="button" class="image-button left-button" (click)="minus('alert')"><img
+                                src="./../../../assets/minus.png"></button>
+                        <input type="text" [value]="alertCount" (keyup)="checkAmount('alert')" pattern="\d*" minlength="0" maxlength="3" class="plus-minus-inputbox"
+                            formControlName="alertCount"   oninput="validity.valid||(value='');">
+                        <button type="button" class="image-button right-button" (click)="plus('alert')"><img
+                                src="./../../../assets/plus.png"></button>
+                    </div>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.alertCount.errors" class="error-block">
+                        <div *ngIf="f.alertCount.errors.required">Alerts Count is required</div>
+                    </div>
+
+                </div>
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Subscription Start Date<span class="mand">*</span></span>
+                    <!-- <input type="date" class="form-control text-box" id="subscriptionDate"
+                        name="subscriptionDate" formControlName="subscriptionDate" placeholder="pick the date"> -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="picker" id="subscriptionDate" class="form-control"
+                            name="subscriptionDate" formControlName="subscriptionDate"  (dateChange)="addEvent('change', $event)" >
+                            <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
+                            <mat-datepicker #picker  ></mat-datepicker>
+                        </mat-form-field>
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.subscriptionDate.errors" class="error-block">
+                            <div *ngIf="f.subscriptionDate.errors.required">Subscription Start Date is required</div>
+                        </div>
+                    </div>
+                  
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Duration (in years)<span class="mand">*</span></span>
+                    <div class='value-wrapper'>
+                        <button type="button" class="image-button left-button" (click)="minus('duration')"><img
+                                src="./../../../assets/minus.png"></button>
+                        <input type="text" [value]="duration" class="plus-minus-inputbox" pattern="\d*" minlength="0" maxlength="3" formControlName="duration"  oninput="validity.valid||(value='');">
+                        <button type="button" class="image-button right-button" (click)="plus('duration')"><img
+                                src="./../../../assets/plus.png"></button>
+                    </div>
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.duration.errors" class="error-block">
+                        <div *ngIf="f.duration.errors.required">Duration Count is required</div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+
+        <div>
+            <mat-card class="license-section ">
+                <span class="card-label"> Client Information</span>
+                <div class="license-item">
+                    <span class="card-text-label">Name<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z0-9 ]*" autocomplete="off" type="text" class="form-control text-box"  id="clientName" name="clientName"
+                        formControlName="clientName" placeholder="Client Name" >
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.clientName.errors" class="error-block">
+                            <div *ngIf="f.clientName.errors.required">Name is required</div>
+                            <div *ngIf="!f.clientName.errors.required">{{getMessage('clientName',' Name')}}</div>
+                        </div>
+                       
+                    </div>
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Email<span class="mand">*</span></span>
+                    <input  type="email"  pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$"  class="form-control text-box"  minlength="0" maxlength="100"  id="clientemail" name="clientemail"
+                        formControlName="clientemail" placeholder="Email" >
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.clientemail.errors" class="error-block">
+                            <div *ngIf="!isemailId && f.clientemail.errors.required">Email is required</div>
+                            <div *ngIf="isemailId">Enter Valid Email-Id</div>
+                        </div>
+                        <!-- <div class="error-block">
+                            {{getMessage('clientemail','Email')}}
+                        </div> -->
+                </div>
+              
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Phone<span class="mand">*</span></span>
+                    <!-- <input type="text" minlength="0" maxlength="17" oninput="validity.valid||(value='');"
+                        class="form-control text-box" id="clientPhone" name="clientPhone"
+                        formControlName="clientPhone" placeholder="Phone No"  appPhoneMask> -->
+                        <input class="form-control text-box"  type="text" appPhoneMask   maxlength="17" formControlName="clientPhone" id="clientPhone" (change)="anyEvent($event)"  placeholder="Phone No"  > 
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.clientPhone.errors" class="error-block">
+                            <div *ngIf="f.clientPhone.errors.required">Phone No is required</div>
+                            <div *ngIf="!f.clientPhone.errors.required && f.clientPhone.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                        </div>
+                        <!-- <div class="error-block">
+                            {{getMessage('clientPhone','Phone')}}
+                        </div> -->
+                    </div>
+               
+
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Logo</span>
+                    <input type="file" id="file"   accept="image/x-png,image/gif,image/jpeg" (change)="handleFileInput($event)">
+                        <!-- <input type="file" id="file"  (change)="handleFileInput($event.target.files)" > -->
+                        <div></div>
+                        <div class="fileupload-text">{{ fileToUpload }}</div>
+                    </div>
+            </mat-card>
+        </div>
+
+        <div class=" margin-cardbox">
+            <mat-card class="license-section ">
+                <span class="card-label"> Address</span>
+
+                <div class="license-item">
+                    <span class="card-text-label">Address Line 1<span class="mand">*</span></span>
+                    <input type="text" class="form-control text-box" minlength="0" maxlength="100" id="address" name="address"
+                        formControlName="address" placeholder="Street Address">
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.address.errors" class="error-block">
+                            <div *ngIf="f.address.errors.required">Address is required</div>
+                        </div>
+                </div>
+               
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Adress Line 2</span>
+                    <input type="text" class="form-control text-box" minlength="0" maxlength="100" id="addressline" name="addressline"
+                        formControlName="addressline" placeholder=" Apartment, Suite, Unit">
+                </div>
+                
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">ZIP Code<span class="mand">*</span></span>
+                    <input type="text" pattern="\d*" minlength="0" maxlength="5" oninput="validity.valid||(value='');"
+                        class="form-control text-box" id="zipCode" name="zipCode" formControlName="zipCode"
+                        placeholder="  Zip Code">
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.zipCode.errors" class="error-block">
+                            <div *ngIf="f.zipCode.errors.required">ZIP Code is required</div>
+                        </div>
+                    </div>
+               
+                <div class="dividerline"></div>
+
+                <div class="license-item">
+                    <span class="card-text-label">City<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  minlength="0" maxlength="25" class="form-control text-box" id="city" name="city"
+                        formControlName="city" placeholder=" City" [ngClass]="{'is-invalid':subscriptionForm.get('city').touched && subscriptionForm.get('city').invalid}">
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.city.errors" class="error-block">
+                            <div *ngIf="f.city.errors.required">City is required</div>
+                            <div *ngIf="!f.city.errors.required">{{getMessage('city','City')}}</div>
+                        </div>
+                       
+                    </div>
+               
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">State<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  minlength="0" maxlength="25" class="form-control text-box" id="state" name="state"
+                        formControlName="state" placeholder="State" >
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.state.errors" class="error-block">
+                            <div *ngIf="f.state.errors.required">State is required</div>
+                            <div *ngIf="!f.state.errors.required">{{getMessage('state','State')}}</div>
+
+                            	
+                        </div>
+                     
+                    </div>
+              
+                <div class="dividerline"></div>
+                <div class="license-item">
+                    <span class="card-text-label">Country<span class="mand">*</span></span>
+                    <!-- <input type="text" class="form-control text-box" id="country" name="country"
+                        formControlName="country" placeholder=""> -->
+                        <select class="form-control text-box" minlength="0" maxlength="30"  formControlName="country">
+                            <option value="United States Of America" selected>United States Of America</option>
+                        </select>
+                        <div></div>
+                        <div *ngIf="isFormSubmitted && f.country.errors" class="error-block">
+                            <div *ngIf="f.country.errors.required">Country is required</div>
+                        </div>
+        
+                </div>
+         
+            </mat-card>
+        </div>
+
+        <div class=" margin-cardbox">
+            <mat-card class="license-section">
+                <div class="selected-site-stats-item">
+                    <button class="btn-border" (click)="goBack()">Cancel</button>
+                    <button *ngIf="isShowForSave" type="submit" class="btn-bg-blue"  (click)="goForward()">Next</button>
+                    <button *ngIf="isShowForUpate" type="submit" class="btn-bg-blue"  (click)="goForwardUpdate()">Next</button>
+                </div>
+            </mat-card>
+
+        </div>
+    </form>
+</div>
+<app-loader *ngIf = 'dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

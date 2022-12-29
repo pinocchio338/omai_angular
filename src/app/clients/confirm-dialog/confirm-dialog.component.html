@@ -1,0 +1,16 @@
+<h1 mat-dialog-title><div class="title">
+    <div class="left-section">
+        <img src="assets/alert.png">
+        <div class="title-text text-heading">Delete</div>
+    </div>
+    <div class="right-section">
+        <img src="assets/x.png" class="close" (click)="cancel()">
+    </div>
+</div></h1>
+<div mat-dialog-content>
+<div class="text-content">All the site information will be lost forever.  Are you sure, you want to delete this site?</div>
+</div>
+<div mat-dialog-actions>
+  <button class="stroked-button" mat-dialog-close="cancel">Keep It</button>
+  <button class="raised-button" mat-dialog-close="ok" cdkFocusInitial>Yes, Delete</button>
+</div>

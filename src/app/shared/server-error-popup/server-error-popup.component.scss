@@ -1,0 +1,26 @@
+.error-wrapper{
+    // height: 40px;
+    padding: 16px;
+    display: flex;
+    border: 1px solid var(--warn);
+    border-radius: 8px;
+    justify-content: space-between;
+    z-index: 999999;
+    img{
+        width: 24px;
+        height: 24px;
+    }
+
+    .error-message{
+        // color: var(--warn);
+        margin-left: 26px;
+    }
+}
+
+.left-section, .right-section{
+    display: flex;
+}
+
+.close-button{
+    cursor: pointer;
+}

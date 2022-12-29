@@ -1,0 +1,61 @@
+.title{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    *{
+        margin: auto 0;
+    }
+    .title-text{
+        margin-left: 16px;
+    }
+}
+
+.left-section{
+    display: flex;
+}
+
+.text-content{
+    margin:40px 0;
+}
+
+.close{
+    cursor: pointer;
+}
+
+.mat-dialog-actions{
+    display: flex;
+    justify-content: space-between;
+}
+
+button{
+    justify-content: center;
+}
+
+.mat-dialog-container{
+    margin:32px;
+}
+
+.mand{
+    color: red;
+}
+
+.mat-dialog-content{
+    margin-top: 48px;
+    margin-bottom: 40px;
+}
+
+button{
+    padding: 8px 24px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02em;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 8px 0px
+}

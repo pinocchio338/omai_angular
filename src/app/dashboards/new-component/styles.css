@@ -1,0 +1,186 @@
+/*
+Modified from: http://bl.ocks.org/natemiller/7dec148bb6aab897e561
+*/
+
+:root {
+  --axisY0_line_color: red;
+  --axisY1_line_color: green ;
+  --axisY2_line_color: blue;
+  --axisY0_text_fill: red;
+  --axisY1_text_fill: green ;
+  --axisY2_text_fill: blue;
+  
+}
+
+.w3-theme-light {color:#000 !important; background-color:#f4f6f9 !important}
+.w3-theme-dark {color:#fff !important; background-color:#26364a !important}
+.w3-theme-action {color:#fff !important; background-color:#26364a !important}
+
+ 
+
+body {
+  font: 10px sans-serif;
+ //background-color:#26364a ;
+}
+
+
+.axisY0_line {
+  fill: none;
+  stroke:var(--axisY0_line_color);
+  stroke-width: 1px;
+}
+
+.axisY1_line {
+  fill: none;
+  stroke: var(--axisY1_line_color);
+  stroke-width: 1px;
+}
+
+.axisY2_line {
+  fill: none;
+  stroke: var(--axisY2_line_color);
+  stroke-width:1px;
+}
+.axisX_text text{
+  fill: black;
+}
+
+.axisY0_text text{
+  fill: var(--axisY0_text_fill);
+  color:var(--axisY0_text_fill);
+
+}
+
+.axisY1_text text{
+  fill: var(--axisY1_text_fill);
+}
+  
+.axisY2_text text {
+  fill: var(--axisY2_text_fill);
+}
+
+ 
+
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.y.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: 0.125;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+}
+
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus circle {
+  fill: none;
+}
+
+.focus circle.y0 {
+  stroke: var(--axisY0_line_color);
+ 
+}
+
+.focus circle.y1 {
+  stroke: var(--axisY1_line_color);
+   
+}
+
+.focus circle.y2 {
+  stroke: var(--axisY2_line_color);
+    
+}
+
+.focus line {
+  stroke: purple;
+  shape-rendering: crispEdges;
+}
+
+.focus line.y0 {
+  stroke: var(--axisY0_line_color);
+  stroke-dasharray: 10 3;
+  opacity: 0.5;
+}
+
+.focus line.y1 {
+  stroke: var(--axisY1_line_color);
+  stroke-dasharray: 10 3;
+  opacity: 0.5;
+}
+
+.focus line.y2 {
+  stroke: var(--axisY2_line_color);
+  stroke-dasharray: 10 3;
+  opacity: 0.5;
+}
+
+.y0 text {
+  
+  fill: "#f4f6f9";
+  color:"#f4f6f9";
+}
+
+.divy0  {
+  
+  fill: "#f4f6f9";
+  color:"#f4f6f9";
+}
+
+.legend {
+    font-size: 13px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.label {
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+/* Style the dots by assigning a fill and stroke */
+.dot_line_y0 {
+    fill:  var(--axisY0_line_color);
+ 
+    }
+
+  .dot_line_y1 {
+  fill:  var(--axisY1_line_color);
+  stroke: #fff;
+  }
+
+  .dot_line_y2 {
+  fill:  var(--axisY2_line_color);
+  stroke: #fff;
+  }
+  .tooltip {
+  position : absolute ;
+  font-size : 9px;
+  font-style : bold;
+  color : black;
+  opacity : 1 ;
+  padding : 2px;
+  background-color :  white;
+  top :0;
+  left :0;
+  
+  }

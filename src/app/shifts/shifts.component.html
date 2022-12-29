@@ -1,0 +1,365 @@
+
+     <div class="main-container" *ngIf = '!dataloaded'>
+   <app-toolbar></app-toolbar>
+    <mat-toolbar style="height: 42px; min-height: unset;">
+        <mat-toolbar-row class="navbar" style="height: 42px; min-height: unset;">
+            <!-- <button mat-icon-button class="slider-button bge-btn" (click)="goBack()">
+                <img src="assets/arrow-left.png">                
+            </button> -->
+            <!-- <span class="selected-client-name">
+                {{clientInfo?.name}}
+            </span>
+            <span class="shifts-label"> / </span>
+            <span class="shifts-label title"> {{siteInfo?.name}} </span>
+            <span class="shifts-label"> / </span> -->
+            <span class="selected-client-name"> Shifts </span>
+        </mat-toolbar-row>
+     
+    </mat-toolbar>
+   
+    <div class="contents-wrapper">
+        <div class="data" *ngIf="!dataloaded">
+                <mat-card class="container-card shift-new-btn bge-btn" (click)="addNewShift()">
+                    <button mat-button class="new-list">
+                        Add New Shift
+                    </button>    
+                    <img src="assets/icons/plus.svg">                
+                </mat-card>                 
+        
+        <div class="shift-container"  *ngIf="newShift">
+            <div>
+        <mat-card class="container-card shift-list-item" >
+            <div class="shift-data-container newShift">
+                <div class="new-shift-error error" *ngIf="newShiftError">{{newShiftError}}</div>
+                <div class="shift-title" [matTooltip]="newShift.name">{{newShift.name}}</div>
+                <div class="shift-data">
+                    <div class="days-container">
+                        <div class="dayselector bge-btn" (click)="selectDay(shiftDay.day)" [ngClass]="{'selected':newShift.daysOfWeek.includes(shiftDay.val)}" *ngFor="let shiftDay of newShift.shiftDays">
+                            <div class="day">{{shiftDay.day}}</div>
+                        </div>
+                    </div>
+                    <div class="divider">
+                        <div class="line2"></div>
+                    </div>
+                    <div class="time-container">
+                        <div class="timefrom dropdown">
+                            <div class="select">
+                                <select [(ngModel)]="newShift.timing.startTime">
+                                    <option *ngFor="let shifttime of shiftTimings" [value]="shifttime">{{shifttime}}</option>
+                                </select>
+                                
+                            </div>
+                            
+                        </div>
+                        <div class="to-seperator">
+                            to
+                        </div>
+                        <div class="timeto dropdown">
+                            <div class="select">
+                                <select [(ngModel)]="newShift.timing.endTime" >
+                                    <option *ngFor="let shifttime of shiftTimings" [value]="shifttime">{{shifttime}}</option>
+                                </select>
+                                
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="icon-btns-container">
+                        <div class="btn btn-close bge-btn" (click)="cancelNewShift()">
+                            <img class="icon-img" src="assets/icons/x.svg">
+                        </div>
+                        <div class="btn btn-check bge-btn" (click)="saveNewShift()">
+                            <img class="icon-img" src="assets/icons/check.svg">
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="shift-data-container-count">
+                <div class="shift-user-count">{{newShift.operators.users.length+(newShift.operators.lead?1:0)}} Users</div>
+                
+            </div>
+            <div class="button-ghost-block">
+                <div class="btn-assign-users-container">
+                    <div class="btn-assign-user-to-shift">
+                        Assign Users To Shift
+                    </div>
+                    <div class="btn" (click)="addusertoshift()">
+                        <img class="icon-img" src="assets/icons/plus.svg">
+                    </div>
+                </div>
+            </div>  
+            <div class="shiftusers-container">
+                <mat-accordion>
+                    <mat-expansion-panel #neshiftexp hideToggle (opened)="newShift.operators.opened = true;" (closed)="newShift.operators.opened = false;">
+                        <mat-expansion-panel-header *ngIf="!newShift.operators.opened">
+                            Show Users <img src="assets/icons/chevron-down.svg"  class="blue-icon"><img src="assets/icons/chevron-up.svg" *ngIf="newShift.operators.opened" class="blue-icon">                         
+                        </mat-expansion-panel-header>
+                       
+                        <div class="shiftusers-conatiner" cdkDropListGroup *ngIf="newShift.operators">
+                            <div class="shift-lead-title">Lead</div>
+                            <div class="shift-lead-container" *ngIf="newShift.operators.lead" cdkDropList [cdkDropListData]="[newShift.operators.lead]" (cdkDropListDropped)="drop($event,newShift)">
+                                <div class="shift-lead">
+                                    <div class="shift-user">
+                                        <div class="user-avatar" *ngIf="getUserData(newShift.operators.lead) && getUserData(newShift.operators.lead).photo" [style.background-image]="'url(' + getUserData(newShift.operators.lead).photo + ')'"></div>
+                                        <div class="user-avatar" *ngIf="!getUserData(newShift.operators.lead) || !getUserData(newShift.operators.lead).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png'+')'"></div>
+                                        <div class="user-data">
+                                            <div class="name">{{getUserData(newShift.operators.lead)?.name}}</div>
+                                            <div class="phone">{{getUserData(newShift.operators.lead)?.phone}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div cdkDropList *ngIf="newShift.operators.users" [cdkDropListData]="newShift.operators.users" class="shift-users-non-lead" (cdkDropListDropped)="drop($event)">
+                                <div class="shift-user" *ngFor="let user of newShift.operators.users" cdkDrag>
+                                    <div class="user-avatar" *ngIf="getUserData(user).photo" [style.background-image]="'url(' + getUserData(user).photo + ')'"></div>
+                                    <div class="user-avatar" *ngIf="!getUserData(user).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png'+ ')'"></div>
+                                    <div class="user-data">
+                                        <div class="name">{{getUserData(user).name}}</div>
+                                        <div class="phone">{{getUserData(user).phone}}</div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="newShift.operators.opened" class="hide-users" (click)="newShift.operators.opened=false;neshiftexp.expanded=false;">
+                            <div class="hide-text">Hide</div><div> <img src="assets/icons/chevron-up.svg"  class="hide-icon"></div>                         
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>                          
+            </div>        
+        </mat-card>    
+        </div>
+        </div>
+        
+        <div class="shift-container"  *ngFor="let shift of allShifts">
+            <div class="shiftForEditdiv" *ngIf="shiftForEdit && shiftForEdit?.sortKey == shift.sortKey; else regularshift">
+            <mat-card class="container-card shift-list-item" >
+                <div class="shift-data-container shiftForEdit">
+                    <div class="new-shift-error error" *ngIf="editShiftError">{{editShiftError}}</div>
+                    <div class="shift-title"><input type="text" class="edit-shift-name" [(ngModel)]="shiftForEdit.name"></div>
+                    <div class="shift-data">
+                        <div class="days-container">
+                            <div class="dayselector bge-btn" (click)="selectDay(shiftDay.day)" [ngClass]="{'selected':shiftForEdit.daysOfWeek.includes(shiftDay.val)}" *ngFor="let shiftDay of shiftForEdit.shiftDays">
+                                <div class="day">{{shiftDay.day}}</div>
+                            </div>
+                        </div>
+                        <div class="divider">
+                            <div class="line2"></div>
+                        </div>
+                        <div class="time-container">
+                            <div class="timefrom dropdown">
+                                <div class="select">
+                                    <select [(ngModel)]="shiftForEdit.timing.startTime">
+                                        <option *ngFor="let shifttime of shiftTimings" [value]="shifttime">{{shifttime}}</option>
+                                    </select>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="to-seperator">to</div>
+                            <div class="timeto dropdown">
+                                <div class="select">
+                                    <select [(ngModel)]="shiftForEdit.timing.endTime" >
+                                        <option *ngFor="let shifttime of shiftTimings" [value]="shifttime">{{shifttime}}</option>
+                                    </select>
+                                    
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="icon-btns-container">
+                            <div class="btn btn-close bge-btn" (click)="cancelEditShift()">
+                                <img class="icon-img" src="assets/icons/x.svg">
+                            </div>
+                            <div class="btn btn-check bge-btn" (click)="saveEditShift()">
+                                <img class="icon-img" src="assets/icons/check.svg">
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="shift-data-container-count">
+                    <div class="shift-user-count">{{shiftForEdit.operators.users.length+(shiftForEdit.operators.lead?1:0)}} Users</div>
+                    
+                </div>
+                <div class="button-ghost-block">
+                    <div class="btn-assign-users-container">
+                        <div class="btn-assign-user-to-shift">
+                            Assign Users To Shift
+                        </div>
+                        <div class="btn" (click)="addusertoeditshift(shiftForEdit)">
+                            <img class="icon-img" src="assets/icons/plus.svg">
+                        </div>
+                    </div>
+                </div>  
+                <div class="shiftusers-container">
+                    <mat-accordion>
+                        <mat-expansion-panel #editexp hideToggle expanded="true" (opened)="shiftForEdit.operators.opened = true;" (closed)="shiftForEdit.operators.opened = false;">
+                            <mat-expansion-panel-header *ngIf="!shiftForEdit.operators.opened && !editexp.expanded">
+                                Show Users <img src="assets/icons/chevron-down.svg"  class="blue-icon"><img src="assets/icons/chevron-up.svg" *ngIf="shiftForEdit.operators.opened" class="blue-icon">                         
+                            </mat-expansion-panel-header>
+              
+                            <div class="shiftusers-conatiner" cdkDropListGroup *ngIf="shiftForEdit.operators">
+                                <div class="shift-lead-title">Lead</div>
+                                <div class="shift-lead-container" *ngIf="shiftForEdit.operators.lead" cdkDropList [cdkDropListData]="[shiftForEdit.operators.lead]" (cdkDropListDropped)="drop($event,shiftForEdit)">
+                                    <div class="shift-lead">
+                                        <div class="shift-user">
+                                            <div class="user-avatar" *ngIf="getUserData(shiftForEdit.operators.lead) && getUserData(shiftForEdit.operators.lead).photo" [style.background-image]="'url(' + getUserData(shiftForEdit.operators.lead).photo + ')'"></div>
+                                            <div class="user-avatar" *ngIf="!getUserData(shiftForEdit.operators.lead) || !getUserData(shiftForEdit.operators.lead).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png'+ ')'"></div>
+                                            <div class="user-data">
+                                                <div class="name">{{getUserData(shiftForEdit.operators.lead)?.name}}</div>
+                                                <div class="phone">{{getUserData(shiftForEdit.operators.lead)?.phone}}</div>
+                                            </div>
+                                            <!-- <div class='delete-button-wrapper operators'>
+                                                <button class='image-button' (click)="deleteUser(shiftForEdit.operators?.lead,shiftForEdit,'l')">
+                                                    <img src='assets/minus.png'></button>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+ 
+                                <div cdkDropList *ngIf="shiftForEdit.operators.users" [cdkDropListData]="shiftForEdit.operators.users" class="shift-users-non-lead" (cdkDropListDropped)="drop($event)">
+                                    <div class="shift-user" *ngFor="let user of shiftForEdit.operators.users" cdkDrag>
+                                        <div class="user-avatar" *ngIf="getUserData(user).photo" [style.background-image]="'url(' + getUserData(user)?.photo + ')'"></div>
+                                        <div class="user-avatar" *ngIf="!getUserData(user).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png'+ ')'"></div>
+                                        <div class="user-data">
+                                            <div class="name">{{getUserData(user).name}}</div>
+                                            <div class="phone">{{getUserData(user).phone}}</div>
+                                        </div>
+                                        <!-- <div class='delete-button-wrapper operators'>
+                                            <button class='image-button' (click)="deleteUser(user,shiftForEdit,'u')">
+                                                <img src='assets/minus.png'></button>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="shiftForEdit.operators.opened || editexp.expanded" class="hide-users" (click)="shiftForEdit.operators.opened=false;editexp.expanded=false;">
+                                <div class="hide-text">Hide</div><div> <img src="assets/icons/chevron-up.svg"  class="hide-icon"></div>                         
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>                          
+                </div>        
+            </mat-card>    
+            </div>
+            <ng-template #regularshift>
+                <div class="regularshift">
+                    <mat-card class="container-card shift-list-item" >
+                        <div class="shift-data-container">
+                            <div class="shift-title" matTooltip="{{shift.name}}">{{shift.name}}</div>
+                            <div class="shift-data">
+                                <div class="days-container">
+                                    <div class="dayselector" [ngClass]="{'selected':shift.daysOfWeek.includes(shiftDay.val)}" *ngFor="let shiftDay of shift.shiftDays">
+                                        <div class="day">{{shiftDay.day}}</div>
+                                    </div>
+                                </div>
+                                <div class="divider">
+                                    <div class="line2"></div>
+                                </div>
+                                <div class="time-container">
+                                    <div class="timefrom-to-container">
+                                        <span>{{format12Hours(shift.timing.startTime)}}</span> <span class="to">to</span> <span>{{format12Hours(shift.timing.endTime)}}</span>
+                                    </div>
+                                </div>
+                              
+                                <div class="icon-btns-container">
+                                    <div class="image-button" [matMenuTriggerFor]="afterMenu">
+                                        <img  src="assets/icons/more-horizontal.svg">
+                                    </div>
+                                    <mat-menu #afterMenu="matMenu" xPosition="after" class="edit-popupmenu">
+                                        <button mat-menu-item (click)="editShift(shift)"> 
+                                            <div class="btn-container">
+                                                <div class="btn-icon"><img class="icon-img" src="assets/icons/edit-2.svg"></div>
+                                                <div class="btn-text"> Edit Shift</div>
+                                            </div>
+                                        </button>
+                                        <mat-divider></mat-divider>
+                                        <button mat-menu-item (click)="deleteShift(shift)"> 
+                                            <div class="btn-container">
+                                                <div class="btn-icon"><img class="icon-img" src="assets/icons/trash-2.svg"></div>
+                                                <div class="btn-text"> Delete Shift</div>
+                                            </div>
+                                        </button>
+                                      </mat-menu>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="shift-data-container-count">
+                            <div class="shift-user-count">{{shift.operators.users.length+(shift.operators.lead?1:0)}} Users</div>
+                            
+                        </div>
+                        <div class="button-ghost-block">
+                            <div class="btn-assign-users-container">
+                                <div class="btn-assign-user-to-shift">
+                                    Assign Users To Shift
+                                </div>
+                                <div class="btn" (click)="addusertoshift(shift)">
+                                    <img class="icon-img" src="assets/icons/plus.svg">
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="shiftusers-container">
+                            <mat-accordion>
+                                <mat-expansion-panel hideToggle #regExp (opened)="shift.operators.opened = true;" (closed)="shift.operators.opened = false;">
+                                    <mat-expansion-panel-header *ngIf="!shift.operators.opened">
+                                        Show Users <img src="assets/icons/chevron-down.svg"  class="blue-icon"><img src="assets/icons/chevron-up.svg" *ngIf="shift.operators.opened" class="blue-icon">                         
+                                    </mat-expansion-panel-header>
+                                    
+                                    <div class="shiftusers-conatiner" cdkDropListGroup *ngIf="shift.operators">
+                                        
+                                        <div class="shift-lead-title">Lead</div>
+                                        <div class="shift-lead-container" *ngIf="shift.operators.lead"  cdkDropList [cdkDropListData]="[shift.operators.lead]" (cdkDropListDropped)="drop($event,shift)">
+                                            <div class="shift-lead">
+                                                <div class="shift-user">
+                                                    <div class="user-avatar" *ngIf="getUserData(shift.operators.lead) && getUserData(shift.operators.lead).photo" [style.background-image]="'url(' + getUserData(shift.operators.lead).photo + ')'"></div>
+                                                    <div class="user-avatar" *ngIf="!getUserData(shift.operators.lead) || !getUserData(shift.operators.lead).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png' + ')'"></div>
+                                                    <div class="user-data">
+                                                        <div class="name">{{getUserData(shift.operators.lead)?.name}}</div>
+                                                        <div class="phone">{{getUserData(shift.operators.lead)?.phone}}</div>
+                                                    </div>
+                                                    <!-- <div class='delete-button-wrapper operators'>
+                                                        <button class='image-button' (click)="deleteUser(shift.operators.lead,shift,'l')">
+                                                            <img src='assets/minus.png'></button>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                        <div cdkDropList *ngIf="shift.operators.users && shift.operators.users.length>0" [cdkDropListData]="shift.operators.users" class="shift-users-non-lead" (cdkDropListDropped)="drop($event)">
+                                            <div class="shift-user" *ngFor="let user of shift.operators.users" >
+                                                <div class="user-avatar" *ngIf="getUserData(user) && getUserData(user).photo" [style.background-image]="'url(' + getUserData(user).photo + ')'"></div>
+                                                <div class="user-avatar" *ngIf="!getUserData(user) || !getUserData(user).photo" [style.background-image]="'url(' + 'assets/sample-site-image.png' + ')'"></div>
+                                                <div class="user-data operators">
+                                                    <div class="name">{{getUserData(user)?.name}}</div>
+                                                    <div class="phone">{{getUserData(user)?.phone}}</div>
+                                                </div>
+                                                <div class='delete-button-wrapper operators'>
+                                                    <button class='image-button' (click)="deleteUser(user,shift,'u')">
+                                                        <img src='assets/minus.png'></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="shift.operators.opened" class="hide-users" (click)="regExp.expanded=false">
+                                        <div class="hide-text">Hide</div><div> <img src="assets/icons/chevron-up.svg"  class="hide-icon"></div>                         
+                                    </div>
+                                </mat-expansion-panel>
+                                
+                            </mat-accordion>                          
+                        </div>        
+                    </mat-card>                 
+                </div>
+            </ng-template>
+            
+        </div>
+        </div>
+            <!-- <app-loader *ngIf = 'inProcess || !dataloaded'></app-loader> -->
+        
+  </div>
+
+</div>
+    <app-loader *ngIf = 'dataloaded'></app-loader>
+    <app-server-error-popup [message]="errorString"></app-server-error-popup>
+  
+

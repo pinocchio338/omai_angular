@@ -1,0 +1,14 @@
+[
+    {
+        "wellsId":"1234",
+        "wellsStatus":"Active",
+        "wellsName":"1234",
+        "wellsCordinates":"21.486935, 86.924599"
+    },
+    {
+        "wellsId":"3245",
+        "wellsStatus":"Active",
+        "wellsName":"3245",
+        "wellsCordinates":"21.486935, 86.924599"
+    }
+]

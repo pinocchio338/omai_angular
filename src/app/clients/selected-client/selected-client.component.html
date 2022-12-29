@@ -1,0 +1,515 @@
+<div class="main-container" *ngIf = 'dataLoaded'>
+    <app-toolbar [logo]="clientInfo.logo"></app-toolbar>
+    <mat-toolbar>
+        <mat-toolbar-row class="navbar" style="height: 42px;">
+            <!-- <button mat-icon-button class="slider-button" *ngIf="role=='super-admin'" (click)="goBack()">
+                <img src="assets/arrow-left.png">                
+            </button> -->
+             <span class="selected-client-name">
+                {{clientInfo ? clientInfo.name : '-'}}
+            </span> <!--
+            <span class="sites-label"> / </span>
+            <span class="sites-label"> Sites /</span> -->
+            <!-- <span class="selected-client-name"> 
+                {{this.selectedClientSites && this.selectedClientSites.length && this.selectedSiteIndex >= 0? 
+                    (this.selectedClientSites[this.selectedSiteIndex].name) : '-'}} 
+            </span> -->
+            <!-- <button (click)="captureScreen()">PDF</button> -->
+        </mat-toolbar-row>
+        <mat-toolbar-row class='sites-toolbar'>
+            <div class="site-location-list-wrapper">
+                <div *ngFor="let site of selectedClientSites; let i = index"
+                    [ngClass]="selectedSiteIndex == i ? 'site-location-item underlined' : 'site-location-item'"
+                    (click)="selectSite(i)">
+                    <div *ngIf="i<7" [ngClass]="selectedSiteIndex == i ? 'site-name-label site-selected' : 'site-name-label'">
+                        {{site.name}}</div>
+                    <div *ngIf="i<7"
+                        [ngClass]="selectedSiteIndex == i ? 'site-status selected-'+site.status : 'site-status '+ site.status">
+                        {{site.status}}
+                    </div>
+                </div>
+                <button  *ngIf="selectedClientSites.length>7" mat-button [matMenuTriggerFor]="sitesMenu" class="image-button sites-expand"><img src="/assets/chevron-down.png"></button>
+                <mat-menu #sitesMenu="matMenu">
+                    <div *ngFor="let site of selectedClientSites; let i = index" >
+                        <div class="sites-overflow-item" *ngIf="i>=7" (click)="selectSite(i)">
+                        <div *ngIf="i>=7" [ngClass]="selectedSiteIndex == i ? 'site-name-label site-selected' : 'site-name-label'">
+                            {{site.name}}</div>
+                        <div *ngIf="i>=7"
+                            [ngClass]="selectedSiteIndex == i ? 'site-status selected-'+site.status : 'site-status '+ site.status">
+                            {{site.status}}
+                        </div>
+                    </div>
+                    </div>
+                  </mat-menu>
+            </div>
+            <button class='stroked-button' (click)="addSite()"><img src='assets/plus-blue.png'>Add Site</button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-grid-list class="col-3-grid" cols="4" id="page" rowHeight="fit" *ngIf="selectedSiteIndex>=0">
+        <mat-grid-tile colspan="1">
+            <div class='left-tile'>
+                <mat-card class="site-details-card">
+                    <div class="site-image" *ngIf="selectedSiteIndex>=0" (click)="openImage()" [style.background-image]="selectedClientSites && selectedSiteIndex>=0 && selectedClientSites[selectedSiteIndex]? 
+                    'url('+getPhoto(selectedClientSites[selectedSiteIndex]['siteImage'])+')' : ''">
+                        <input type="file" #fileInput class="file" accept="image/x-png,image/jpeg"
+                            (change)="handleFileInput($event,$event.target.files,'site-image')">
+                    </div>
+                    <span class="site-label first-label text-content">Site</span>
+                    <span class="site-name" (click)="inlineFieldChangeMode('name','edit')"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['name']['mode']=='view'">{{selectedClientSites[selectedSiteIndex]['name']}}</span>
+                    <div class="inline-edit-wrapper" *ngIf="selectedSiteIndex>=0 && siteFields['name']['mode']=='edit'">
+                        <input class='inline-edit text-input' pattern="[a-zA-Z0-9 ]*" name="siteName" #siteName
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['name']">
+                        <div class="inline-button-wrapper">
+                            <button class="image-button float-button" (click)="inlineFieldCancel('name')"><img
+                                    src="assets/x.png"></button>
+                            <button class="image-button float-button" (click)="inlineFieldUpdate('name')"><img
+                                    src="assets/check.png"></button>
+                        </div>
+                        <div></div>
+                        <div [hidden]="siteName.valid || siteName.pristine"
+                       style="position: relative;
+                       top: 33px;">
+                         <div class="error-block" [hidden]="!siteName.hasError('pattern')">Entered Alphabet Value</div>
+                      </div>
+                    </div>
+                    <span class="site-label text-content">Site ID</span>
+                    <span class="site-address" (click)="inlineFieldChangeMode('customSiteId','edit')"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['customSiteId']['mode']=='view'">{{selectedClientSites[selectedSiteIndex]['customSiteId']
+                        || '-'}}</span>
+                    <div class="inline-edit-wrapper"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['customSiteId']['mode']=='edit'">
+                        <input class='inline-edit text-input' name="siteId" #siteId="ngModel"  pattern="[a-zA-Z0-9 ]*"
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['customSiteId']" >
+                        <div class="inline-button-wrapper">
+                            <button class="image-button float-button" (click)="inlineFieldCancel('customSiteId')"><img
+                                    src="assets/x.png"></button>
+                            <button class="image-button float-button" (click)="inlineFieldUpdate('customSiteId')"><img
+                                    src="assets/check.png"></button>
+                        </div>
+                        <div [hidden]="siteId.valid || siteId.pristine"
+                        class="alert alert-danger">
+                         <div class="error-block" [hidden]="!siteId.hasError('pattern')">Entered Alphabet Value</div>
+                      </div>
+                    </div>
+
+
+                    <span class="site-label text-content">Address</span>
+                    <div class="site-address-wrapper" (click)="inlineFieldChangeMode('line1','edit')"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['line1']['mode']=='view'">
+                        <span class="site-address"
+                            *ngIf="selectedSiteIndex>=0">{{selectedClientSites[selectedSiteIndex]['address']['line1']}}</span>
+                        <span class="site-address"
+                            *ngIf="selectedSiteIndex>=0">{{selectedClientSites[selectedSiteIndex]['address']['line2']}}
+                        </span>
+                            <span class="site-address"
+                            *ngIf="selectedSiteIndex>=0"> {{selectedClientSites[selectedSiteIndex]['address']['city']}}
+                            </span>
+                        <span class="site-address"
+                            *ngIf="selectedSiteIndex>=0">{{selectedClientSites[selectedSiteIndex]['address']['state']}}
+                            {{selectedClientSites[selectedSiteIndex]['address']['zipCode']}}</span>
+                        <span class="site-address"
+                            *ngIf="selectedSiteIndex>=0">{{selectedClientSites[selectedSiteIndex]['address']['country']}}</span>
+                    </div>
+                    <div class="inline-edit-wrapper address-edit-wrapper"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['line1']['mode']=='edit'">
+                        <input class='inline-edit text-input'   [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['line1']" placeholder="Street Address">
+                        <input class='inline-edit text-input' 
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['line2']" placeholder="Apartment, Suite, Unit">
+                        <input class='inline-edit text-input'  name="siteCity" #siteCity="ngModel"  pattern="[a-zA-Z ]*"
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['city']" placeholder="City" >
+                            <div [hidden]="siteCity.valid || siteCity.pristine"
+                            class="alert alert-danger">
+                             <div class="error-block" [hidden]="!siteCity.hasError('pattern')">Entered Alphabet Value</div>
+                          </div>
+                            <input class='inline-edit text-input' name="siteState" #siteState="ngModel"  pattern="[a-zA-Z ]*"
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['state']" placeholder="State" >
+                            <div [hidden]="siteState.valid || siteState.pristine"
+                            class="alert alert-danger">
+                             <div class="error-block" [hidden]="!siteState.hasError('pattern')">Entered Alphabet Value</div>
+                          </div>
+                            <input class='inline-edit text-input'  pattern="\d*" minlength="0" maxlength="5"  oninput="validity.valid||(value='');"
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['zipCode']" placeholder="90001" >
+                        <select class="form-control text-box full-width"
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['address']['country']">
+                            <option value="United States Of America" selected>United States Of America</option>
+                        </select>
+
+                        <div class="inline-button-wrapper">
+                            <button class="image-button float-button" (click)="inlineFieldCancel('line1')"><img
+                                    src="assets/x.png"></button>
+                            <button class="image-button float-button" (click)="isAddressValid()"><img
+                                    src="assets/check.png"></button>
+                        </div>
+                    </div>
+
+
+                    <!-- <span class="dropbox-label" (click)="inlineFieldChangeMode('dropboxLink','edit')">Dropbox Folder</span> -->
+                    <!-- <span class="dropbox-label">Dropbox Folder</span>
+                    <a  target="_blank" class="dropbox-link">
+                        {{selectedClientSites[selectedSiteIndex]['dropboxLink'] || ''}}
+                    </a> -->
+                    <!-- <div class="inline-edit-wrapper"
+                        *ngIf="selectedSiteIndex>=0 && siteFields['dropboxLink']['mode']=='edit'">
+                        <input class='inline-edit text-input' #siteDropbox
+                            [(ngModel)]="selectedClientSites[selectedSiteIndex]['dropboxLink']">
+
+                        <div class="inline-button-wrapper">
+                            <button class="image-button float-button" (click)="inlineFieldCancel('dropboxLink')"><img
+                                    src="assets/x.png"></button>
+                            <button class="image-button float-button" (click)="inlineFieldUpdate('dropboxLink')"><img
+                                    src="assets/check.png"></button>
+                        </div>
+                    </div> -->
+                    <div class="action-button-div activate">
+                        <button [color]="isClientActive ? '' : 'primary'"
+                            [ngClass]="selectedClientSites[selectedSiteIndex]['status'] != 'active' ? 'stroked-button full-width-button' : 'stroked-button full-width-button stroked-button-no-color'"
+                            (click)="changeSiteStatus()">
+                            <span> {{selectedClientSites[selectedSiteIndex]['status'] == 'active' ? 'Deactivate' : 'Re
+                                activate'}} </span>
+                        </button>
+                        <button class="image-button" (click)="deleteSite()"
+                            *ngIf="selectedClientSites[selectedSiteIndex]['status']=='inactive'"><img
+                                src="assets/delete_icon.png"></button>
+                    </div>
+                </mat-card>
+                <mat-card
+                    [ngClass]="selectedClientSites[selectedSiteIndex]['status'] == 'inactive'?'dut-config inactive-section':'dut-config'">
+                    <div class="dut-config-label-wrapper">
+                        <div class="dut-config-label">DUT Configuration</div>
+                        <!-- <button class='image-button' [disabled]='true'>
+                            <img class="icon" src='assets/edit-2.png'>
+                        </button> -->
+                    </div>
+                    <div *ngIf="dutConfig" class="dutConfig-container">
+                        <!-- <span class="file-label">{{dutConfig?.config}} </span> -->
+                    <div> 
+                        <span class="text-subtext">{{dutConfig.dataReceivedAt ? (getDutTime(dutConfig.dataReceivedAt) | date:'medium') : '-'}}</span>
+                        <span *ngIf="dutConfig.dataReceivedAt"><img class="dut-status-indicator" [src]="isDutLive(dutConfig.dataReceivedAt)"></span>
+                    </div>  
+                        <span class="file-path"><a target="_blank" download="{{dutConfig?.fileName}}" [href]="fileUrl">{{dutConfig?.fileName}}</a></span>
+                    </div>
+                    
+                    <!-- <hr class='divider'>
+                    <span class="dut-progress-label">Progress</span>
+                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar> -->
+                </mat-card>
+
+                <mat-card
+                    [ngClass]="selectedClientSites[selectedSiteIndex]['status'] == 'inactive'?'layouts inactive-section':'layouts'">
+                    <div class="layout-label-wrapper">
+                        <div class="layout-label">Site Layouts</div>
+                        <button class='image-button'(click)="openPdf()">
+                            <img class="icon" src='assets/plus.png'>
+                        </button>
+                        <input type="file" #pdfFileInput class="file" accept="application/pdf"
+                        (change)="handleFileInput($event,$event.target.files,'site-layout')">
+                    </div>
+                    <div class="pdf-wrapper" *ngIf="selectedSiteIndex>=0">
+                        <div *ngFor="let layout of selectedClientSites[selectedSiteIndex]['siteLayouts']; let i = index">
+                            <pdf-viewer [src]="layout" [show-all]="false" [original-size]="false" (click)="downloadLayout(layout, getLayoutName(layout))">{{layout}} 
+                            </pdf-viewer>
+                            <div class="layout-description-wrapper">
+                                <div class="layout-info">
+                                <span class="file-label">File</span>
+                                <span class="file-path">{{getLayoutName(layout)}}</span>
+                                </div>
+                                <button (click)="deleteLayout(getLayoutName(layout),i)" class="image-button layout-delete"><img src="assets/delete_icon.png"></button>
+                            </div>
+                            <hr class='divider'>
+                        </div>
+                    </div>
+                </mat-card>
+                <!-- <mat-card style="margin-top:32px;">
+                    <div class="dut-config-label-wrapper">
+                        <button class="manage-button" mat-stroked-button (click)="joinTables()">
+                            <div>
+                                <span>Join Tables</span>
+                                <mat-icon>chevron_right</mat-icon>
+                            </div>
+                        </button>
+                    </div>   
+                </mat-card> -->
+                <div class="powered-by">Powered by OMai</div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+            <div
+                [ngClass]="selectedClientSites[selectedSiteIndex]['status'] == 'inactive'?'middle-tile inactive-section':'middle-tile'">
+                <mat-card>
+                    <span class="card-title">
+                        <div class="wells-info-wrapper">
+                            <div class="total-wells">
+                                <span class="text-subtext">Wells</span>
+                                <span class="text-title">{{activeWells + inactiveWells}}</span>
+                            </div>
+                            <div class="active-inactive-wells">
+                                <span class="text-subtext selected-active well-label">{{activeWells}} Active</span>
+                                <span class="text-subtext selected-inactive well-label">{{inactiveWells}} Inactive</span>
+                            </div>
+                        </div>
+                    </span>
+                    <button class="manage-button" mat-stroked-button (click)="viewWells()">
+                        <div>
+                            <span>Manage wells</span>
+                            <mat-icon>chevron_right</mat-icon>
+                        </div>
+                    </button>
+                </mat-card>
+                <!-- <mat-card class="test-card">
+                    <span class="card-title">Performance</span>
+                    <img class="performance-graph" src='assets/sample-performance-graph.png'>
+                </mat-card> -->
+                <mat-card class="test-card">
+                    <span class="card-title">Shifts & operators</span>
+                    <!-- {{selectedClientUsers.userGroups | json}} -->
+
+                    <div class='user-group-item' *ngFor="let group of shifts">
+                        <div class='user-group-name'>{{group.display_name}}</div>
+                        <div class="user-group-count text-subtext" *ngIf="group.operators.users.length || group.operators.lead">
+                            {{group.operators.lead ? group.operators.users.length + 1 : group.operators.users.length}} Operators
+                        </div>
+                        
+                        <div class="user-group-count text-subtext" *ngIf="!group.operators.lead && !group.operators.users.length">
+                            No operator(s)
+                        </div>
+                        <div class='user-group-users-wrapper' *ngIf="selectedClientUsers">
+                            <div class='pseudo-wrapper' *ngIf="group.operators.lead">
+                                <div class="user-group-users-item" 
+                                    [style.background-image]="'url('+getPhoto( selectedClientUsers['usersObject'][group.operators.lead]? selectedClientUsers['usersObject'][group.operators.lead]['photo'] : '')+')'"
+                                    [style.transform]="'translateX(-'+5*0+'px)'"></div>
+                            </div>
+                            <div class='pseudo-wrapper' *ngFor="let user of group.operators.users; let i = index">
+                                <div class="user-group-users-item" *ngIf="group.operators.lead ? i<4 : i<5"
+                                    [style.background-image]="'url('+getPhoto( selectedClientUsers['usersObject'][user]? selectedClientUsers['usersObject'][user]['photo'] : '')+')'"
+                                    [style.transform]="'translateX(-'+5*(i+1)+'px)'"></div>
+                            </div>
+                            <div class="user-group-users-item number-item" *ngIf="group.operators.lead ? group.operators.users.length>4 : group.operators.users.length>5"
+                                [style.transform]="'translateX(-'+5*6+'px)'">+{{group.operators.users.length-5}}</div>
+                        </div>
+                    </div>
+
+                    <button class="manage-button" mat-stroked-button (click)="manageShifts()">
+                        <div>
+                            <span>Manage shifts</span>
+                            <mat-icon>chevron_right</mat-icon>
+                        </div>
+                    </button>
+                </mat-card>
+                <mat-card class="test-card"><span class="card-title">Top activities</span>
+                    <div class="activities-data">
+                <ol type='1'>
+                    <li *ngIf="shifts">
+                        <div class="activity">
+                        <span *ngIf="selectedClientUsers && selectedClientUsers.users.length">
+                            User(s) are working
+                        </span>
+                        <span *ngIf="shifts && shifts.length"> in <span class="primary">{{shifts.length}}</span> shift(s)</span>
+                        <span *ngIf="this.selectedClientSites && this.selectedClientSites.length && this.selectedSiteIndex >= 0"> 
+                            under <span class="primary">{{(this.selectedClientSites[this.selectedSiteIndex].name)}}</span></span> 
+                        </div>
+                        <mar-divider class="custom-divider"></mar-divider>  
+                    </li>
+                    <!-- <li *ngIf="selectedSiteWells && selectedSiteWells.length">
+                        There are <span class="primary">{{selectedSiteWells.length}}</span> wells out of which 
+                        <span class="success"> {{activeWells}}</span> are active and <span class="error">{{inactiveWells}}</span> are inactive.
+                    </li> -->
+                    <li *ngIf="selectedSiteApplications">
+                        <div class="activity">
+                            <span class="primary" *ngIf="selectedSiteApplications && selectedSiteApplications.length"> {{selectedSiteApplications.length}}</span>
+                            <span class="error" *ngIf="!(selectedSiteApplications && selectedSiteApplications.length)">0</span>
+                            application(s) are present for this site.
+                        </div>
+                        <mar-divider class="custom-divider"></mar-divider>                        
+                    </li>
+                    <li>
+                        <div class="activity">
+                            <span class="error" *ngIf="!dutConfig">No</span> DUT is configured <span *ngIf="!dutConfig">yet</span>.
+                            <span *ngIf="dutConfig">It is <span *ngIf="dutConfig && isDutLive(dutConfig.dataReceivedAt)=='assets/indicator-inactive.png'" class="error">Not Live</span>
+                            <span class="success" *ngIf="dutConfig && isDutLive(dutConfig.dataReceivedAt)=='assets/indicator-active.png'">Live</span> at the moment.</span>
+                        </div>
+                        <mar-divider class="custom-divider"></mar-divider>
+                    </li>                    
+                    <li>
+                        <div class="activity">
+                        <span *ngIf="getDashboardsCount" class="primary">{{getDashboardsCount}}</span>
+                         <span *ngIf="!getDashboardsCount" class="error">No</span> dashboard(s) are associated with this site.
+                        </div>    
+                    </li>
+                </ol>
+                
+            </div>
+                </mat-card>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2">
+            <div
+                [ngClass]="selectedClientSites[selectedSiteIndex]['status'] == 'inactive'?'right-tile inactive-section' : 'right-tile'">
+                <mat-card>
+                    <div class="emergency-contacts-wrapper">
+                        <div class="emergency-contacts-label">Emergency Contacts</div>
+                        <button class='image-button' (click)="addUsers()">
+                            <img class="icon" src='assets/plus.png'>
+                        </button>
+                    </div>
+                    <span
+                        *ngIf="selectedSiteIndex<0 || !selectedClientSites[selectedSiteIndex] || !selectedClientSites[selectedSiteIndex]['emergencyContacts'].length">No
+                        emergency contacts added</span>
+                    <span
+                        *ngIf="selectedSiteIndex>=0 && selectedClientSites[selectedSiteIndex] && selectedClientSites[selectedSiteIndex]['emergencyContacts'].length"
+                        class="emergency-contact-primary">Primary</span>
+                    <div class="emergency-contact-wrapper" *ngIf="selectedSiteIndex>=0">
+                        <div
+                            *ngFor="let contact of selectedClientSites[selectedSiteIndex]['emergencyContacts']; let i = index">
+                            <div class="emergency-contact-item">
+                                <div class='contact-details-wrapper'>
+                                    <div class='shift-user-wrapper'>
+                                        <img src='assets/arrow-up.png' [style.opacity]="i!=0?'1':'0'"
+                                            (click)="shiftUser(i,'up')">
+                                        <img src='assets/arrow-down.png'
+                                            [style.opacity]="i!=selectedClientSites[selectedSiteIndex]['emergencyContacts'].length-1?'1':'0'"
+                                            (click)="shiftUser(i,'down')">
+                                    </div>
+                                    <div class='contact-avatar'
+                                        [style.background-image]="'url('+getPhoto(selectedClientUsers['usersObject'][contact] ?selectedClientUsers['usersObject'][contact]['photo'] : '')+')'">
+                                    </div>
+                                    <div class="contact-details" *ngIf="selectedClientUsers['usersObject'][contact]">
+                                        <span
+                                            class="contact-name">{{selectedClientUsers['usersObject'][contact]['name']}}
+                                            <span class="custom-chip" *ngIf='i!=0'>{{getReadableCount(i+1)}}</span>
+                                        </span>
+                                        <span
+                                            class="contact-email">{{selectedClientUsers['usersObject'][contact]['email']}}</span>
+                                        <span
+                                            class="contact-phone">{{selectedClientUsers['usersObject'][contact]['phone']}}</span>
+                                        <span class="contact-alert">Next level alert after &nbsp;<b>24hrs</b></span>
+                                    </div>
+                                </div>
+                                <div class='delete-button-wrapper'>
+                                    <button class='image-button' (click)="deleteUser(i)">
+                                        <img src='assets/minus.png'></button>
+                                </div>
+                            </div>
+                            <div *ngIf="i==0" class='separator'></div>
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-card class="test-card"  *ngIf="isAllowed('applications','view') "  [ngClass]="{ 'disabled': !isAllowed('applications','view')}">
+                    <span class="card-title">Application data  </span>
+                    <div class="application-template-btns">
+                        <span   class="application-card-item add-application-button" [ngClass]="{ 'disabled': !isAllowed('applications','add') }" (click)="addApplication()">
+                            <img class="add-application-icon" src="assets/plus.png">
+                            <span class="text-content add-application-text">
+                                New Application
+                            </span>
+                        </span>
+                        <span   class="application-card-item add-application-button" >
+                            <span class="text-content get-template">
+                                <a href="assets/application_template.csv" download="Application_Schema.csv">Get Template</a>
+                            </span>
+                        </span>
+                    </div>
+                    <mat-accordion >
+                        <mat-expansion-panel class="application-panel" #mep="matExpansionPanel">
+                            <mat-expansion-panel-header class="application-name-panel text-content">
+                                <mat-panel-title>
+                                   <span class="application-label text-content" *ngIf="!selectedSiteApplications || selectedSiteApplications.length<=0"> Choose Application </span>
+                                   <span class="application-name text-content" *ngIf="selectedSiteApplications && selectedSiteApplications.length>0">{{selectedSiteApplications[selectedSiteApplicationIndex].name}}</span>
+                                </mat-panel-title>                                
+                            </mat-expansion-panel-header>
+                            <mat-card class="application-card" (click)="mep.expanded = !mep.expanded">
+                                <span class="application-card-item" 
+                                *ngIf="!selectedSiteApplications || selectedSiteApplications.length<=0"> No applicaton found </span>
+                                <div class="application-card-item application-name text-content" 
+                                *ngFor="let application of selectedSiteApplications; let i = index"
+                                (click)="selectApplication(i)"
+                                >
+                                  <span>{{application.name}} </span><button class='image-button'  [ngClass]="isAllowed('applications','delete')?'':'disabled'" (click)="deleteApplication($event,i)"><img src="assets/delete_icon.png"></button>  
+                                </div>
+                               
+                            </mat-card>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <div class="application-operations" *ngIf="selectedSiteApplications && selectedSiteApplications.length">
+                        <div class="application-config" >
+                            <div class="application-operation-info">
+                                <img class="config-icon" src="assets/gear-circled.png">
+                                <div class="config-details">
+                                    <span class="config-details-label text-emphasis">Configuration</span>
+                                    <span *ngIf="selectedSiteApplications && selectedSiteApplications.length && selectedSiteApplications[selectedSiteApplicationIndex]['status']=='draft' "
+                                     class="text-subtext config-details-status">No Configuration added yet</span>
+                                </div>
+                            </div>
+                            <div class="operation-actions">
+                                <input type="file" #configFileInput class="file" accept=".csv" 
+                                (input)="handleFileInput($event,$event.target.files,'app-config')">
+                                <button  class="stroked-button"   [ngClass]="  (isAllowed('applications','edit') || isAllowed('applications','add')) ||  isAllowed('applications','edit') ? '' : 'disabled'"  (click)="openConfig()"> 
+                                    <img class="config-icon" src="assets/upload-blue.png">
+                                    <span *ngIf="selectedSiteApplications && selectedSiteApplications.length">{{selectedSiteApplications[selectedSiteApplicationIndex]['status']=='draft' ? 'Add Configuration' : 'Change'}}</span>
+                                </button>
+                                <span (click)="downloadSchemaOrData('schema')" *ngIf="selectedSiteApplications && selectedSiteApplications.length" 
+                                class="get-template text-content" 
+                                [ngClass]="selectedSiteApplications[selectedSiteApplicationIndex]['status']!='draft' ? active-temselectedSiteplate : 'invisible'">
+                                Get Template</span>
+                            </div>
+                        </div>
+                        <div class="application-data" *ngIf="selectedSiteApplications && selectedSiteApplications.length && selectedSiteApplications[selectedSiteApplicationIndex]['status']=='active'">
+                            <div class="application-operation-info">
+                                <img class="config-icon" src="assets/db-circled.png">
+                                <div class="config-details">
+                                    <span class="config-details-label text-emphasis">Data</span>
+                                    <!-- <span class="text-subtext config-details-filename">site_data.xls</span> -->
+                                    <span *ngIf="selectedSiteApplications && selectedSiteApplications.length && !isDefined(selectedSiteApplications[selectedSiteApplicationIndex]['dataReceivedAt']) "
+                                     class="text-subtext config-details-status">No Data added yet</span>
+                                </div>
+                            </div>
+                            <div class="operation-actions">
+                                <input type="file" #dataFileInput class="file" multiple  accept=".csv"  
+                                (change)="handleFileInput($event,$event.target.files,'app-data')">
+                                <button [ngClass]="(isAllowed('applications','edit') || isAllowed('applications','add')) ? '' : 'disabled'" class="stroked-button" (click)="openData()">
+                                    <img class="config-icon" src="assets/upload-blue.png">
+                                    <span>Upload Data</span>
+                                </button>
+                                <span class="get-template text-content hidden">Get Template</span>
+                            </div>
+                        </div>
+                        <div class="application-view" *ngIf="selectedSiteApplications && selectedSiteApplications.length && selectedSiteApplications[selectedSiteApplicationIndex]['status']=='active'">
+                            <div class="application-operation-info">
+                                <img class="config-icon" src="assets/menu-circled.png">
+                                <div class="config-details">
+                                    <button class="stroked-button stroked-button-no-color" (click)="openApplication()">
+                                        <span>Open Application</span>
+                                        <img src="assets/chevron-right.png">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="operation-actions">                            
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-card class="test-card">
+                    <span class="card-title">Well map</span>
+                    <!-- <img class="well-map" src="assets/sample_well_map.png"> -->
+                    <!-- <div *ngIf="apiLoaded | async"> -->
+                        <!--  -->
+                        <div id="map">
+                        Loading Wells Data
+                            <!-- <google-map></google-map> -->
+                        </div>
+                       
+                      <!-- </div> -->
+                      <button class="manage-button" mat-stroked-button (click)="viewWells()">
+                        <div>
+                            <span>Manage wells</span>
+                            <mat-icon>chevron_right</mat-icon>
+                        </div>
+                    </button>
+                </mat-card>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <div class="no-sites" *ngIf="selectedSiteIndex<0"> No Site Created</div>
+</div>
+<app-loader *ngIf='!dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

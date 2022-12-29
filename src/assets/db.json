@@ -1,0 +1,134 @@
+[
+    {
+      "chartId": "#chart0",
+      "chartValue": 0,
+      "graphTypes": "2",
+      "componentName": "test",
+      "dataview": "view1",
+      "data": [
+        {
+          "legend": "test",
+          "color": "#c91313",
+          "field": "f0",
+          "axis": "test",
+          "unit": "12",
+          "label": "test"
+        }
+      ],
+      "xaxisLabel": "test",
+      "xaxisField": "date",
+      "legendPos": "RIGHT",
+      "XticksOrientation": "23",
+      "id": 1
+    },
+    {
+      "chartId": "#chart1",
+      "chartValue": 1,
+      "graphTypes": "2",
+      "componentName": "test1",
+      "dataview": "view1",
+      "data": [
+        {
+          "legend": "test1",
+          "color": "#c91313",
+          "field": "f0",
+          "axis": "test1",
+          "unit": "43",
+          "label": "test1"
+        }
+      ],
+      "xaxisLabel": "test1",
+      "xaxisField": "date",
+      "legendPos": "BOTTOM",
+      "XticksOrientation": "34",
+      "id": 2
+    },
+    {
+      "chartId": "#chart2",
+      "chartValue": 2,
+      "graphTypes": "2",
+      "componentName": "test2",
+      "dataview": "view2",
+      "data": [
+        {
+          "legend": "test2",
+          "color": "#10703e",
+          "field": "f1",
+          "axis": "test2",
+          "unit": "67",
+          "label": "test2"
+        }
+      ],
+      "xaxisLabel": "test2",
+      "xaxisField": "date",
+      "legendPos": "TOP",
+      "XticksOrientation": "54",
+      "id": 3
+    },
+    {
+      "chartId": "#chart3",
+      "chartValue": 3,
+      "graphTypes": "1",
+      "componentName": "test3",
+      "dataview": "view3",
+      "data": [
+        {
+          "legend": "test3",
+          "color": "#1199bb",
+          "field": "f2",
+          "axis": "test3",
+          "unit": "56",
+          "label": "test3"
+        }
+      ],
+      "xaxisLabel": "test3",
+      "xaxisField": "date",
+      "legendPos": "RIGHT",
+      "XticksOrientation": "77",
+      "id": 4
+    },
+    {
+      "chartId": "#chart4",
+      "chartValue": 4,
+      "graphTypes": "2",
+      "componentName": "test4",
+      "dataview": "view1",
+      "data": [
+        {
+          "legend": "test4",
+          "color": "#2506c1",
+          "field": "f0",
+          "axis": "test4",
+          "unit": "34",
+          "label": "test4"
+        }
+      ],
+      "xaxisLabel": "test4",
+      "xaxisField": "date",
+      "legendPos": "RIGHT",
+      "XticksOrientation": "76",
+      "id": 5
+    },
+    {
+      "chartId": "#chart5",
+      "chartValue": 5,
+      "graphTypes": "2",
+      "componentName": "test5",
+      "dataview": "view3",
+      "data": [
+        {
+          "legend": "test5",
+          "color": "#cb0bbb",
+          "field": "f2",
+          "axis": "test5",
+          "unit": "44",
+          "label": "test5"
+        }
+      ],
+      "xaxisLabel": "test5",
+      "xaxisField": "date",
+      "legendPos": "TOP",
+      "XticksOrientation": "50",
+      "id": 6
+    }
+  ]

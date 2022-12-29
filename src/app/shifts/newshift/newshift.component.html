@@ -1,0 +1,36 @@
+<div class="users-header">
+    <div class="circled-icon bge-btn" mat-dialog-close>
+        <img src="assets/icons/arrow-left.svg">
+    </div>
+    <div class="header-title">
+        Add New Shift
+    </div>
+    <div class="close-btn bge-btn" mat-dialog-close>
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+<div class="shift-form">
+    <form [formGroup]="frmShift">
+        <div class="form-fields">
+            <div class="in-place-field">
+                <label for="shiftName">Shift Name</label>
+                <input type="text" class="shiftName" autocomplete="off" id="shiftName" maxlength="50" formControlName="shiftName" placeholder="Enter Shift Name">
+                <span class="error" *ngIf="shiftName.touched && shiftName.invalid">Please Enter Shift Name.</span>
+                <span class="error" *ngIf="newShiftError && newShiftError!=''">{{newShiftError}}</span>
+                
+            </div>
+        
+        </div>
+        
+      </form>
+</div>
+<div class="bottom-btns">
+    <div class="btn-cancel btn" mat-dialog-close>
+        <div class="btn">Cancel</div>
+    </div>
+    <button class="btn-done bge-btn"  (click)="saveShift();">
+        <div class="btn">Done</div> 
+    </button>
+   
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

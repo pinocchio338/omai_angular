@@ -1,0 +1,106 @@
+
+<app-toolbar [currentPage]="'applications'"></app-toolbar>
+<div class="applications-breadcrumb" style="height: 42px;">
+
+    <div class="page-title">
+        <!-- <button mat-icon-button class="slider-button bge-btn" (click)="goBack()">
+            <img src="assets/arrow-left.png">                
+        </button>
+        <div class="application-page-title current">
+            {{selectedSite}} / Applications
+        </div>
+        <div class="application-page-title-seperator">
+            /
+        </div> -->
+        <div class="application-page-title current">
+            {{applicationName}}
+        </div>
+    </div>
+    <div class="applications-table-btns" *ngIf = "applicationData && applicationData.length">
+       
+        <input type="file" multiple #dataFileInput class="file" (change)="handleFileInput($event,'app-data')"  accept=".csv">
+        <div class="btn-adddata bge-btn" (click)="openData()">
+            <div class="btn-icon" ><img src="assets/icons/upload.svg" class="blue-icon"></div>
+            <!-- <div class="btn-text">Add Data</div> -->
+        </div>
+        <div class="btn-adddata bge-btn" *ngIf="applicationData && applicationData.length>0" (click)="downloadDataOnEmail()" >
+            <div class="btn-icon" ><img src="assets/icons/arrow-down.svg" class="blue-icon"></div>
+            <!-- <div class="btn-text">Get Data</div> -->
+        </div>
+        <!-- <div class="btn-get-template bge-btn" (click)="exportCsv();">
+            <div class="btn-text">Download</div>
+        </div> -->
+    </div>
+</div>
+<div *ngIf = "paginated && (!applicationData || !applicationData.length)" class="no-data">
+    No Data Available
+    <div class="no-data-back-btn" (click)="selectPage('p')">
+        <button mat-icon-button class="slider-button bge-btn" >
+            <img src="assets/arrow-left.png">              
+        </button>
+        <div>Go To Previous Records  </div>
+    </div>
+    
+</div>
+<div *ngIf = "filtered && (!applicationData || !applicationData.length)" class="no-data">
+    No Data Available
+    <div class="no-data-back-btn" (click)="clearFilter()">
+        <button mat-icon-button class="slider-button bge-btn" >
+            <img src="assets/arrow-left.png">              
+        </button>
+        <div>Go To Previous Records  </div>
+    </div>
+    
+</div>
+<div class="contents-wrapper" >
+    <div *ngIf="!applicationData || !applicationData.length" class="no-data">No data available</div>
+    <div *ngIf="applicationData && applicationData.length" class="applications-container">
+        <div *ngIf="dataLoaded" class="tbl-container">
+<table mat-table matTableExporter #exporter="matTableExporter" [dataSource]="dataSource" class="table-applications">
+    <ng-container *ngFor="let displayColumn of displayedColumns"  [matColumnDef]="displayColumn">
+      <th mat-header-cell *matHeaderCellDef class="table-cell"> {{displayColumn}} </th>
+      <td mat-cell *matCellDef="let element; let index = index"  class="table-cell"> 
+        <div class="searchframe" *ngIf="index === 0;else dt">
+            <div class="search-icon btn" (click)="filterTable(displayColumn)"><img src="assets/icons/filter.svg"></div>
+            <div class="search-input"><input type="text" [id]="displayColumn" placeholder="Search {{displayColumn}}" [(ngModel)]="search[displayColumn]" (keyup)="clearOtherFilter(displayColumn, $event)"></div>
+        </div>        
+        <ng-template #dt>
+            <span >{{element[displayColumn]}}</span>
+        </ng-template>      
+    </td>
+    </ng-container>
+      
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  </div>
+  
+  </div>
+  <div class="pager-container" *ngIf="applicationData && applicationData.length">
+    <div class="filter-container">
+        <div class="filter-title">Applied Filter:<span *ngIf="searchFilters.length>0"><span class="filter-col col-key">Column:</span> <span class="filter-col col-val"> {{searchFilters[0].filterCol}}</span><span class="filter-col col-key">Value:</span><span class="filter-col col-val">{{searchFilters[0].filterVal}}</span><span (click)="clearFilter()" class="btn btn-clear-filter">Clear Filter</span></span> <span class="filter-col col-key" *ngIf="!searchFilters || searchFilters.length==0">None</span></div>
+    </div>
+    <div class="pager">
+      <div class="page-size-label"> Items per page: </div>  
+      <mat-form-field appearance="fill">        
+      <mat-select [(ngModel)]="selectedPageSize" panelClass="pageSize" disableOptionCentering (selectionChange)="pageSizeChange()">      
+          <mat-option *ngFor="let page of pageList" [value]="page">{{page}}</mat-option>
+        </mat-select>
+        </mat-form-field>
+        <div class="mat-paginator-range-actions">
+          <!-- <div class="mat-paginator-range-label"> {{this.currentPage*this.selectedPageSize}} – {{this.selectedPageSize + (this.currentPage*this.selectedPageSize)}} of 11 </div> -->
+          <!-- <button mat-icon-button type="button" (click)="selectPage('f')"  aria-label="First page" ><svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon"><path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"></path></svg></button> -->
+          <button mat-icon-button type="button" (click)="selectPage('p')" aria-label="Prev page" ><svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></button>
+          <button mat-icon-button type="button"  (click)="selectPage('n')" aria-label="Next page" ><svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button>
+          <!-- <button mat-icon-button type="button"  (click)="selectPage('l')" aria-label="Last page"><svg viewBox="0 0 24 24" focusable="false" class="mat-paginator-icon"><path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"></path></svg></button> -->
+        </div>
+      </div>
+      </div>
+
+
+ 
+  </div>
+
+  <app-loader *ngIf="!dataLoaded"></app-loader>
+  <app-server-error-popup [message]="errorString"></app-server-error-popup>

@@ -1,0 +1,272 @@
+
+
+.nopading{
+    padding: 0;
+    margin: 0;
+}
+
+
+
+.license-item {
+
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 14px;
+    margin-bottom: 0px;
+}
+
+.margin-cardbox{
+
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.value-wrapper{
+    display: flex;
+}
+
+.fileupload-text{
+
+    overflow-wrap: anywhere;
+}
+
+
+
+
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 4px 4px 0 0;
+    padding: .75em .75em 0 .75em;
+    border: 1px solid #ADB5BD;
+}
+
+.minus-btn{
+
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #ADB5BD;
+    box-sizing: border-box;
+    border-radius: 4px 0px 0px 4px;
+
+}
+
+.plus-btn{
+
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #ADB5BD;
+    box-sizing: border-box;
+    border-radius: 0px 4px 4px 0px;
+}
+
+.plus-icon{
+
+    width: 13px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 4px 4px 0 0;
+    padding: .75em .75em 0 .75em;
+    border: 1px solid #ADB5BD!important;
+}
+
+
+
+.plus-minus-inputbox{
+
+    width: 84px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #ADB5BD;
+    box-sizing: border-box;
+    height: 100%;
+    height:initial;
+
+}
+
+@media not all and (min-resolution:.001dpcm) { 
+  
+        .safari10 { 
+            .plus-minus-inputbox{
+                width: 84px;
+                height: 40px;
+                text-align: center;
+                border: 1px solid #ADB5BD;
+                box-sizing: border-box;
+                height: 100%;
+                height: -webkit-calc(42px);
+            
+            }
+        }
+}
+
+
+.card-label{
+
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 12px;
+    
+}
+
+.card-text-label{
+
+    color: #495057;
+    font-size: 13px;
+    width: 160px;
+    margin: auto;
+}
+
+.dividerline{
+
+    border: 1px solid #F1F3F5;
+    margin-bottom: 16px;
+        margin-top: 16px;
+    width: 100%;
+}
+
+.license-section {
+
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    
+    position: static;
+    width: 600px;
+    height: auto; /* 618px;  */
+    left: 0px;
+    top: 0px;
+    
+    /* white */
+    
+    background: #FFFFFF;
+    /* grey/3 */
+    
+    border: 1px solid #DEE2E6;
+    box-sizing: border-box;
+    border-radius: 8px;
+    
+    /* Inside Auto Layout */
+    
+    flex: none;
+    order: 0;
+    align-self: center;
+    flex-grow: 0;
+    margin: auto;
+    
+    } 
+
+
+
+input#file {
+  display: inline-block;
+  width: 100%;
+  padding: 50px 0 0 0;
+  height: 50px;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background: url('../../../../assets/file_uploader.png') center center no-repeat #fff;
+  border-radius: 4px;
+  background-size: auto;
+  border: 1px dashed #CED4DA;
+
+}
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1900px) {
+
+
+    .margin-cardbox{
+
+        margin-top: 32px;
+        margin-bottom: 32px;
+    }
+
+    .card-label{
+
+    font-weight: bold;
+    font-size: 21px;
+    margin-bottom: 16px;
+    
+    }
+
+    .card-text-label{
+
+        color: #495057;
+        font-size: 16px;
+        width: 187px
+    }
+
+    .license-item {
+
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+        grid-gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .dividerline{
+
+        border: 1px solid #F1F3F5;
+        margin-bottom: 16px;
+        margin-top: 16px;
+        width: 100%;
+
+    }
+
+    .license-section {
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 32px;
+        
+        position: static;
+        width: 800px;
+        height: auto; /* 618px;  */
+        left: 0px;
+        top: 0px;
+        
+        /* white */
+        
+        background: #FFFFFF;
+        /* grey/3 */
+        
+        border: 1px solid #DEE2E6;
+        box-sizing: border-box;
+        border-radius: 8px;
+        
+        /* Inside Auto Layout */
+        
+        flex: none;
+        order: 0;
+        align-self: center;
+        flex-grow: 0;
+        margin: auto;
+        
+        } 
+        
+}

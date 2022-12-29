@@ -1,0 +1,695 @@
+<div class="main-container" *ngIf='dataLoaded'>
+    <app-toolbar [hideApplications]='true'></app-toolbar>
+    <!-- <mat-toolbar>
+        <mat-toolbar-row>
+            <div class="sites-operations">
+                <span [ngClass]='selectedCategory!=="all" ?"site-categories" : "site-categories active-underlined"' (click)="selectCategory('all')">
+                    <span [ngClass]='selectedCategory!=="all" ?"site-category-name" : "site-category-name active"'>Clients</span> 
+                    <span class="custom-chip chip-normal">{{clients.length}}</span>
+                </span>
+                <span [ngClass]='selectedCategory!=="expired" ?"site-categories" : "site-categories active-underlined"'  (click)="selectCategory('expired')">
+                    <span [ngClass]='selectedCategory!=="expired" ?"site-category-name" : "site-category-name active"'>Expired licenses</span> 
+                    <span class="custom-chip chip-warn">{{expiredClients.length}}</span>
+                </span>
+                <span [ngClass]='selectedCategory!=="week" ?"site-categories" : "site-categories active-underlined"'  (click)="selectCategory('week')">
+                    <span [ngClass]='selectedCategory!=="week" ?"site-category-name" : "site-category-name active"'>Expiring in a week</span>
+                    <span class="custom-chip chip-warn">{{weekExpiringClients.length}}</span>
+                </span>
+                <span [ngClass]='selectedCategory!=="month" ?"site-categories" : "site-categories active-underlined"'  (click)="selectCategory('month')">
+                    <span [ngClass]='selectedCategory!=="month" ?"site-category-name" : "site-category-name active"'>Expiring in a month</span> 
+                    <span class="custom-chip chip-normal">{{monthExpiringClients.length}}</span>
+                </span> -->
+    <!-- <div [ngClass]="isSearchActive==true ? 'search-wrapper search-active' : 'search-wrapper'">
+                    <img src='../../../assets/search.png'>
+                    <input #searchbox type="text" placeholder="Search Client" 
+                     (focus)='isSearchActive=true' (focusout)='isSearchActive=false'
+                    (keyup)="searchSites(searchbox.value)">
+                </div> -->
+    <!-- </div>
+        </mat-toolbar-row>
+      </mat-toolbar> -->
+      <div class="contents-wrapper center" *ngIf="(!clients || !clients.length) && (!this.drafts || !this.drafts.length)">
+          No Client Present
+      </div>
+    <div class="contents-wrapper" *ngIf="(clients && clients.length) ||  (this.drafts && this.drafts.length)">
+        <mat-grid-list cols="18" rowHeight="100%">
+            <mat-grid-tile colspan="4">
+                <mat-card class="container-card sites-list sites-list-card">
+                    <div [ngClass]="isSearchActive==true ? 'search-wrapper search-active' : 'search-wrapper'">
+                        <img src='../../../assets/search.png'>
+                        <input #searchbox type="text" placeholder="Search Client" (focus)='isSearchActive=true'
+                            (focusout)='isSearchActive=false' (keyup)="searchSites(searchbox.value)">
+                    </div>
+
+                    <!-- drafts -->
+                    <div class="sites-drafts">
+                        <div class="sites-drafts-title">
+                            <span class="label-small">Drafts ({{drafts.length}})</span>
+                            <button mat-icon-button>
+                                <mat-icon aria-hidden="false" aria-label="collapse-expand"
+                                    class='collapse-expand chevron' (click)='showDraft= !showDraft'>
+                                    {{showDraft ? 'expand_less' : 'expand_more'}}
+                                </mat-icon>
+                            </button>
+                        </div>
+                        <div class="sites-list" *ngIf='showDraft'>
+                            <div class="sites-draft-list-item" *ngFor="let draft of drafts; let i = index"
+                                (click)='selectDraftClient(draft , i)'>
+                                <div class='site-logo' [style.background-image]="'url('+getPhoto(draft.logo)+')'"></div>
+                                <div class="site-details">
+                                    <div class="site-name">{{draft.name}}</div>
+                                    <div class="site-description">Added {{getDraftCreationDays(i)}} </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- expiring or expired sites -->
+                    <div class="sites-drafts">
+                        <div class="sites-drafts-title">
+                            <span class="label-small">Expired/Expiring ({{expiredClients.length +
+                                weekExpiringClients.length + monthExpiringClients.length}})</span>
+                            <button mat-icon-button>
+                                <mat-icon aria-hidden="false" aria-label="collapse-expand"
+                                    class='collapse-expand chevron'
+                                    (click)='showExpiredAndExpiring= !showExpiredAndExpiring'>
+                                    {{showExpiredAndExpiring ? 'expand_less' : 'expand_more'}}
+                                </mat-icon>
+                            </button>
+                        </div>
+                        <div class="sites-list" *ngIf='showExpiredAndExpiring'>
+                            <!-- expired -->
+                            <div class="sites-drafts">
+                                <div class="sites-drafts-title inner-title">
+                                    <span class="label-small error-label">Expired Licenses
+                                        ({{expiredClients.length}})</span>
+                                    <button mat-icon-button>
+                                        <mat-icon aria-hidden="false" aria-label="collapse-expand"
+                                            class='collapse-expand chevron' (click)='showExpired= !showExpired'>
+                                            {{showExpired ? 'expand_less' : 'expand_more'}}
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                                <div class="sites-list" *ngIf='showExpired'>
+                                    <div *ngFor="let client of expiredClients; let i = index"
+                                        [ngClass]="selectedClientType=='expired' && i == selectedClientIndex ? 'sites-all-list-item selected-site' : 'sites-all-list-item'"
+                                        (click)='selectClient("expired",i)'>
+                                        <div class="sites-all-list-sub-item">
+                                            <div class='site-logo'
+                                                [style.background-image]="'url('+getPhoto(client.logo)+')'"></div>
+                                            <div class="site-details">
+                                                <div class="site-name">{{client.name}}</div>
+                                                <div class="site-description">{{client.email}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="site-stats">
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.sites}}</span>
+                                                <img class="stat-icon" src='assets/map-pin.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.users}}</span>
+                                                <img class="stat-icon" src='assets/users.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.dasboards}}</span>
+                                                <img class="stat-icon" src='assets/pie-chart.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.alerts}}</span>
+                                                <img class="stat-icon" src='assets/bell.png'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- expiring in a week -->
+                            <div class="sites-drafts">
+                                <div class="sites-drafts-title inner-title">
+                                    <span class="label-small warn-label">Expiring In a Week
+                                        ({{weekExpiringClients.length}})</span>
+                                    <button mat-icon-button>
+                                        <mat-icon aria-hidden="false" aria-label="collapse-expand"
+                                            class='collapse-expand chevron'
+                                            (click)='showExpiringInWeek= !showExpiringInWeek'>
+                                            {{showExpiringInWeek ? 'expand_less' : 'expand_more'}}
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                                <div class="sites-list" *ngIf='showExpiringInWeek'>
+                                    <div *ngFor="let client of weekExpiringClients; let i = index"
+                                        [ngClass]="selectedClientType=='week' && i == selectedClientIndex ? 'sites-all-list-item selected-site' : 'sites-all-list-item'"
+                                        (click)='selectClient("week",i)'>
+                                        <div class="sites-all-list-sub-item">
+                                            <div class='site-logo'
+                                                [style.background-image]="'url('+getPhoto(client.logo)+')'"></div>
+                                            <div class="site-details">
+                                                <div class="site-name">{{client.name}}</div>
+                                                <div class="site-description">{{client.email}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="site-stats">
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.sites}}</span>
+                                                <img class="stat-icon" src='assets/map-pin.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.users}}</span>
+                                                <img class="stat-icon" src='assets/users.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.dasboards}}</span>
+                                                <img class="stat-icon" src='assets/pie-chart.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.alerts}}</span>
+                                                <img class="stat-icon" src='assets/bell.png'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- expiring in a month -->
+                            <div class="sites-drafts">
+                                <div class="sites-drafts-title inner-title">
+                                    <span class="label-small">Expiring In a Month
+                                        ({{monthExpiringClients.length}})</span>
+                                    <button mat-icon-button>
+                                        <mat-icon aria-hidden="false" aria-label="collapse-expand"
+                                            class='collapse-expand chevron'
+                                            (click)='showExpiringInMonth= !showExpiringInMonth'>
+                                            {{showExpiringInMonth ? 'expand_less' : 'expand_more'}}
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                                <div class="sites-list" *ngIf='showExpiringInMonth'>
+                                    <div *ngFor="let client of monthExpiringClients; let i = index"
+                                        [ngClass]="selectedClientType=='month' && i == selectedClientIndex ? 'sites-all-list-item selected-site' : 'sites-all-list-item'"
+                                        (click)='selectClient("month",i)'>
+                                        <div class="sites-all-list-sub-item">
+                                            <div class='site-logo'
+                                                [style.background-image]="'url('+getPhoto(client.logo)+')'"></div>
+                                            <div class="site-details">
+                                                <div class="site-name">{{client.name}}</div>
+                                                <div class="site-description">{{client.email}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="site-stats">
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.sites}}</span>
+                                                <img class="stat-icon" src='assets/map-pin.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.users}}</span>
+                                                <img class="stat-icon" src='assets/users.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.dasboards}}</span>
+                                                <img class="stat-icon" src='assets/pie-chart.png'>
+                                            </div>
+                                            <div class="site-stats-item">
+                                                <span class='stat-count'>{{client.alerts}}</span>
+                                                <img class="stat-icon" src='assets/bell.png'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="sites-drafts">
+                            <div class="sites-drafts-title">
+                                <span class="label-small">Drafts ({{drafts.length}})</span>
+                                <button mat-icon-button>
+                                    <mat-icon aria-hidden="false" aria-label="collapse-expand" class='collapse-expand chevron' (click)='showExpiredAndExpiring= !showExpiredAndExpiring'>
+                                        {{showExpiredAndExpiring ? 'expand_less' : 'expand_more'}}
+                                    </mat-icon>
+                                </button>
+                            </div>
+                            <div class="sites-list" *ngIf='showDraft'>
+                                <div class="sites-draft-list-item" *ngFor="let draft of drafts; let i = index" (click)='selectDraftClient(draft , i)'>
+                                    <div class='site-logo' [style.background-image]="'url('+getPhoto(draft.logo)+')'"></div>                                    <div class="site-details">
+                                        <div class="site-name">{{draft.name}}</div>
+                                        <div class="site-description">Added {{getDraftCreationDays(i)}} </div>
+                                    </div>                                    
+                                </div>                                
+                            </div>
+                        </div> -->
+                    <mat-divider></mat-divider>
+                    <div class="sites-all">
+                        <span class="label-small">Clients ({{liveClients ? liveClients.length : '0'}})</span>
+                        <div class="sites-list">
+                            <div *ngFor="let client of liveClients; let i = index"
+                                [ngClass]="selectedClientType=='live' && i == selectedClientIndex ? 'sites-all-list-item selected-site' : 'sites-all-list-item'"
+                                (click)='selectClient("live",i)'>
+                                <div class="sites-all-list-sub-item">
+                                    <div class='site-logo' [style.background-image]="'url('+getPhoto(client.logo)+')'">
+                                    </div>
+                                    <div class="site-details">
+                                        <div class="site-name">{{client.name}}</div>
+                                        <div class="site-description">{{client.email}}</div>
+                                    </div>
+                                </div>
+                                <div class="site-stats">
+                                    <div class="site-stats-item">
+                                        <span class='stat-count'>{{client.sites}}</span>
+                                        <img class="stat-icon" src='assets/map-pin.png'>
+                                    </div>
+                                    <div class="site-stats-item">
+                                        <span class='stat-count'>{{client.users}}</span>
+                                        <img class="stat-icon" src='assets/users.png'>
+                                    </div>
+                                    <div class="site-stats-item">
+                                        <span class='stat-count'>{{client.dasboards}}</span>
+                                        <img class="stat-icon" src='assets/pie-chart.png'>
+                                    </div>
+                                    <div class="site-stats-item">
+                                        <span class='stat-count'>{{client.alerts}}</span>
+                                        <img class="stat-icon" src='assets/bell.png'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="14" class="padding-14">
+                <div class='site-expanded' color="primary" *ngIf=' searchedClients && searchedClients.length && selectedClientIndex>=0'>
+                    <mat-card class="site-expanded-card">
+                        <div class="grid-3-container" *ngIf="selectedClientDisplayMode=='view'">
+                            <div class="site-expanded-container">
+                                <div [style.background-image]="'url('+clientphoto+')'"
+                                    class='selected-site-logo'>
+                                </div>
+                            </div>
+                            <div class="site-expanded-container" *ngIf="searchedClients && searchedClients.length && selectedClientIndex >=0">
+                                <div class="selected-site-details">
+                                    <span class="selected-site-name">
+                                        {{searchedClients[selectedClientIndex].name}}
+                                    </span>
+                                    <span class="selected-site-contact">
+                                        {{searchedClients[selectedClientIndex].email}}
+                                    </span>
+                                    <span class="selected-site-address">
+                                        {{searchedClients[selectedClientIndex].address.line1}}
+                                    </span>
+                                    <span class="selected-site-address">
+                                        
+                                        {{searchedClients[selectedClientIndex].address.line2}}
+                                    </span>
+                                    <span class="selected-site-address">
+                                        {{searchedClients[selectedClientIndex].address.city}}
+                                    </span>
+                                    <span class="selected-site-address">
+                                        {{searchedClients[selectedClientIndex].address.state}} {{searchedClients[selectedClientIndex].address.zipCode}}
+                                    </span>
+                                    <span class="selected-site-address">
+                                        {{searchedClients[selectedClientIndex].address.country}}
+                                    </span>
+                                    <div class="selected-site-stats">
+                                        <div class="selected-site-stats-item">
+                                            <div class="selected-site-stat-icon-wrapper">
+                                                <img class="selected-site-stat-icon" src='assets/map-pin.png'>
+                                            </div>
+                                            <span class='stat-count'>{{searchedClients[selectedClientIndex].sites}}
+                                                Sites</span>
+                                        </div>
+                                        <div class="selected-site-stats-item">
+                                            <div class="selected-site-stat-icon-wrapper">
+                                                <img class="selected-site-stat-icon" src='assets/users.png'>
+                                            </div>
+                                            <span class='stat-count'>{{searchedClients[selectedClientIndex].users}}
+                                                Users</span>
+                                        </div>
+                                        <div class="selected-site-stats-item">
+                                            <div class="selected-site-stat-icon-wrapper">
+                                                <img class="selected-site-stat-icon" src='assets/pie-chart.png'>
+                                            </div>
+                                            <span class='stat-count'>{{searchedClients[selectedClientIndex].dasboards}}
+                                                Dash</span>
+                                        </div>
+                                        <div class="selected-site-stats-item">
+                                            <div class="selected-site-stat-icon-wrapper">
+                                                <img class="selected-site-stat-icon" src='assets/bell.png'>
+                                            </div>
+                                            <span class='stat-count'>{{searchedClients[selectedClientIndex].alerts}}
+                                                Alerts</span>
+                                        </div>
+                                        <button mat-icon-button color="primary" class="editclientinfo"
+                                            (click)="editClientMode()">
+                                            <div class="selected-site-stats-item">
+                                                <div class="selected-site-stat-icon-wrapper edit-icon-wrapper">
+                                                    <img class="selected-site-stat-icon" id='edit-icon'
+                                                        src='assets/edit-2.png'>
+                                                </div>
+                                                <span class='stat-count'>Edit</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="site-expanded-container">
+                                <div class="selected-site-subscription-details">
+                                    <div class="subscription-label">Subscription End Date</div>
+                                    <div class="subscription-date">
+                                        {{searchedClients[selectedClientIndex] ? (searchedClients[selectedClientIndex].subscriptionEndDate | date:'longDate') : '-'}}
+                                    </div>
+                                    <!-- <button mat-stroked-button color="primary">
+                                                    <mat-icon>watch_later</mat-icon> Send reminder
+                                                </button> -->
+                                    <button (click)="sendReminder()"
+                                        [ngClass]="expiringSoon()? 'stroked-button reminder-button ' : 'stroked-button reminder-button disabled'">
+                                        <img src="assets/clock.png"> Send reminder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-4-container" *ngIf="selectedClientDisplayMode=='edit'">
+                            <div [style.background-image]="'url('+clientphoto+')'"
+                                class='selected-site-logo grid-4-item logo-edit' (click)="openImage()">
+                                <input type="file" #fileInput id="file" accept="image/x-png,image/jpeg"
+                                    (change)="handleFileInput($event)">
+                            </div>
+
+                            <div class="site-expanded-container grid-4-item">
+                                <div class="client-details-heading first-label">
+                                    Client
+                                </div>
+                                <div class="client-name">
+                                    <!-- {{searchedClients[selectedClientIndex].name}} -->
+                                    <input class='text-input' placeholder="Client Name"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].name" pattern="[A-Za-z0-9 ]+"
+                                        name="clientName" #clientName="ngModel">
+                                    <div [hidden]="clientName.valid || clientName.pristine" class="alert alert-danger">
+                                        <div class="error-block" [hidden]="!clientName.hasError('pattern')">Entered
+                                            alphanumeric Value</div>
+                                    </div>
+                                </div>
+                                <div class="client-details-heading">
+                                    email
+                                </div>
+                                <div class="client-details-value">
+                                    <!-- {{searchedClients[selectedClientIndex].email}} -->
+                                    <input class='text-input' (change)="validateEmail()" placeholder="Email"  [(ngModel)]="searchedClients[selectedClientIndex].email" name="clientEmail" #clientEmail="ngModel" type="email"   required>
+                                        
+                                    <div  [hidden]="clientEmail.valid || clientEmail.pristine"   class="alert alert-danger">
+                                    <div class="error-block" [hidden]="!clientEmail.hasError('required')">Enter Valid Email</div>
+                                    </div>
+                                </div>
+                                <div class="client-details-heading">
+                                    Address
+                                </div>
+                                <div class="client-address-value">
+                                    <!-- {{searchedClients[selectedClientIndex].address.line1}} -->
+                                    <input class='text-input first-input' placeholder="Street Address"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.line1">
+                                    <input class='text-input' placeholder="Apartment, Suite, Unit"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.line2">
+                                    <input class='text-input' placeholder="City"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.city"
+                                        pattern="[a-zA-Z ]*" name="cityvalid" #cityvalid="ngModel">
+                                    <div [hidden]="cityvalid.valid || cityvalid.pristine" class="alert alert-danger">
+                                        <div class="error-block" [hidden]="!cityvalid.hasError('pattern')">Entered
+                                            Alphabet Value</div>
+                                    </div>
+                                    <input class='text-input' placeholder="State"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.state"
+                                        pattern="[a-zA-Z ]*" name="statevalid" #statevalid="ngModel">
+                                    <div [hidden]="statevalid.valid || statevalid.pristine" class="alert alert-danger">
+                                        <div class="error-block" [hidden]="!statevalid.hasError('pattern')">Entered
+                                            Alphabet Value</div>
+                                    </div>
+                                    <input class='text-input' pattern="\d*" minlength="0" maxlength="5"
+                                        oninput="validity.valid||(value='');" placeholder="Zip Code"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.zipCode">
+                                    <select class="form-control text-box full-width"
+                                        [(ngModel)]="searchedClients[selectedClientIndex].address.country">
+                                        <option value="United States Of America" selected>United States Of America
+                                        </option>
+                                    </select>
+                                </div>
+                                <!-- <div class="client-details-value">
+                                        {{searchedClients[selectedClientIndex].address.line2}} {{searchedClients[selectedClientIndex].address.city}}
+                                    </div>
+                                    <div class="client-details-value">
+                                        {{searchedClients[selectedClientIndex].address.state}} {{searchedClients[selectedClientIndex].address.zipCode}}
+                                    </div> -->
+                            </div>
+                            <div class="site-values-edit-container grid-4-item">
+                                <div class="edit-stat-label first-label">License Value (USD)</div>
+                                <input type = number class='text-content first-content' [(ngModel)]="searchedClients[selectedClientIndex].licenseValue">
+                                <div class="edit-stat-label first-label payment-terms-label">Payment Terms (In Days)</div>
+                                <select class="form-control text-box" minlength="0" maxlength="30"  [(ngModel)]="searchedClients[selectedClientIndex].paymentterms">
+                                    <option *ngFor="let pterm of paymentTermsData" value="{{pterm}}">{{pterm}} Days</option>
+                                </select>
+                                <div class="grid-2-container">
+                                    <div class="grid-2-item">
+                                        <div class="edit-stat-label">Sites</div>
+                                        <div class="stats-value-wrapper">
+                                            <button class='decrement' (click)="editStatus('decrement','sites')">
+                                                <img src='../../../assets/minus.png'>
+                                            </button>
+                                            <input type="text" class='text-content' maxlength="15"
+                                                (keyup)="checkAmount('sites')" pattern="\d*" minlength="0"
+                                                maxlength="15" oninput="validity.valid||(value='');"
+                                                [(ngModel)]='searchedClients[selectedClientIndex].sites'>
+                                            <button class='increment' (click)="editStatus('increment','sites')">
+                                                <img src='../../../assets/plus.png'>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-item">
+                                        <div class="edit-stat-label">Users</div>
+                                        <div class="stats-value-wrapper">
+                                            <button class='decrement' (click)="editStatus('decrement','users')">
+                                                <img src='../../../assets/minus.png'>
+                                            </button>
+                                            <input type="text" class='text-content' (keyup)="checkAmount('users')"
+                                                pattern="\d*" minlength="0" maxlength="3"
+                                                oninput="validity.valid||(value='');"
+                                                [(ngModel)]='searchedClients[selectedClientIndex].users'>
+                                            <button class='increment' (click)="editStatus('increment','users')">
+                                                <img src='../../../assets/plus.png'>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-item">
+                                        <div class="edit-stat-label">Dashboards</div>
+                                        <div class="stats-value-wrapper">
+                                            <button class='decrement' (click)="editStatus('decrement','dasboards')">
+                                                <img src='../../../assets/minus.png'>
+                                            </button>
+                                            <input type="text" class='text-content' pattern="\d*" minlength="0"
+                                                maxlength="3" oninput="validity.valid||(value='');"
+                                                [(ngModel)]='searchedClients[selectedClientIndex].dasboards'>
+                                            <button class='increment' (keyup)="checkAmount('dasboards')"
+                                                (click)="editStatus('increment','dasboards')">
+                                                <img src='../../../assets/plus.png'>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-item">
+                                        <div class="edit-stat-label">Alerts</div>
+                                        <div class="stats-value-wrapper">
+                                            <button class='decrement' (click)="editStatus('decrement','alerts')">
+                                                <img src='../../../assets/minus.png'>
+                                            </button>
+                                            <input type="text" class='text-content' pattern="\d*" minlength="0"
+                                                maxlength="3" oninput="validity.valid||(value='');"
+                                                [(ngModel)]='searchedClients[selectedClientIndex].alerts'>
+                                            <button class='increment' (keyup)="checkAmount('alerts')"
+                                                (click)="editStatus('increment','alerts')">
+                                                <img src='../../../assets/plus.png'>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-item">
+                                        <div class="edit-stat-label">Duration (In Years)</div>
+                                        <div class="stats-value-wrapper">
+                                            <button class='decrement' (click)="editStatus('decrement','duration')">
+                                                <img src='../../../assets/minus.png'>
+                                            </button>
+                                            <input type="number" class='text-content' [readOnly]="true" maxlength="3"
+                                                [(ngModel)]='searchedClients[selectedClientIndex].duration'>
+                                            <button class='increment' (click)="editStatus('increment','duration')">
+                                                <img src='../../../assets/plus.png'>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedClientDisplayMode=='edit'" class="client-action-container ">
+                            <button class="stroked-button" (click)="cancelEdit()">Cancel</button>
+                            <div style="display: grid;grid-template-columns: 1fr 1fr;">
+                                <button class="stroked-button" (click)="deleteClient()">Delete client</button>
+                                <button class="stroked-button" (click)="updateClient()">Save changes</button>
+                            </div>
+                        </div>
+
+
+                    </mat-card>
+                    <mat-card class="site-expanded-card" *ngIf="searchedClients && searchedClients.length && selectedClientIndex >=0">
+                        <span class="sites-title">Sites ({{selectedClientSites ? selectedClientSites.length :
+                            '0'}})</span>
+                        <div class="slider-div">
+                            <span>
+                                <button mat-icon-button class="slider-button" (click)="scroll('prev')">
+                                    <img src="assets/arrow-left.png">
+                                </button>
+                            </span>
+                            <span>
+                                <button mat-icon-button class="slider-button" (click)="scroll('next')">
+                                    <img src="assets/arrow-right.png">
+                                </button>
+                            </span>
+                        </div>
+                        <div #sites class="sites-location-list">
+                            <mat-card *ngFor="let site of selectedClientSites" class="site-list-item"
+                                (click)="manageSites(site.sortKey)">
+                                <div class="site-list-item-detail">
+                                    <img class="site-image" [src]="site.siteImage || 'assets/sample-site-image.png'">
+                                    <span class="site-location-name">{{site.name}}</span>
+                                    <span class="site-id">{{site.customSiteId}}</span>
+                                    <span class="site-address">
+                                        {{site.address.line1 || '&nbsp;'}}
+                                    </span>
+                                    <span class="site-address">
+                                        {{site.address.line2 }}  
+                                    </span>
+                                    <span class="site-address">
+                                       {{site.address.city}}
+                                    </span>
+                                    <span class="site-address">
+                                        {{site.address.state || '&nbsp;'}} {{site.address.zipCode}}
+                                    </span>
+                                    <span class="site-address">
+                                        {{site.address.country}}
+                                    </span>
+                                </div>
+                                <span
+                                    [ngClass]="'site-status site-'+site.status">{{site.status=='active'?"Active":"Inactive"}}</span>
+                            </mat-card>
+                        </div>
+                        <button class="manage-button" mat-stroked-button (click)="manageSites()">
+                            <div>
+                                <span>Manage Sites</span>
+                                <mat-icon>chevron_right</mat-icon>
+                            </div>
+                            
+                        </button>           
+                                </mat-card>
+                                <!-- <mat-card class="site-expanded-card">
+                                    <span class="sites-title">Sites ({{selectedClientSites ? selectedClientSites.length : '0'}})</span>
+                                    <div class="slider-div">
+                                        <span>
+                                            <button mat-icon-button class="slider-button" (click)="scroll('prev')">
+                                                <img src="assets/arrow-left.png">
+                                            </button>
+                                        </span>
+                                        <span>
+                                            <button mat-icon-button class="slider-button" (click)="scroll('next')">
+                                                <img src="assets/arrow-right.png">
+                                            </button> 
+                                        </span>  
+                                    </div>
+                                    <div #sites class="sites-location-list">                                   
+                                            <mat-card *ngFor="let site of selectedClientSites" class="site-list-item" (click)="manageSites(site.sortKey)">
+                                                <div class="site-list-item-detail">
+                                                <img class="site-image" [src]="site.siteImage || 'assets/sample-site-image.png'">
+                                                <span class="site-location-name">{{site.name}}</span>
+                                                <span class="site-id">{{site.customSiteId}}</span>
+                                                <span class="site-address">
+                                                    {{site.address.line1 || '&nbsp;'}}
+                                                </span>
+                                                <span class="site-address">
+                                                    {{site.address.line2 }}  <span *ngIf="site.address.line2">{{'&nbsp;' + ','}}</span> {{site.address.city}}
+                                                </span>
+                                                <span class="site-address">
+                                                    {{site.address.state || '&nbsp;'}}  {{site.address.zipCode}}
+                                                </span>
+                                                <span class="site-address">
+                                                    {{site.address.country}}
+                                                </span>
+                                            </div>
+                                                <span [ngClass]="'site-status site-'+site.status">{{site.status=='active'?"Active":"Inactive"}}</span>
+                                            </mat-card>
+                                    </div>
+                                    <button class="manage-button" mat-stroked-button (click)="manageSites()">
+                                        <div>
+                                        <span>Manage Sites</span>
+                                        <mat-icon>chevron_right</mat-icon>
+                                    </div>
+                                    </button>
+                                    
+                                </mat-card> -->
+    
+                                <mat-card class='site-user-groups-card' *ngIf="searchedClients && searchedClients.length && selectedClientIndex >=0">
+                                    <span class="sites-title" *ngIf='selectedClientUsers'>User groups ({{selectedClientUsers.userGroups.length}})</span>
+                                    <div class="user-groups-list"> 
+                                        <mat-card class='user-group-item' *ngFor="let group of selectedClientUsers.userGroups" (click)="selectUserGroup(group.sortKey)">
+                                            <div class='user-group-name'>{{group.display_name}}</div>
+                                            <div class="user-group-count">
+                                                {{group.userList.length}} {{group.userList.length<=1 ?'user' : 'users'}}
+                                            </div>
+                                            <div class='user-group-users-wrapper' >
+                                                <div class='pseudo-wrapper' *ngFor = "let user of group.userList; let i = index">
+                                                    <div class="user-group-users-item"  *ngIf="i<5"
+                                                    [style.background-image]="'url('+getPhoto(selectedClientUsers['usersObject'][user] ?selectedClientUsers['usersObject'][user]['photo'] : '')+')'"
+                                                    [style.transform]="'translateX(-'+5*i+'px)'"></div>
+                                            </div>
+                                            <div class="user-group-users-item number-item"
+                                                *ngIf="group.userList.length>5"
+                                                [style.transform]="'translateX(-'+5*6+'px)'">
+                                                +{{group.userList.length-5}}</div>
+                                        </div>
+                            </mat-card>
+                        </div>
+                        <button class="manage-button" mat-stroked-button (click)="manageGroup()">
+                            <div>
+                                <span>Manage user groups</span>
+                                <mat-icon>chevron_right</mat-icon>
+                            </div>
+                        </button>
+                    </mat-card>
+                    <mat-card class='site-users-card'*ngIf="searchedClients && searchedClients.length && selectedClientIndex >=0">
+                        <span class="sites-title" *ngIf='selectedClientUsers'>Users
+                            ({{selectedClientUsers['users'].length}})</span>
+                        <!-- <mat-card> -->
+                        <div class='users-wrapper' *ngIf='selectedClientUsers'>
+                            <div class='pseudo-wrapper'
+                                *ngFor="let user of selectedClientUsers['users']; let i = index">
+                                <div class="users-item" *ngIf="i<10"
+                                    [style.background-image]="'url('+getPhoto(user['photo'])+')'"
+                                    [style.transform]="'translateX(-'+10*i+'px)'">
+                                    <div class="username-tooltip text-content">
+                                        {{user['name']}}
+                                        <div class="tooltip-pointer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-item number-item" *ngIf="selectedClientUsers['users'].length>10"
+                                [style.transform]="'translateX(-'+10*10+'px)'">
+                                +{{selectedClientUsers['users'].length-10}}</div>
+                        </div>
+                        <!-- </mat-card> -->
+                        <button class="manage-button" mat-stroked-button (click)="manageUsers()">
+                            <div>
+                                <span>Manage users</span>
+                                <mat-icon>chevron_right</mat-icon>
+                            </div>
+                        </button>
+                    </mat-card>
+
+                </div>
+                <div class='no-client' color="primary" *ngIf='selectedClientIndex<0'>
+                    No client selected
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+</div>
+<app-loader *ngIf='!dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

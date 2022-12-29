@@ -1,0 +1,4 @@
+field,timestamp,field2,field3
+datatype,timestamp,int,double
+min,,10,20
+max,,30

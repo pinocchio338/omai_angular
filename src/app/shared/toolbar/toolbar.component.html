@@ -1,0 +1,214 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div class="navbar">
+      <img id="app-logo" class="bge-btn" [src]="role!='super-admin' && false ? logo : 'assets/logo.png'" (click)="goToHome()">
+      <div class="navbar-nav-tabs">
+        <div *ngIf="role=='super-admin' && !hideApplications" class="nav-tab bge-btn" [ngClass]="{'active':currentPage=='clients'}"
+          (click)="goToClients()">
+          <div class="tab-title">Clients</div>
+        </div>
+        <div class="nav-tab bge-btn" *ngIf="isAllowed('dashboard','view') && !hideApplications" [matMenuTriggerFor]="dashboardMenu"
+          [ngClass]="{'active': isDashboard()}">
+          <div class="tab-title">Dashboards</div>
+          <div class='tab-icon'><img src="assets/icons/chevron-down.svg"></div>
+          <mat-menu #dashboardMenu="matMenu"  class="edit-popupmenu">
+            <div (click)="dashboardMenu.closeMenu()" mat-menu-item class="btn-container no-action"
+              *ngIf="!dashboardData ||  dashboardData.length == 0">
+              <div class="btn-text"> No Dashboard(s)</div>
+            </div>
+            <div *ngIf="dashboardData">
+            <button *ngFor="let dashboard of dashboardData; let i = index" mat-menu-item>
+              <div class="btn-container"  (click)="goToDashboards(i)">
+                <div class="btn-text"> {{dashboard.name}}</div>
+              </div>
+              <!-- <button class="image-button"> -->
+              <div class="actions-wrapper">
+                <img src="assets/edit-2.png"
+                  [ngClass]="isAllowed('dashboard','edit') ? 'edit-button' : 'edit-button disabled'"
+                  (click)="editDashboard($event,dashboard.dashboardId)">
+                <img src="assets/delete_icon.png"
+                  [ngClass]="isAllowed('dashboard','delete') ? 'delete-button' : 'delete-button disabled'"
+                  (click)="deleteDashboard($event,dashboard.dashboardId);">
+              </div>
+              <!-- </button> -->
+            </button>
+          </div>
+            <mat-divider></mat-divider>
+            <div mat-menu-item class="btn-container">
+              <div class="btn-text" (click)="compareDashboards()">Site Performances</div>
+            </div>
+            <mat-divider></mat-divider>
+            <div mat-menu-item [ngClass]="isAllowed('dashboard','add')? 'btn-container' : 'btn-container disabled'">
+              <div class="btn-text" (click)="addDashboard()"> <img src="assets/plus.png"> New Dashboard</div>
+            </div>
+          </mat-menu>
+        </div>
+        <div *ngIf="isAllowed('applications','view') && !hideApplications" class="nav-tab bge-btn"
+          [ngClass]="{ 'disabled': !isAllowed('applications','view')}"
+          [ngClass]="{'active':currentPage=='applications'}" [matMenuTriggerFor]="applicationMenu">
+          <div class="tab-title">Applications</div>
+          <div class='tab-icon'><img src="assets/icons/chevron-down.svg"></div>
+          <mat-menu #applicationMenu="matMenu"  class="edit-popupmenu">
+
+            <div mat-menu-item class="btn-container no-action"
+              *ngIf="!applicationData || !applicationData.applications ||  applicationData.applications.length == 0">
+            
+              <div class="btn-text"> No Application(s)</div>
+            </div>
+            <div *ngIf="applicationData && applicationData.applications">
+            <button *ngFor="let application of applicationData.applications; let i = index" mat-menu-item
+              (click)="gotoApplications(i)">
+              <div class="btn-container">
+                <div class="btn-text"> {{application.name}}</div>
+              </div>            
+            </button>
+           
+          </div>
+            <!-- <mat-divider></mat-divider>
+                  <button mat-menu-item (click)="gotoApplications()"> 
+                      <div class="btn-container">
+                         <div class="btn-text"> Application2</div>
+                      </div>
+                  </button> -->
+          </mat-menu>
+        </div>
+        
+        <div *ngIf="role!='super-admin'" class="nav-tab bge-btn"
+        [ngClass]="{active :currentPage=='mysites'}"
+        (click)="gotoMysites()">
+        <div class="tab-title">Sites</div>
+      </div>
+        <div *ngIf="role=='client-admin'" class="nav-tab bge-btn"
+          [ngClass]="{ disabled : (!isAllowed('users','view') && !isAllowed('userGroups','view') ) , active :currentPage=='userandgroups'}"
+          (click)="gotouserandgroups()">
+          <div class="tab-title">User & Groups</div>
+        </div>
+        <div *ngIf="role=='client' &&  (isAllowed('users','view')|| isAllowed('userGroups','view'))" class="nav-tab bge-btn"
+          [ngClass]="{ disabled : (!isAllowed('users','view') && !isAllowed('userGroups','view') ) , active :currentPage=='userandgroups'}"
+          (click)="gotouserandgroups()">
+          <div class="tab-title">User & Groups</div>
+        </div>
+        <div *ngIf="role=='client-admin'" class="nav-tab bge-btn"
+        [ngClass]="{active :currentPage=='clientinfo'}"
+        (click)="goToClientInfo()">
+        <div class="tab-title">Client Info</div>
+      </div>
+        
+        <!-- (click)="gotoUserGroups()" -->
+      </div>
+      <div class="user-info-toolbar">
+        <button *ngIf='showAddClientButton==true' class='add-client-button' mat-raised-button color="primary"
+          (click)="addClient()">
+          <mat-icon>add</mat-icon>
+          Add new client
+        </button>
+        <div class="loggedin-user-container">
+          <div *ngIf="role!='super-admin'" (click)="gotoalerts()" [ngClass]="{ 'disabled': !isAllowed('alerts','receive') || !alertsData.length  }" class="alert"
+            >
+            <div class="bell"><img src="assets/icons/bell.svg" class="blue-icon"></div>
+            <div class="tag">
+              <div class="text">{{alertsData.length>999?'999+':alertsData.length}}</div>
+            </div>
+            <!-- <mat-menu #alertMenu="matMenu" [hasBackdrop]="true" xPosition="before" yPosition="below"
+              class="alert-popup">
+              <div class="alert-container">
+                <div class="alert-title">
+                  <div class="alert-title-text" (click)="$event.stopPropagation()">
+                    <div class="text">Alerts ({{alertsData.length}})</div>
+                  </div>
+                  <div class="alert-close-btn bge-btn" (click)="alertMenu.closeMenu()"><img src="assets/icons/x.svg">
+                  </div>
+                </div>
+                <div class="alert-card-container">
+                  <div *ngFor="let alert of alertsData">
+                    <div class="alert-card" (click)="showRca($event,alert)">
+                      <div class="data bge-btn">
+                        <div class="content">
+                          <div class="circled-icon" *ngIf="!alert.level || alert.level==''"><img src="assets/icons/chevrons-up.svg"
+                            class="error-icon"></div>
+                          <div class="circled-icon" *ngIf="alert.level=='high'"><img src="assets/icons/chevrons-up.svg"
+                              class="error-icon"></div>
+                          <div class="circled-icon" *ngIf="alert.level=='medium'"><img src="assets/icons/chevron-up.svg"
+                              class="warning-icon"></div>
+                          <div class="circled-icon" *ngIf="alert.level=='low'"><img src="assets/icons/arrow-down.svg"
+                              class="success-icon"></div>
+                          <div class="alert-content" title="{{alert.errorDetail}}">
+                            <div class="alert-name" >{{alert.errorDetail}}</div>
+                            <div class="alert-from">From {{alert.entity}}. {{alert.timestamp | dateAgo}}</div>
+                            <div *ngIf="alert.level" class="alert-type {{alert.level}}">{{alert.level|titlecase }}</div>
+                            <div *ngIf="!alert.level" class="alert-type high">High</div>
+                          </div>
+                        </div>
+                        <div class="icon"><img src="assets/icons/chevron-right.svg"></div>
+
+                      </div>
+
+                    </div>
+                    <mat-divider></mat-divider>
+                  </div>
+
+                </div>
+              </div>
+            </mat-menu> -->
+          </div>
+        </div>
+
+        <div *ngIf='!showAddClientButton'></div>
+        <!-- <img class="avatar company-logo" *ngIf="role != 'super-admin'" [src]="logo"> -->
+        <div class="user-info" *ngIf="userInfo && userInfo['mainUser']">
+          <div class="avatar" [style.background-image]="'url(' + userInfo['mainUser']['photo'] + ')'"></div>          
+          <div class="user-data">
+            <div class="text-emphasis">{{getFirstName(userInfo['mainUser']['name'])}}</div>
+            <div class="text-subtext company-name">Impersonating As</div>
+          </div>
+        </div>
+        <button class='profile-expand-button' mat-button [matMenuTriggerFor]="menu">
+        <div>
+        <img class="avatar company-logo" *ngIf="role != 'super-admin'" [src]="logo">
+        <div class="user-info">
+          <!-- <div class="avatar" [style.background-image]="'url(' + userInfo && userInfo['photo'] ? userInfo['photo'] : 'assets/sample-site-image.png'+ ')'"></div> -->
+          <img class="avatar" [src]="userInfo['photo'] || 'assets/sample-site-image.png'">
+          <!-- <div class="user-data">
+            <div class="text-emphasis">{{getFirstName(userInfo['name'])}}</div>
+            <div class="text-subtext company-name">{{role=='super-admin' ? 'Biogas' : companyName}}</div>
+          </div> -->
+        </div>
+        
+          <!-- <mat-icon>expand_more</mat-icon> -->
+        </div>
+        </button>
+        <mat-menu #menu="matMenu" class="profile-wrapper profile-container">
+          <!-- <button mat-menu-item>Item 1</button> -->
+          <div class="profile-wrapper">
+            <div class="profile-image" [style.background-image]="'url(' + userInfo['photo'] + ')'"></div>
+            <div class="text-body profile-label ">Name</div>
+            <div class="text-emphasis profile-value">{{userInfo['name']}}</div>
+            <div class="text-body profile-label">E-mail</div>
+            <div class="text-body profile-value">{{userInfo['email']}}</div>
+            <div class="text-body profile-label">Phone</div>
+            <div class="text-subtext profile-value">{{userInfo['phone']}}</div>
+            <div *ngIf="role!='super-admin'">
+              <div class="text-body profile-label">Groups</div>
+              <div class="groups-list">
+                <div class="user-group" *ngFor="let group of userInfo['userGroups']">{{group['display_name']}}</div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="text-body profile-label change-pwd" (click)="chnagePwd();">Change Password</div>
+            
+            <button class="stroked-button stroked-button-no-color logout-button" mat-menu-item (click)="logout()">
+              <span>Log out</span>
+              <img src="assets/log-out.png">
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-toolbar-row>
+  <!-- <mat-toolbar-row>
+        <div id="client-tabs"></div>
+      </mat-toolbar-row> -->
+</mat-toolbar>
+<div class="loader-wrapper" *ngIf="!isLoaded">
+  <app-loader></app-loader>
+</div>

@@ -1,0 +1,440 @@
+<div class="container-fluid">
+    <div class="margin-cardbox">
+        <mat-card class="user-group-section">   
+            <span class="card-label"> User Groups ({{usergroupList.length}}) </span>      
+            <button  *ngIf="isShowAddbtn" class="btn  add-site-btn"  (click)="addUserGroup()"><img src="./../../../assets/plus_icon.jpg" class="add-site-plus-icon" >Add User Group</button>
+
+        
+           
+            <form *ngIf="isShowAddsection"  [formGroup]="usergroupsForm"  (ngSubmit)="onSubmitUsergroupsForm($event);"  method="post" style="width:100%" novalidate>
+            <mat-card  *ngIf="isShowAddsection" class=" addSite-section" >
+                 <div class="usergroup-item-label">
+                    <span  class="sub-card-label">Add New Group</span>
+                    <img src="../../../assets/cross.jpg" (click)="closeForm()" >
+                </div>
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Name<span class="mand">*</span></span>
+                    <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="^\w+([\s-_]\w+)*$" autocomplete="off"  type="text"  class="form-control text-box" minlength="0" maxlength="100" id="groupName" name="groupName" formControlName="groupName" placeholder="Group Name"> 
+                    <div></div>
+                    <div *ngIf="isFormSubmitted && f.groupName.errors" class="error-block">
+                        <div *ngIf="f.groupName.errors.required">Name  is required</div>
+                        <div *ngIf="!f.groupName.errors.required"> {{getMessage('groupName',' Group Name')}}</div>
+
+                    </div>
+                   
+                </div>
+                <div class="dividerline"></div>
+                <div class="usergroup-item">
+                    <span class="sites-text-label administrators">Administrators<br>
+                        <span>Have all the access along with can create site.</span></span>
+                    
+                    <div>
+                        <mat-checkbox color="primary" name="dashboard-view" formControlName="accessAdmin"  class="example-margin" (change)="adminChanged(usergroupsForm)"></mat-checkbox>
+                    </div>
+                </div>
+                <div class="dividerline"></div>
+<!-- 
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Sites</span>
+                    <mat-form-field  class="applications-select"> -->
+                        <!-- <mat-select [(value)]="site" multiple>
+                          <mat-select-trigger>
+                            <div class="selected-applications selected-list">
+                                <div class="selected-application" >
+                                    <div class="selection-value">
+                                        <div class="selection-text">
+                                            {{site ? site[0] : ''}}
+                                            <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                            (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                            </span>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                          </mat-select-trigger>
+                          <mat-option *ngFor="let site of newGroupSiteList" [value]="site.name" >{{site.name}}</mat-option>
+                        </mat-select> -->
+
+                            <!-- <mat-select [formControl]="site" multiple>
+                              <mat-select-trigger>
+                                {{site ? site[0] : ''}}
+                                <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                  (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                </span>
+                              </mat-select-trigger>
+                              <mat-option *ngFor="let site of newGroupSiteList" [value]="site.sortKey">{{site.name}}</mat-option>
+                            </mat-select> -->
+
+<!-- 
+                      </mat-form-field>
+                </div> -->
+
+               
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Sites</span>
+                    <!-- <mat-form-field  class="applications-select">
+                        <mat-select [(value)]="site" multiple>
+                          <mat-select-trigger>
+                            <div class="selected-applications selected-list">
+                                <div class="selected-application" >
+                                    <div class="selection-value">
+                                        <div class="selection-text">
+                                            {{site ? site[0] : ''}}
+                                            <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                            (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                            </span>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                          </mat-select-trigger>
+                          <mat-option *ngFor="let site of newGroupSiteList" [value]="site.name" (onSelectionChange)="change($event , site)">{{site.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+                      <mat-form-field  class="applications-select draft-usergroup-select" [ngClass]="{ 'disabled': newdisbleSitedropdown}" >
+                        <mat-select [(value)]="site" multiple>
+                          <mat-select-trigger>
+                              <div class="selected-applications selected-list">
+                                  <div class="selected-application" >
+                                      <div class="selection-value">
+                                        <div class="selection-text">
+                                            {{site ? site[0] : ''}}
+                                            <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                            (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                            </span>
+                                         </div>
+                                          <div class="remove-selection"><img src="assets/icons/x.svg"></div></div>
+                                  </div>
+                              </div>
+                          </mat-select-trigger>
+                      
+                          <mat-option *ngFor="let site of newGroupSiteList" [value]="site.name"  (onSelectionChange)="change($event , site)">{{site.name}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+
+                </div>
+
+                <div class="dividerline"></div>
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Dashboard Access</span>
+                    <div>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="accessView"  (change)="checkCheckBoxvalue($event)"  formControlName="accessView">View</mat-checkbox>
+                        <!-- <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="accessHome"    (change)="checkCheckBoxvalue($event)"  formControlName="accessHome">As Home</mat-checkbox> -->
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value"  [checked]="accessAdd" (change)="checkCheckBoxvalue($event)"  formControlName="accessAdd">Add</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value"  [checked]="accessEdit" (change)="checkCheckBoxvalue($event)"  formControlName="accessEdit">Edit</mat-checkbox>
+                       <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value"    [checked]="accessDelete" (change)="checkCheckBoxvalue($event)"  formControlName="accessDelete">Delete</mat-checkbox>
+
+                    </div>
+                </div>
+
+                <!-- <div class="dividerline"></div>
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Dashboards</span>
+                    <input type="text"  class="form-control text-box" id="dashboardlist" name="dashboardlist"
+                    formControlName="dashboardlist" placeholder=""> 
+                </div> -->
+             
+                <div class="dividerline"></div>
+
+                <div class="usergroup-item">
+                    <span class="sites-text-label">User Groups</span>
+                    <div>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userGroupView" formControlName="userGroupView">View</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userGroupAdd" formControlName="userGroupAdd">Add</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userGroupEdit" formControlName="userGroupEdit">Edit</mat-checkbox>
+                       <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userGroupDelete" formControlName="userGroupDelete">Delete</mat-checkbox>            
+                    </div>
+                </div>
+                <div class="dividerline"></div>
+
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Users</span>
+                    <div>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userView" formControlName="userView">View</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userAdd" formControlName="userAdd">Add</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userEdit" formControlName="userEdit">Edit</mat-checkbox>
+                       <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="userDelete" formControlName="userDelete">Delete</mat-checkbox>                     
+                    </div>
+
+                </div>
+            
+                <div class="dividerline"></div>
+
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Alert</span>
+                    <div>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="alertReceive" formControlName="alertReceive">Receive</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="alertSend" formControlName="alertSend">Send</mat-checkbox>
+
+                    </div>
+
+                </div>
+          
+                <!-- <div class="dividerline"></div>
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Report</span>
+                    <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="alertGenerate" formControlName="alertGenerate">Generate</mat-checkbox>
+
+
+                </div> -->
+        
+                <div class="dividerline"></div>
+
+                <div class="usergroup-item">
+                    <span class="sites-text-label">Application Access</span>
+                    <div>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="applicationView" formControlName="applicationView">View</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="applicationAdd" formControlName="applicationAdd">Add</mat-checkbox>
+                        <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="applicationEdit" formControlName="applicationEdit">Edit</mat-checkbox>
+                       <mat-checkbox class="example-margin" [disabled]="usergroupsForm.controls.accessAdmin.value" [checked]="applicationDelete" formControlName="applicationDelete">Delete</mat-checkbox>                     
+                    </div>
+ 
+                </div>
+
+                <!-- <div class="usergroup-item">
+                    <span class="sites-text-label">Applications</span>
+                    <input type="text"  class="form-control text-box" id="applicationlist" name="applicationlist"
+                    formControlName="applicationlist" placeholder=""> 
+                </div> -->
+                <div class="dividerline"></div>
+                <div class="input-group">  
+                    <div class="selected-site-stats-item">
+                        <button   type="button" class="delete-btn" mat-raised-button [disabled]="true" >
+                            <!-- <mat-icon>delete</mat-icon> -->
+                            <img src="../../../../assets/delete-user-group.jpg" style="padding-right: 11px;" > 
+                            Delete Group
+                        </button>
+                        <button type="button" class="btn-bg-blue" (click)="saveUserGroupDetails()" >Save</button>
+                    </div>   
+                </div>  
+               
+           </mat-card>
+           </form>
+
+           <form *ngIf="isShowUpdateAddsection"  [formGroup]="updateusergroupForm" (ngSubmit)="onSubmitSitesForm($event);" method="post" style="width:100%" novalidate>
+
+           <mat-card   class=" addSite-section" >
+            <div class="usergroup-item-label">
+               <span  class="sub-card-label">Update Group</span>
+               <img src="../../../assets/cross.jpg" (click)="updatecloseForm()" >
+           </div>
+           <div class="usergroup-item">
+               <span class="sites-text-label">Name<span class="mand">*</span></span>
+               <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="^\w+([\s-_]\w+)*$" autocomplete="off" type="text"  class="form-control text-box" id="editgroupName" name="editgroupName"
+                formControlName="editgroupName" placeholder="Group Name"> 
+                <div></div>
+                <div *ngIf="isupdateFormSubmitted && f1.editgroupName.errors" class="error-block">
+                    <div *ngIf="f1.editgroupName.errors.required">Name  is required</div>
+                    <div *ngIf="!f1.editgroupName.errors.required"> {{getUpdateMessage('editgroupName',' Group Name')}}</div>
+                </div>
+                
+           </div>
+           <div class="dividerline"></div>
+           <div class="usergroup-item">
+               <span class="sites-text-label administrators">Administrators<br>
+                   <span>Have all the access along with can create site.</span></span>
+               
+               <div>
+                   <mat-checkbox color="primary" name="dashboard-view" [checked]="editaccessAdmin" formControlName="editaccessAdmin"  class="example-margin" (change)="editadminChanged(updateusergroupForm)"></mat-checkbox>
+               </div>
+           </div>
+           <div class="dividerline"></div>
+
+           <div class="usergroup-item">
+            <span class="sites-text-label">Sites</span>
+                <mat-form-field [ngClass]="{ 'disabled':  disbleSitedropdown }">
+                <mat-select  class="applications-select" multiple placeholder="" [(value)]="siteList" >
+                    <mat-option  *ngFor="let s of newGroupSiteList" [value]="s.sortKey" (onSelectionChange)="editchange($event , s)" >  
+                      
+                                            {{s.name}}
+                                    
+                        </mat-option>   
+                    </mat-select>
+
+                    <!-- <mat-select [(value)]="site" multiple>
+                        <mat-select-trigger>
+                          <div class="selected-applications selected-list">
+                              <div class="selected-application" >
+                                  <div class="selection-value">
+                                      <div class="selection-text">
+                                          {{site ? site[0] : ''}}
+                                          <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                          (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                          </span>
+                                       </div>
+                                   </div>
+                               </div>
+                          </div>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let site of newGroupSiteList" [value]="site.name" (onSelectionChange)="editchange($event , site)">{{site.name}}</mat-option>
+                      </mat-select> -->
+
+                </mat-form-field>
+           </div>
+           <div class="dividerline"></div>
+           <div class="usergroup-item">
+               <span class="sites-text-label">Dashboard Access</span>
+               <div>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editaccessView"  (change)="checkCheckBoxvalue($event)"  formControlName="editaccessView">View</mat-checkbox>
+                   <!-- <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editaccessHome"   (change)="checkCheckBoxvalue($event)"  formControlName="editaccessHome">As Home</mat-checkbox> -->
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editaccessAdd"   (change)="checkCheckBoxvalue($event)"  formControlName="editaccessAdd">Add</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editaccessEdit"   (change)="checkCheckBoxvalue($event)"  formControlName="editaccessEdit">Edit</mat-checkbox>
+                  <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editaccessDelete"    (change)="checkCheckBoxvalue($event)"  formControlName="editaccessDelete">Delete</mat-checkbox>
+               </div>
+           </div>
+
+           <!-- <div class="dividerline"></div>
+           <div class="usergroup-item">
+               <span class="sites-text-label">Dashboards</span>
+               <input type="text"  class="form-control text-box" id="editdashboardlist" name="editdashboardlist"
+               formControlName="editdashboardlist" placeholder=""> 
+           </div> -->
+        
+           <div class="dividerline"></div>
+
+           <div class="usergroup-item">
+               <span class="sites-text-label">User Groups</span>
+               <div>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserGroupView" formControlName="edituserGroupView">View</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserGroupAdd" formControlName="edituserGroupAdd">Add</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserGroupEdit" formControlName="edituserGroupEdit">Edit</mat-checkbox>
+                  <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserGroupDelete" formControlName="edituserGroupDelete">Delete</mat-checkbox>            
+               </div>
+           </div>
+           <div class="dividerline"></div>
+
+           <div class="usergroup-item">
+               <span class="sites-text-label">Users</span>
+               <div>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserView" formControlName="edituserView">View</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserAdd" formControlName="edituserAdd">Add</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserEdit" formControlName="edituserEdit">Edit</mat-checkbox>
+                  <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="edituserDelete" formControlName="edituserDelete">Delete</mat-checkbox>                     
+               </div>
+
+           </div>
+       
+           <div class="dividerline"></div>
+
+           <div class="usergroup-item">
+               <span class="sites-text-label">Alert</span>
+               <div>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editalertReceive" formControlName="editalertReceive">Receive</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editalertSend" formControlName="editalertSend">Send</mat-checkbox>
+
+               </div>
+
+           </div>
+     
+           <!-- <div class="dividerline"></div>
+           <div class="usergroup-item">
+               <span class="sites-text-label">Report</span>
+               <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editalertGenerate" formControlName="editalertGenerate">Generate</mat-checkbox>
+
+
+           </div> -->
+   
+           <div class="dividerline"></div>
+
+           <div class="usergroup-item">
+               <span class="sites-text-label">Application Access</span>
+               <div>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editApplicationView" formControlName="editApplicationView">View</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editApplicationAdd" formControlName="editApplicationAdd">Add</mat-checkbox>
+                   <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editApplicationEdit" formControlName="editApplicationEdit">Edit</mat-checkbox>
+                  <mat-checkbox class="example-margin" [disabled]="updateusergroupForm.controls.editaccessAdmin.value" [checked]="editApplicationDelete" formControlName="editApplicationDelete">Delete</mat-checkbox>                     
+               </div>
+
+           </div>
+           <!-- <div class="usergroup-item">
+               <span class="sites-text-label">Applications</span>
+               <input type="text"  class="form-control text-box" id="editapplicationlist" name="editapplicationlist"
+               formControlName="editapplicationlist" placeholder=""> 
+           </div> -->
+           <div class="dividerline"></div>
+           <div class="input-group">  
+               <div class="selected-site-stats-item">
+                   <button   type="button" class="delete-btn" mat-raised-button  (click)="deleteEditedGroup(group_id , updateclient_id)" >
+                       <mat-icon>delete</mat-icon>
+                       Delete Group
+                   </button>
+                   <button type="button" class="btn-bg-blue" (click)="updateUserGroupDetails()" >Save</button>
+               </div>   
+           </div>  
+          
+      </mat-card>
+      </form>
+            
+          
+          
+                <div *ngFor="let item of usergroupList; let i = index" (click)="updateUserGroup(item)" style="margin-bottom: 16px; width: -webkit-fill-available;">
+                    <mat-card class="userGroupCards" >
+                       
+                          <div class="user-group-title">{{ item.display_name }}</div>
+                          <div> </div>
+                         
+                            <div class="user-group-box-content">
+                                <div>
+                                    <div style="margin-top: 12px; margin-bottom: 9.33px;">Dashboard</div>  
+                                    <img src="./../../../assets/home.jpg">
+                                    <span *ngIf="item.permissions.dashboard.view" class="can-view"> V</span>
+                                    <span *ngIf="item.permissions.dashboard.add"  class="can-add" > A</span>
+                                    <span *ngIf="item.permissions.dashboard.edit"  class="can-edit"  > E</span>
+                                    <span  *ngIf="item.permissions.dashboard.delete" class="can-delete" > D</span>
+                                </div>
+                                <div>
+                                    <div style="margin-top: 12px; margin-bottom: 9.33px;">User Groups</div>  
+                                    <img src="./../../../assets/home.jpg">
+                                    <span *ngIf="item.permissions.userGroups.view" class="can-view"> V</span>
+                                    <span *ngIf="item.permissions.userGroups.add"  class="can-add" > A</span>
+                                    <span *ngIf="item.permissions.userGroups.edit"  class="can-edit"  > E</span>
+                                    <span  *ngIf="item.permissions.userGroups.delete" class="can-delete" > D</span>
+                                </div>
+                                <div>
+                                    <div style="margin-top: 12px; margin-bottom: 9.33px;">Users</div>  
+                                    <img src="./../../../assets/home.jpg">
+                                    <span *ngIf="item.permissions.users.view" class="can-view"> V</span>
+                                    <span *ngIf="item.permissions.users.add"  class="can-add" > A</span>
+                                    <span *ngIf="item.permissions.users.edit"  class="can-edit"  > E</span>
+                                    <span  *ngIf="item.permissions.users.delete" class="can-delete" > D</span>
+                                   </div>
+                              
+                            </div>
+                           
+                        
+                </mat-card>
+    
+                </div>
+
+           
+                <div  *ngIf="usergroupLength === 0" style="width: 100%; margin-bottom: 32px;">
+
+                    <div class="emptybox">
+                        <span class="empty-box-text"> No User Group added yet.</span>  
+                    </div>
+                </div>
+
+                <div  *ngIf="usergroupLength != 0"  class="usergroup-item-label-icon">
+                    <span  class="can-view">V : Can View </span>
+                    <span  class="can-add" >A : Can Add</span>
+                    <span  class="can-edit"  >E : Can Edit</span>
+                    <span   class="can-delete" >D : Can Delete</span>
+                </div>
+
+          
+              
+        </mat-card>
+     </div>
+<div class="" >
+        <mat-card class=" sites-section-next">
+            <div class="selected-site-stats-item">
+                <button class="btn-border" (click)="goBack()">Cancel</button>
+                 <button class="btn-bg-blue"  (click)="goForward()">Next</button>
+            </div>   
+            
+        </mat-card>
+  
+    </div>
+</div>
+<app-loader *ngIf = 'dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

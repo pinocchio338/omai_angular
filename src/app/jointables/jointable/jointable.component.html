@@ -1,0 +1,187 @@
+<div class="main-container" *ngIf = 'dataLoaded'>
+    <app-toolbar *ngIf="role" [logo]="clientInfo.logo"></app-toolbar>
+    <mat-toolbar style="height: 42px !important; min-height:unset!important;">
+        <mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+            <!-- <button mat-icon-button class="slider-button"  *ngIf="role" (click)="goBack()">
+                <img src="assets/arrow-left.png">                
+            </button> -->
+            <!-- <span class="selected-client-name">
+                {{clientInfo ? clientInfo.name : '-'}}
+            </span> -->
+            <span class="selected-client-name"> Create View </span>
+        </mat-toolbar-row> 
+        <!-- <mat-toolbar-row class='sites-toolbar'>
+            <button mat-icon-button *ngIf="!token" class="slider-button" (click)="goBack()">
+                <img src="assets/arrow-left.png">
+            </button>
+            
+        </mat-toolbar-row> -->
+        <!-- <mat-toolbar-row class='sites-toolbar'>
+            <div class="site-location-list-wrapper">
+                <div *ngFor="let site of selectedClientSites; let i = index"
+                    [ngClass]="selectedSiteIndex == i ? 'site-location-item underlined' : 'site-location-item'"
+                    (click)="selectSite(i)">
+                    <div [ngClass]="selectedSiteIndex == i ? 'site-name-label site-selected' : 'site-name-label'">
+                        {{site.name}}</div>
+                    <div
+                        [ngClass]="selectedSiteIndex == i ? 'site-status selected-'+site.status : 'site-status '+ site.status">
+                        {{site.status}}
+                    </div>
+                </div>
+            </div>
+            <button class='stroked-button' (click)="addSite()"><img src='assets/plus-blue.png'>Add Site</button>
+        </mat-toolbar-row> -->
+    </mat-toolbar>
+    <div class="data-wrapper">
+    <mat-grid-list class="col-3-grid" cols="18" rowHeight="fit">
+        <mat-grid-tile colspan="4" class="tile-table-container">
+            <div class='left-tile'>
+               <div class="tables-container">
+                   <div class="title">
+                       Tables
+                   </div>
+                   <div class="table-data" *ngFor="let tableData of tablesData">
+                    <mat-expansion-panel [expanded]="tableData.checked" >
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                           {{tableData.name}}
+                           <mat-checkbox style="margin-left: 8px;" [checked]="tableData.checked" (change)='tableChanged($event,tableData)'  class="chk-table-field"></mat-checkbox>
+                           
+                          </mat-panel-title>
+                          
+                        </mat-expansion-panel-header>
+                        <section class="table-fields-section">
+                            <mat-checkbox *ngFor="let field of tableData.fields?.schema" (change)="tableFieldChanged()" [(ngModel)]="field.checked" [disabled]="!tableData.checked" class="chk-table-field">{{field.Name}} ({{field.Type}})</mat-checkbox>
+                           
+                           
+                          </section>
+    
+                      </mat-expansion-panel>
+                   </div>
+                   
+               </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="14" class="tile-join-data">
+            <div class='middle-tile'>
+                <div class="join-data-container">
+                    <div class="title">Data Sources</div>
+                    <div class="join-data-table-container">
+                        <div class="selected-table-container">
+                            <div class="selected-table">
+                                <div class="left">
+                                    <label>Table</label>
+                                    <select [(ngModel)]="selectedTable1Val" (change)="table1Changed($event)">
+                                        <option value="" >Select Table</option>
+                                        <option *ngFor="let tbl of selectedTable"   [disabled]="selectedTable2?.name==tbl.name">{{tbl.name}}</option>
+                                    </select>
+                                   
+                                </div>
+                                <div class="middle">
+                                   &nbsp;
+                                </div>
+                                <div class="right">
+                                <label>Table</label>
+                                <select [(ngModel)]="selectedTable2Val" (change)="table2Changed($event)">
+                                    <option value="">Select Table</option>
+                                    <option *ngFor="let tbl of selectedTable" [disabled]="selectedTable1?.name==tbl.name">{{tbl.name}}</option>
+                                </select>
+                                
+                            </div>
+                                
+                            </div>
+                            <div class="selected-table">
+                                <div class="left">
+                                    <label>Fields</label>
+                                    <select (change)="joinFieldChanged($event,'selectedTable1')">
+                                        <option value="">Select Field</option>
+                                        <option [selected]="selectedTable1.joinField==selfield.Name" value="{{selfield.Name}}" *ngFor="let selfield of selectedTable1?.fields?.schema">{{selfield.Name}} ({{selfield.Type}})</option>
+                                    </select>
+                                   
+                                </div>
+                                <div class="middle">
+                                    <label>&nbsp;</label>
+                                   =
+                                </div>
+                                <div class="right">
+                                <label>Fields</label>
+                                <select  (change)="joinFieldChanged($event,'selectedTable2')">
+                                    <option value="">Select Field</option>
+                                    <option [selected]="selectedTable2.joinField==selfield.Name" value="{{selfield.Name}}" *ngFor="let selfield of selectedTable2?.fields?.schema">{{selfield.Name}} ({{selfield.Type}})</option>
+                                </select>
+                                
+                            </div>
+                                
+                            </div>
+                        </div>
+                        <div class="join-type-container">
+                            <div class="option-container">
+                               
+                                <mat-radio-group [(ngModel)]="joinType"   aria-label="Select an option">
+                                      <mat-radio-button (change)="joinTypeChanged('inner')" value="inner">Inner Join</mat-radio-button>
+                                      <mat-radio-button (change)="joinTypeChanged('left')" value="left">Left Join</mat-radio-button>
+                                      <mat-radio-button (change)="joinTypeChanged('right')" value="right">Right Join</mat-radio-button>
+                                    
+                                      <mat-radio-button (change)="joinTypeChanged('full')" value="full">Full Join</mat-radio-button>
+                                  </mat-radio-group>
+                            </div>
+                            <div class="btn-container">
+                                <div class="preview-btn bge-btn" (click)="previewData()" [ngClass]="{'disabled':!validToPreviewData}">
+                                    <div class="btn-icon"><img src="assets/icons/play.svg" class="blue-icon"></div>
+                                    <div class="btn-text">Preview Data</div>
+                                </div>
+                            </div>
+                      
+                        </div>
+
+                        
+                        
+                        
+                    </div>
+                </div>
+                <div class="join-data-container preview-data" *ngIf="viewPreviewData && viewPreviewData.length>0">
+                    <div class="table-list">
+                        <table>
+                            <thead>                               
+                                <th *ngFor="let key of viewPreviewDataKeys" class="table-cell">{{key}}</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let previewData of viewPreviewData">
+                                   <td *ngFor="let key of viewPreviewDataKeys"  class="table-cell" >{{previewData[key]}}</td>
+                                                                  
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    
+                </div>
+                <div class="join-data-container" style="margin-top: 8px;" *ngIf="viewPreviewData && viewPreviewData.length>0">
+                    
+                    <div class="preview-data-container" style="margin-top: 0px;">
+                        <div class="btn-container" [ngClass]="{'disabled':!viewPreviewData || viewPreviewData.length<=0}">
+                            <div class="preview-btn bge-btn" style="width: 400px;padding: 0px;">
+                                <div class="btn-text"><input type="text" (keyup)="removeSpaces()" [(ngModel)]="viewName" style="width: 380px;line-height: 24px;border: none;background: transparent;" placeholder="View Name"/></div>
+                            </div>
+                            <div class="error" *ngIf="viewNameError" style="order: 2;padding: 8px 0px;">Please Enter Valid View Name</div>
+                        </div>
+                        <div class="btn-container">
+                            <div class="preview-btn bge-btn" (click)="createDataset()" [ngClass]="{'disabled':!viewPreviewData || viewPreviewData.length<=0}" >
+                               
+                                <div class="btn-text">Create View</div>
+                            </div>
+                        </div>
+                  
+                    </div>
+                </div>
+                <div class="join-data-container preview-data" *ngIf="previewDataCalled && (!viewPreviewData || viewPreviewData.length<=0)">
+                    <h2>No records found</h2>                  
+                </div>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>
+</div>
+
+    <app-loader *ngIf = '!dataLoaded'></app-loader>
+    <app-server-error-popup [message]="errorString"></app-server-error-popup>

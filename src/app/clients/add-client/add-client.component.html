@@ -1,0 +1,80 @@
+<app-toolbar></app-toolbar>
+<mat-toolbar style="height: 42px !important; min-height:unset!important;">
+<mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+  <button mat-icon-button class="slider-button"  (click)="goClose()">
+      <img src="assets/circled-icon.png">                
+  </button>
+  <div class="add-client-name">
+      <!-- {{clientInfo ? clientInfo.name : '-'}} -->
+      Add New Client 
+  </div>
+  <div style="text-align: center;" *ngIf="clientName">{{  clientName }}</div> 
+  <div class="add-client-name">
+    
+</div>
+</mat-toolbar-row>
+</mat-toolbar>
+<div class="" style="height: 100vh;">
+  <!-- <app-toolbar></app-toolbar> -->
+  
+            <mat-horizontal-stepper  [selectedIndex]="this.selectedIndex" 
+            (selectionChange)="selectionChange($event)" linear  labelPosition="bottom" #stepper>
+            <ng-template matStepperIcon="done" let-index="index">
+
+              {{index+1}}
+            </ng-template>
+            <!-- <ng-template matStepperIcon="done" let-index="index" let-active="active">
+                <mat-icon *ngIf="index === stepper.steps.length - 1; else default">done</mat-icon>
+                <ng-template #default>{{index + 1}}</ng-template>
+            </ng-template> -->
+           
+              <mat-step  class="main-wrapper" [completed]="false" [stepControl]="subscriptionFormGroup" [editable]="isEditable" label="Subscription">
+                <form [formGroup]="subscriptionFormGroup">
+                  <app-subscription  [editSubscription]="getData" [stepperData]="stepper" (loadSubscriptionformEvent)="openSubscriptionForm($event)"></app-subscription>
+                </form>
+              </mat-step>
+              <mat-step [completed]="false"  [stepControl]="sitesFormGroup" [editable]="isEditable" label="Sites">
+                <form [formGroup]="sitesFormGroup">
+                  <app-sites-card  *ngIf="isSiteShow" [stepperData]="stepper" (loadSiteformEvent)="openSiteForm($event)" ></app-sites-card>
+                </form>
+              </mat-step>
+              <mat-step  [completed]="false" [stepControl]="usergroupsFormGroup" [editable]="isEditable" label="User Groups">
+                <form [formGroup]="usergroupsFormGroup">
+                  <app-user-groups  *ngIf="isShowUserGroup" [stepperData]="stepper" (loadUserGroupformEvent)="openUserGroupForm($event)"></app-user-groups>
+                </form>
+              </mat-step>
+              <mat-step  [completed]="false" [stepControl]="usersFormGroup" [editable]="isEditable"  label="Users">
+                <form [formGroup]="usersFormGroup">
+                    <app-users  *ngIf="isShowUser"  (loadformEvent)="openFinishForm($event)" [stepperData]="stepper"></app-users> 
+                </form>
+              </mat-step>
+              <mat-step [completed]="false" >
+                <ng-template matStepLabel>Finish</ng-template>
+                <app-finish  [subsciptionupdatedata]="subscriptionData"   [siteupdatedata]="siteData" [groupupdatedata]="userGroupData"  [updatedata]="loadfinalform"  *ngIf="isShowfinish"   (messageEvent)="receiveMessage($event)"  [stepperData]="stepper" ></app-finish>
+              </mat-step>
+            </mat-horizontal-stepper>
+
+
+            
+          <!-- <mat-horizontal-stepper  id="stepper"  linear  labelPosition="bottom"  #stepper>
+            <ng-template matStepperIcon="done" let-index="index">
+              {{index+1}}
+            </ng-template>
+            <mat-step label="Step 1">
+              <app-subscription  [editSubscription]="getData" [stepperData]="stepper" (loadSubscriptionformEvent)="openSubscriptionForm($event)"></app-subscription>
+            </mat-step>
+            <mat-step label="Step 2">
+              <app-sites-card  *ngIf="isSiteShow" [stepperData]="stepper" (loadSiteformEvent)="openSiteForm($event)" ></app-sites-card>
+            </mat-step>
+            <mat-step label="Step 3">
+              <app-user-groups  *ngIf="isShowUserGroup" [stepperData]="stepper" (loadUserGroupformEvent)="openUserGroupForm($event)"></app-user-groups>
+            </mat-step>
+            <mat-step label="Step 4">
+              <app-users  *ngIf="isShowUser"  (loadformEvent)="openFinishForm($event)" [stepperData]="stepper"></app-users> 
+            </mat-step>
+            <mat-step label="Step 5">
+              <app-finish  [subsciptionupdatedata]="subscriptionData"   [siteupdatedata]="siteData" [groupupdatedata]="userGroupData"  [updatedata]="loadfinalform"  *ngIf="isShowfinish"   (messageEvent)="receiveMessage($event)"  [stepperData]="stepper" ></app-finish>
+            </mat-step>
+          </mat-horizontal-stepper> -->
+    </div>
+    <app-server-error-popup [message]="errorString"></app-server-error-popup>

@@ -1,0 +1,18 @@
+<div class="login-wrapper" *ngIf="dataLoaded">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <mat-card class="login-card">
+            <img class="logo" src="assets/logo.png">
+            <input class="input-field" formControlName="email" placeholder="E-mail">
+            <span class="error-text">{{fgtPwderrorText}}</span>
+            <input class="input-field" formControlName="password" type="password" placeholder="Password">
+            <span class="error-text">{{errorText}}</span>
+            
+            <input type="submit" value = "Sign In" class="raised-button signin-button" mat-raised-button color="primary">
+            <span class="forgot-success">{{fgtSuccessText}}</span>
+            <div class="forgot-password bge-btn" (click)="forgotpassword()">Forgot Password?</div>
+    </mat-card>
+  </form>
+    <div class="powered-by">Powered by OMai</div>
+</div>
+<app-loader *ngIf="!dataLoaded"></app-loader>
+<app-server-error-popup></app-server-error-popup>

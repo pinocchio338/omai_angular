@@ -1,0 +1,96 @@
+<div class="main-container" *ngIf='dataLoaded'>
+    <app-toolbar [currentPage]="'clientinfo'" [hideApplications]='true'></app-toolbar>
+    <mat-card class="site-expanded-card">
+        <div class="grid-3-container">
+            <div class="site-expanded-container">
+                <div [style.background-image]="'url('+(clientInfo.logo || 'assets/sample-site-image.png')+')'"
+                    class='selected-site-logo'>
+                </div>
+            </div>
+            <div class="site-expanded-container">
+                <div class="selected-site-details">
+                    <span class="selected-site-name">
+                        {{clientInfo.name}}
+                    </span>
+                    <span class="selected-site-contact">
+                        {{clientInfo.email}}
+                    </span>
+                    <span class="selected-site-address">
+                        {{clientInfo.address.line1}}
+                    </span>
+                    <span class="selected-site-address">
+                        
+                        {{clientInfo.address.line2}}<span *ngIf="clientInfo.address.line2">{{'&nbsp;'}}</span>
+                        {{clientInfo.address.city}}
+                    </span>
+                    <span class="selected-site-address">
+                        {{clientInfo.address.state}} {{clientInfo.address.zipCode}}
+                    </span>
+                    <span class="selected-site-address">
+                        {{clientInfo.address.country}}
+                    </span>
+                    <div class="selected-site-stats">
+                        <div class="selected-site-stats-item">
+                            <div class="selected-site-stat-icon-wrapper">
+                                <img class="selected-site-stat-icon" src='assets/map-pin.png'>
+                            </div>
+                            <span class='stat-count'>{{clientInfo.sites}}
+                                Sites</span>
+                        </div>
+                        <div class="selected-site-stats-item">
+                            <div class="selected-site-stat-icon-wrapper">
+                                <img class="selected-site-stat-icon" src='assets/users.png'>
+                            </div>
+                            <span class='stat-count'>{{clientInfo.users}}
+                                Users</span>
+                        </div>
+                        <div class="selected-site-stats-item">
+                            <div class="selected-site-stat-icon-wrapper">
+                                <img class="selected-site-stat-icon" src='assets/pie-chart.png'>
+                            </div>
+                            <span class='stat-count'>{{clientInfo.dasboards}}
+                                Dash</span>
+                        </div>
+                        <div class="selected-site-stats-item">
+                            <div class="selected-site-stat-icon-wrapper">
+                                <img class="selected-site-stat-icon" src='assets/bell.png'>
+                            </div>
+                            <span class='stat-count'>{{clientInfo.alerts}}
+                                Alerts</span>
+                        </div>
+                        <!-- <button mat-icon-button color="primary" class="editclientinfo"
+                            (click)="editClientMode()">
+                            <div class="selected-site-stats-item">
+                                <div class="selected-site-stat-icon-wrapper edit-icon-wrapper">
+                                    <img class="selected-site-stat-icon" id='edit-icon'
+                                        src='assets/edit-2.png'>
+                                </div>
+                                <span class='stat-count'>Edit</span>
+                            </div>
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="site-expanded-container">
+                <div class="selected-site-subscription-details">
+                    <div class="subscription-label">Subscription End Date</div>
+                    <div class="subscription-date">
+                        {{clientInfo ? (clientInfo.subscriptionEndDate | date:'longDate') : '-'}}
+                    </div>
+                    <!-- <button mat-stroked-button color="primary">
+                                    <mat-icon>watch_later</mat-icon> Send reminder
+                                </button> -->
+                    <!-- <button (click)="sendReminder()"
+                        [ngClass]="expiringSoon()? 'stroked-button reminder-button ' : 'stroked-button reminder-button disabled'">
+                        <img src="assets/clock.png"> Send reminder
+                    </button> -->
+                </div>
+            </div>
+        </div>
+        
+
+
+    </mat-card>
+</div>
+<app-loader *ngIf = '!dataLoaded'></app-loader>
+<app-server-error-popup></app-server-error-popup>

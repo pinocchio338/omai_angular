@@ -1,0 +1,269 @@
+﻿<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<title></title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, minimum-scale=0.5, maximum-scale=0.7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+   <link type="text/css" rel="stylesheet" href="./css/aristo/jquery-ui-1.8.16.custom.css" />
+   <link type="text/css" rel="stylesheet" href="./css/jquery.layout.css" />
+   <link type="text/css" rel="stylesheet" href="./css/application.css" />
+<style>
+   #labels{
+      display: flex;
+      flex-direction: column;
+   }
+
+   input[type=text]{
+      width: 140px;
+   }
+
+  .custom-button{
+     cursor: pointer !important;
+     background: whitesmoke !important;
+     padding: 6px 12px !important;
+     border: unset !important;
+     min-width: 84px !important;
+     margin: 8px auto;
+     border-radius: 2px;
+     width: fit-content;
+     font-size: 14px;
+     color:#111111;
+  }
+
+  .title{
+     color:white;
+     margin:8px;
+     display:flex; 
+     flex-direction:row
+  }
+
+  hr{
+   border-color:gray;
+   margin: 4px;
+  }
+</style>
+<script src="./lib/jquery.js"></script>
+<script src="./lib/jquery-ui.js"></script>
+<script src="./lib/jquery.browser.js"></script>
+<script src="./lib/jquery.layout.js"></script>
+   <script src="./lib/jquery-touch_punch.js"></script>
+   <script src="./lib/raphael.js"></script> 
+   <script src="./lib/shifty.js"></script>
+   <script src="./lib/jquery.contextmenu.js"></script>
+   <script src="./lib/rgbcolor.js"></script>
+   <script src="./lib/StackBlur.js"></script>
+   <script src="./lib/Class.js"></script>
+
+    <script src="../draw2d.js"></script>
+    <script src="./draw2d.js"></script>
+    <script src="./gui/Application.js"></script>
+	  <script src="./gui/View.js"></script>
+    <script src="./gui/Toolbar.js"></script>
+    <script src="./gui/HoverConnection.js"></script>
+    <script src="./gui/LabelRectangle.js"></script>
+    <script src="./gui/LabeledEnd.js"></script>    
+
+ <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded",function () {
+
+     var app  = new example.Application();
+   //   app.view.installEditPolicy( new draw2d.policy.canvas.CanvasPolicy)
+     app.view.installEditPolicy(  new draw2d.policy.connection.DragConnectionCreatePolicy({
+        createConnection: function(){
+            return new HoverConnection();
+        }
+      }));
+});
+
+
+</script>
+
+</head>
+
+<body id="container" onload="setMode()">
+
+   <div id="content">
+   		<div id="toolbar"></div>
+   		<div id="canvas" class="" style="width:100%; height:100%;"></div>
+   </div>
+
+   <div id="navigation" class="">
+      <div class="title">Blocks</div>
+    	<div data-shape="draw2d.shape.node.Start" onclick="draw('draw2d.shape.node.Start','transparent',null)" class="custom-button draw2d_clickable">Start</div>
+    	<div data-shape="draw2d.shape.node.End" onclick="draw('draw2d.shape.node.End','transparent',null)" class="custom-button draw2d_clickable">End</div>
+       <div data-shape="draw2d.shape.node.Between" onclick="draw('draw2d.shape.node.Between','transparent',null)" class="custom-button draw2d_clickable">Between</div>
+       <div data-shape="draw2d.shape.basic.Rectangle" onclick="draw('draw2d.shape.basic.Rectangle','transparent',null)" class="custom-button draw2d_clickable">Rectangle</div>
+       <div data-shape="draw2d.shape.basic.Circle" onclick="draw('draw2d.shape.basic.Circle','green',null)" class="custom-button draw2d_clickable">Green Circle</div>
+       <div data-shape="draw2d.shape.basic.Circle" onclick="draw('draw2d.shape.basic.Circle','red',null)" class="custom-button draw2d_clickable">Red Circle</div>
+       <div data-shape="draw2d.shape.basic.Circle" onclick="draw('draw2d.shape.basic.Circle','gray',null)" class="custom-button draw2d_clickable">Gray Circle</div>                
+       <div data-shape="draw2d.shape.basic.Image" onclick="draw('draw2d.shape.basic.Image','gray',null)" class="custom-button draw2d_clickable">Valve</div>                
+       <div class="title" style="margin-bottom: 0px;">Label</div>    
+       <input type="text" id="label-name" class="custom-button" placeholder="Label Text"> 
+       <div data-shape="example.LabelRectangle" onclick="createLabel()" class="custom-button">Create</div>
+       <!-- <div data-shape="example.LabeledEnd" class="palette_node_element custom draw2d_droppable">State</div> -->
+       <!-- <div data-shape="draw2d.shape.basic.Text" class="palette_node_element custom draw2d_droppable">Text</div> -->
+       <hr>
+       <div id="labels"></div>
+       
+   </div>
+   <script>
+
+      function createLabel(){
+         let name = document.getElementById('label-name').value;
+         console.log(name);
+         if(!name){
+            return;
+         }
+         else{
+            draw('example.LabelRectangle','transparent',name)
+         }
+         
+      }
+
+      function draw(shape,color,label){
+         // console.log(shape, label)
+         let figure;
+         if(!shape.includes('Image'))
+            figure = eval("new "+shape+"();");
+         else  {
+            figure = eval("new "+shape+"('valve.png',25,25);");
+            figure.path="valve.png"
+            figure.width=figure.height=25} 
+         console.log(figure);
+         try{
+            const figureClass = figure.cssClass;
+            // console.error(figureClass)
+            if(["draw2d_shape_node_Start", "draw2d_shape_node_End", "draw2d_shape_node_Between"].includes(figureClass)){
+               figure.bgColor.hashString = '#FFFFFF00'
+            }
+         }
+         catch(e){
+            console.error(e)
+         }
+         // figure.installEditPolicy(draw2d.policy.EditPolicy(30,30,300,300));
+         var command = new draw2d.command.CommandAdd(this, figure, 10, 10);
+         if(color){
+            if(color=='green'){
+               console.log(command.figure);
+               command.figure.bgColor.hashString = '#00a100';
+            }
+            else if(color=='gray'){
+               console.log(command.figure);
+               if(command.figure.bgColor)
+                  command.figure.bgColor.hashString = '#444444';
+            }       
+         }     
+            if(label)  
+            {
+            command.figure.height=40;
+            command.figure.width=100;
+            command.figure.radius=4;
+            command.figure.bgColor.hashString = '#17191C';
+            command.figure.children.data[0].figure.text = label;
+            command.figure.children.data[0].figure.fontColor.hashString="#FFFFFF";
+            command.figure.children.data[0].figure.color.hashString="#17191C";
+            }
+            if(color=='transparent'){
+               try{
+                  command.figure.bgColor.hashString = '#FFFFFF';
+                  if(label)
+                     command.figure.color.hashString = '#FFFFFF';
+                  command.figure.children.data[0].figure.text = label;
+                  command.figure.children.data[0].figure.fontColor.hashString="#212121";
+                  command.figure.children.data[0].figure.color.hashString="#FFFFFF";
+               }
+               catch(e){}
+            }
+         
+      //   console.error(command);
+      //   alert(globalCanvas)
+        command.canvas = globalCanvas;
+        globalCanvas.getCommandStack().execute(command);
+      }
+    function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+    function(m,key,value) {
+      vars[key] = value;
+    });
+    return vars;
+  }
+      function setMode(){
+         let mode = 'view';
+         let index = -1;
+         let params = getUrlVars();
+         // console.error(window.location.href)
+         index = params['index'];
+         if(params['mode']!=='edit'){            
+            mode = 'view';
+            if(params['mode']=='preview')
+               mode = 'preview';
+            var toolbar = document.getElementById('toolbar');
+            var navigation = document.getElementById('navigation');
+            var canvas = document.getElementById('canvas');
+            $('#navigation-toggler').click().css('pointer-events','none');
+            // $('body').css('pointer-events','none');
+            if(toolbar){
+               // console.error(toolbar)
+               toolbar.style.display="none";               
+            }
+            else{
+               // console.error('not found')
+            }
+            if(navigation){
+               // console.error(navigation)
+               navigation.style.display="none"
+            }
+            else{
+               // console.error('not found')
+            }
+            if(canvas){
+               // console.error(canvas)
+               canvas.style.height="100%";
+               canvas.style.top="0";
+            }
+            else{
+               // console.error('not found')
+            }            
+         }
+         else{
+            mode = 'edit';
+            let labels = sessionStorage.getItem('labels_'+index)
+            window.params = labels || []; 
+            if(labels){
+               labels = JSON.parse(labels);
+               let labelsDiv = '<div class="title">Available Tags</div>';
+               labels.forEach(label =>{
+                  labelsDiv += `<button class="custom-button" onclick="draw('example.LabelRectangle','gray','`+label+`')" >`+label+`</button>`;
+               });
+               document.getElementById('labels').innerHTML=labelsDiv;
+            }
+         }
+         
+         if(mode == 'view'){
+            setInterval(()=>{
+               const liveData = sessionStorage.getItem('liveData_'+index);
+               console.log('checking for live data')
+               if(liveData){
+                  // console.log(liveData)
+                  const liveDataObject = JSON.parse(liveData)
+                  // console.log(liveDataObject)
+                  if(typeof(liveDataObject)!=='object')
+                     return;
+                  const fieldNames = Object.keys(liveDataObject)                   
+                  fieldNames.forEach(fieldName => {
+                     try{
+                        $($('text.'+fieldName).children()[0]).text(fieldName + ': '+liveDataObject[fieldName])
+                  }
+                  catch(e){}   
+                  }) 
+               }
+            }, 5000)                     
+         }
+      }
+
+   </script>
+</body>
+</html>

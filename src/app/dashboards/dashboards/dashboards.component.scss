@@ -1,0 +1,65 @@
+.multi-graph{
+    width: 100%;
+    height: 85%;
+}
+
+.single-graph{
+    width: 100%;
+    height: 100%;
+}
+
+.dashboards-container, .dashboard-wrapper{
+    height: 100%;
+}
+
+iframe{
+    border: unset;
+}
+.dashboards-container{
+    overflow: scroll;
+    height: calc(100% - 106px);
+}
+
+mat-toolbar{
+    background-color: white;
+}
+
+.sites-label{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    // display: flex;
+    // align-items: center;
+    color: var(--text);
+}
+
+.selected-client-name{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.7px;
+    word-spacing: 2px;
+    // display: flex;
+    // align-items: center;
+    color: var(--text);
+    // margin-left: 16px;
+}
+
+.slider-button{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: #F1F3F5;
+    margin: auto 0px;
+    border: unset;
+}
+
+@media (max-width:800px){
+    .dashboards-container{
+        height: 100%;
+    }
+}

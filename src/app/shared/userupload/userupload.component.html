@@ -1,0 +1,24 @@
+<div mat-dialog-title>
+    <div class="users-header">
+   
+    <div class="header-title">
+     Importing Users
+    </div>
+    <div class="close-btn bge-btn" *ngIf="isCompleteProcess" (click)="closeUserUpload()">
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+</div>
+<div mat-dialog-content >
+
+    <div class="error" *ngIf="csvError" [innerHTML]="csvError"></div>
+    <div *ngIf="successRecords || failedRecords">
+        <div class="total upload_summary"> Total Records: {{totalRecords}}</div>
+        <div class="success upload_summary">Successfully uploaded : {{successRecords}} </div>
+        <div class="failed upload_summary">Failed To Upload : {{failedRecords}}</div>
+    </div>
+    
+    <mat-progress-bar mode="indeterminate" *ngIf="uploadStarted"></mat-progress-bar>  
+</div>
+
+                            

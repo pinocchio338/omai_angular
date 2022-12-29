@@ -1,0 +1,209 @@
+<div class="main-container page-container"  *ngIf = 'dataLoaded'>
+    <app-toolbar></app-toolbar>
+    <mat-toolbar style="height: 42px !important; min-height:unset!important;">
+        <mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+            <!-- <button mat-icon-button class="slider-button" (click)="goBack()" >
+                <img src="assets/arrow-left.png">                
+            </button> -->
+            <!-- <span class="group-name">
+                {{clientInfo ? clientInfo.name : '-'}}
+            </span>
+            <span class="sites-label"> / </span> -->
+            <span class="sites-label"> Users </span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="secondary-container">
+        <div class="user-card-section">
+            <mat-card class="user-card">
+                <div class="card-text-label">Users
+                <div class="btn-get-template bge-btn">
+                    <div class="btn-text"><a href="assets/user_import_sample.csv" download="user_import_sample.csv">Get Template</a></div>
+                </div>
+                </div>
+                <div class="add-btn-import">
+                    <button  class="btn-add text-content" (click)="addNewUser()" >
+                        <span>Add new user</span> 
+                        <img src="./../../../assets/plus_icon.jpg" class="add-site-plus-icon">            
+                    </button>
+                    <div class="importUser bge-btn" (click)="uploadUsers()"></div>
+                    <input type="file" #csvReader name="Upload CSV"  id="usersFileUpload"  (change)="importUsersListener($event)" accept=".csv" /> 
+
+                </div>
+                 <div  [ngClass]="isSearchActive==true ? 'search-wrapper search-active' : 'search-wrapper'">
+                    <mat-icon>search</mat-icon>
+                    <input #searchbox type="text" placeholder="Search User" 
+                    (focus)='isSearchActive=true' (focusout)='isSearchActive=false'
+                    (keyup)="searchUser(searchbox.value)">
+                </div>
+                <div class='users-list-wrapper'>
+                    <div *ngFor="let client of UserList; let i = index" class="user-item" 
+                    [ngClass]="client.sortKey == selectedUser ? 'sites-all-list-item selected-site' : 'sites-all-list-item'"
+                    (click)='selectClient(i , client)'>
+                        <div class="user-card-box">
+                            <div class='user-image' [style.background-image]="'url('+getPhoto(client.photo)+')'"></div>
+                            <div class="site-details">
+                                <div class="user-item-name text-emphasis">{{client.name}}</div>
+                                <div class="user-item-phone text-subtext">{{client.phone}}</div>
+                            </div>
+                        </div>
+                    </div>   
+
+                </div>       
+            </mat-card>
+            <mat-card *ngIf="isShowUserInfo" class="user-card-detail"> 
+                <div *ngIf="userDetailInfo && isShowUserInfo">
+                <div class='user-info-image' (click)="changeImage();inlineFieldChangeMode('photo','edit', userDetailInfo)" [style.background-image]="'url('+getPhoto(userDetailInfo.photo)+')'"></div>
+                <input type="file" hidden #userImage  accept="image/x-png,image/gif,image/jpeg" (change)="uploadPhoto($event)">
+                <div class="inline-edit-btn-wrapper" style="width: 100%;" *ngIf="userFields['photo']['mode']=='edit' && selectedUserPhoto">
+                    <button class="image-button" (click)="inlineFieldCancel('photo')"><img src="assets/x.png"></button>
+                    <button class="image-button" (click)="inlineFieldUpdate('photo',userDetailInfo)"><img src="assets/check.png"></button>  
+                  </div>               
+                  <div class="text-label">Name</div>
+                  <span class="text-value"  (click)="inlineFieldChangeMode('name','edit', userDetailInfo)" *ngIf="userFields['name']['mode']=='view'">{{ userDetailInfo.name }}</span>
+                  <div class="inline-edit-wrapper" *ngIf="userFields['name']['mode']=='edit'" >
+                      <input class='inline-edit text-input' [(ngModel)]="selectedUserName" pattern="[a-zA-Z ]*" name="name" #name="ngModel">
+                      <div class="inline-edit-btn-wrapper">
+                        <button class="image-button" (click)="inlineFieldCancel('name')"><img src="assets/x.png"></button>
+                        <button class="image-button" (click)="inlineFieldUpdate('name' ,userDetailInfo )"><img src="assets/check.png"></button>  
+                      </div>
+                      <div [hidden]="name.valid || name.pristine"
+                         class="alert alert-danger">
+                          <div class="error-block" [hidden]="!name.hasError('pattern')">Entered Alphabet Value</div>
+                       </div>
+                 </div>
+                
+                  <!-- <div class="text-value"> {{ userDetailInfo.name }}</div> -->
+                  <div class="text-label">email</div>
+                  <div class="text-value" >{{ userDetailInfo.email }}</div>
+                   
+                  <form   [formGroup]="userForm"  method="post" novalidate>
+                    <div class="text-label">Email to Text</div>
+                  <span class="text-value" [ngClass]="{'emptyval':!userDetailInfo.emailtotext}"  (click)="inlineFieldChangeMode('emailtotext','edit', userDetailInfo)" *ngIf="userFields['emailtotext']['mode']=='view'">{{ userDetailInfo.emailtotext }}</span>
+                  <div class="inline-edit-wrapper" *ngIf="userFields['emailtotext']['mode']=='edit'" >
+                      <input class='inline-edit text-input' formControlName="selectedEmailToText"  name="emailtotext">
+                      <div class="inline-edit-btn-wrapper">
+                        <button class="image-button" (click)="inlineFieldCancel('emailtotext')"><img src="assets/x.png"></button>
+                        <button class="image-button" (click)="inlineFieldUpdate('emailtotext' ,userDetailInfo )"><img src="assets/check.png"></button>  
+                      </div>
+                      <div *ngIf="isFormSubmitted && f.selectedEmailToText.errors" class="error-block">
+                        <div >Enter Valid Email</div>
+                        
+                    </div>
+                 </div> 
+                    <div class="text-label">phone</div>
+                    <span class="text-value" style="display: block;"  (click)="inlineFieldChangeMode('phone','edit', userDetailInfo)" *ngIf="userFields['phone']['mode']=='view'">{{ userDetailInfo.phone }}</span>
+                    <div class="inline-edit-wrapper" *ngIf="userFields['phone']['mode']=='edit'">
+                        <input type="text" minlength="14" maxlength="17" appPhoneMask   formControlName="selectedUserPhone"   class='inline-edit text-input'  >
+                        <div class="inline-edit-btn-wrapper">
+                          <button class="image-button" (click)="inlineFieldCancel('phone')"><img src="assets/x.png"></button>
+                          <button class="image-button" (click)="inlineFieldUpdate('phone' ,userDetailInfo )"><img src="assets/check.png"></button>  
+                        </div>
+                        <div *ngIf="isFormSubmitted && f.selectedUserPhone.errors" class="error-block">
+                            <div *ngIf="f.selectedUserPhone.errors.required">Phone no is required</div>
+                            <div *ngIf="f.selectedUserPhone.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                    </div> 
+                   </div>
+
+                  </form>
+                
+                  <!-- <div class="text-value">{{ userDetailInfo.phone }}</div> -->
+                  <div class="text-label">address</div>
+                  <span class="text-value"  (click)="inlineFieldChangeMode('address','edit', userDetailInfo)" *ngIf="userFields['address']['mode']=='view'">
+                     <div class="user-item-name">{{ userDetailInfo.address.line1 }}</div>
+                     <div class="user-item-name" *ngIf="userDetailInfo.address.line2">{{ userDetailInfo.address.line2  }}</div>
+                     <div class="user-item-name">{{ userDetailInfo.address.city  }}</div>
+                     <div class="user-item-name">{{ userDetailInfo.address.state  + ' ' + userDetailInfo.address.zipCode}}</div>
+                     <div class="user-item-name">{{ userDetailInfo.address.country }}</div>
+
+                </span>
+                <div class="inline-edit-wrapper" *ngIf="userFields['address']['mode']=='edit'">
+                    <input type="text" class="form-control text-box-address" [(ngModel)]="line1"   placeholder="Street Address">
+                    <input type="text" class="form-control text-box-address" [(ngModel)]="line2"   placeholder="Apartment,Suite,Unit">
+                    <input type="text" class="form-control text-box-address"  pattern="\d*" minlength="0" maxlength="5" oninput="validity.valid||(value='');" [(ngModel)]="zipcode" placeholder="Zip Code">
+                    <input type="text" class="form-control text-box-address"   pattern="[a-zA-Z ]*" [(ngModel)]="city" placeholder="City"  name="cityvalid" #cityvalid="ngModel" (keyup)="checkValidation(city)">
+                    <div [hidden]="cityvalid.valid || cityvalid.pristine"
+                    class="alert alert-danger">
+                     <div class="error-block" [hidden]="!cityvalid.hasError('pattern')">Entered Alphabet Value</div>
+                     </div>
+                    <input type="text" class="form-control text-box-address"   pattern="[a-zA-Z ]*" [(ngModel)]="state" placeholder="State" name="stateValid" #stateValid="ngModel">
+                    <div [hidden]="stateValid.valid || stateValid.pristine"
+                    class="alert alert-danger">
+                     <div class="error-block" [hidden]="!stateValid.hasError('pattern')">Entered Alphabet Value</div>
+                    </div>
+                    <select class="form-control text-box-address" [(ngModel)]="country">
+                            <option value="United States Of America" selected>United States Of America</option>
+                    </select>
+                    <div class="inline-edit-btn-wrapper">
+                      <button class="image-button" (click)="inlineFieldCancel('address')"><img src="assets/x.png"></button>
+                      <button class="image-button" (click)="isAddressValid(userDetailInfo)"><img src="assets/check.png"></button>  
+                    </div>
+                   
+                    
+               </div>
+               
+
+                  <div class="user-info-section">
+                      <div [ngClass]='userDetailInfo.status == "active" && userRole == "super-admin"? "action-wrapper" : "action-wrapper disabled"' 
+                      (click)="loginAs(userDetailInfo.email)">
+                        <img src="../../assets/login-user-icon.png">
+                        <div>Login as <br>
+                            this user</div>
+                      </div>
+                      <div class="divider"></div>
+                      <!-- <div  class="user-info-contact-section"> -->
+                        <div class='action-wrapper'>
+                            <a  href="mailto:{{userDetailInfo.email}}" >
+                              <img src="../../assets/email-icon.png">
+                             </a>
+                            <div>Email</div>
+                            <!-- <a href="mailto:{{email}}">Contact via E-mail</a> -->
+                          </div>
+                          <div class='action-wrapper'>
+                            <!-- <img src="../../assets/call_circled-icon.png">
+                            <div>Call</div> -->
+                          </div>
+                          <div class='action-wrapper'>
+                            <!-- <img src="../../assets/text-circled-icon.png">
+                            <div>Text</div> -->
+                          </div>
+                          
+                      <!-- </div> -->
+                  </div>
+                  <div class="text-label no-top-margin">Groups</div>
+                  <div class="user-info-group"> 
+                    <span class="user-group-item" style="display: inline-flex;" *ngFor="let group of userDetailInfo.userGroups">{{getGroupDetails(group)?.display_name}}</span>
+                    
+                </div>
+                <div class="text-label">Sites</div>
+                <div class="user-info-group" *ngIf="selectedUserSites.length>0"> 
+                <span class="user-group-item sites" style="display: inline-flex;" *ngFor="let usersite of selectedUserSites">{{usersite?.name}}</span>
+                </div>
+                <div class="user-info-btn"> 
+                    <img src="./../../../assets/delete_user.png" style="cursor: pointer;" (click)="deleteUser(userDetailInfo)">
+                    <button  *ngIf="userDetailInfo.status == 'active'" class="btn-border" mat-button (click)="suspenUser(userDetailInfo)">Suspend </button>
+                    <button  *ngIf="userDetailInfo.status == 'suspended'"  class="btn-border" mat-button (click)="activeUser(userDetailInfo)">Activate </button>
+
+              </div>
+            </div>
+            <div class="no-user-container" *ngIf="!userDetailInfo">
+                <h4>No user found</h4>
+            </div>
+            </mat-card>
+        </div>
+    </div> 
+</div>
+<app-loader *ngIf = '!dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>
+
+
+
+
+
+
+
+
+
+
+
+
+

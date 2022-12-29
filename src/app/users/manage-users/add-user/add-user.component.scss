@@ -1,0 +1,259 @@
+.main-container {
+ 
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+    height: 100%;
+  }
+  
+  mat-toolbar{
+    background: transparent;
+    background: white;   
+    span{
+        margin:0px 4px;
+    }
+    .selected-client-name{
+        margin-left: 32px;
+    }
+}
+
+.mand{
+    color:red;
+  }
+
+.mat-toolbar-row{
+    height: 56px;
+    background: transparent;
+    background: white;
+}
+
+.text-box{
+    width: 100%;
+    text-transform: unset;
+}
+
+.card-wrapper{
+    overflow: auto;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+.group-name{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color:var(--text);
+    margin-left: 24px;
+}
+
+.sites-label{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color:var(--text);
+}
+
+.user-card{
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    position: relative;
+    width: fit-content;
+    height: auto;
+    left: 0;
+    background: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: auto;
+}
+
+// input#file {
+//     display: inline-block;
+//     width: 100%;
+//     padding: 200px 0 0 0;
+//     height: 200px;
+//     overflow: hidden;
+//     -webkit-box-sizing: border-box;
+//     -moz-box-sizing: border-box;
+//     box-sizing: border-box;
+//     background: url('../../../../assets/add-user-image.png') center center no-repeat #fff;
+//     border-radius: 4px;
+//     background-size: auto;
+//     border: 1px dashed #CED4DA;
+  
+//   }
+.user-image-container{
+    margin-top: 22px!important; 
+    margin-bottom: 12px!important;
+    
+    height: 150px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px auto;
+    border: 1px solid #DEE2E6;
+    box-sizing: border-box;
+    border-radius: 4px;
+    cursor: pointer;
+   
+    .user-image{
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0px auto;
+        display: flex;
+    }
+}
+.user-image-container.noImage{
+    background-image:url('../../../../assets/add-user-image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.card-text-label{
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 21px;
+    line-height: 34px;
+    color:var(--text);
+}
+
+.text-label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #495057;
+    margin-top: 32px;
+    margin-bottom: 8px;
+    text-transform: capitalize;
+}
+
+.add-user-text{
+
+    font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 24px;
+color: #495057;
+
+}
+
+.dividerline{
+
+    border: 1px solid #F1F3F5;
+    margin-bottom: 28px;
+    width: 100%;
+    margin: 8px 0;
+}
+
+.user-item {
+
+    display: grid;
+    grid-template-columns: 2fr 4fr;
+    grid-gap: 14px;
+    margin-bottom: 10px;
+    /* padding: 16px; */
+    margin: 16px 0;
+}
+
+.add-user-btn-section {
+
+   
+    
+    display: grid;
+    grid-template-columns:  14fr 4fr;
+    grid-gap: 14px;
+    margin-bottom: 10px;
+}
+
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 4px 0;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+
+.in-place-field{
+    width: 464px;
+    height: 64px;
+   
+    margin: 8px 0px;
+    label{
+        position: relative;
+width: 100%;
+height: 24px;
+/* left: 0px; */
+display: block;
+/* top: 0px; */
+font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+flex: none;
+order: 0;
+flex-grow: 0;
+    }
+  
+    input,textarea{
+        font-family: Roboto;
+        font-style: normal;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.02em;
+        color:var(--text);
+        height: 24px;
+        background: #FFFFFF;
+        border-radius: 4px;
+        border: none;
+        width: 100%;
+        padding: 8px 0px;
+background: #FFFFFF;
+border-radius: 4px;
+border: none;
+outline:none;
+width: 100%;
+    }
+    label.side{
+        width:40%;
+        float: left;
+        margin-top:16px;
+    }
+    input.side,textarea.side{
+        width:60%;
+        float: left;
+        
+    }
+    input.name{
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+    }
+    input:focus{
+        border: none!important;
+    }
+}
+
+.error-msg{
+    padding: 5px 0px;
+    text-align: right;
+}

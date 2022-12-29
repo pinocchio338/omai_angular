@@ -1,0 +1,184 @@
+/*
+Modified from: http://bl.ocks.org/natemiller/7dec148bb6aab897e561
+*/
+
+:root {
+  --axisY0_line_color: red !important;
+  --axisY1_line_color: green !important;
+  --axisY2_line_color: blue !important;
+  --axisY0_text_fill: red !important;
+  --axisY1_text_fill: green !important;
+  --axisY2_text_fill: blue !important;
+  
+}
+
+.w3-theme-light {color:#000 !important; background-color:#f4f6f9 !important}
+.w3-theme-dark {color:#fff !important; background-color:#26364a !important}
+.w3-theme-action {color:#fff !important; background-color:#26364a !important}
+
+body {
+  font: 10px sans-serif !important;
+ //background-color:#26364a ;
+}
+
+
+::ng-deep .axisY0_line {
+  fill: none !important;
+  stroke:var(--axisY0_line_color) !important;
+  stroke-width: 1px !important;
+}
+
+::ng-deep .axisY1_line {
+  fill: none !important;
+  stroke: var(--axisY1_line_color) !important;
+  stroke-width: 1px !important;
+}
+
+::ng-deep .axisY2_line {
+  fill: none !important;
+  stroke: var(--axisY2_line_color) !important;
+  stroke-width:1px !important;
+}
+
+::ng-deep .axisX_text text{
+  fill: black !important;
+}
+
+::ng-deep .axisY0_text text{
+  fill: var(--axisY0_text_fill) !important;
+  color:var(--axisY0_text_fill) !important;
+}
+
+::ng-deep .axisY1_text text{
+  fill: var(--axisY1_text_fill) !important;
+}
+  
+::ng-deep .axisY2_text text {
+  fill: var(--axisY2_text_fill) !important;
+}
+
+
+::ng-deep .axis path,
+.axis line {
+  fill: none !important;
+  stroke: #000 !important;
+  shape-rendering: crispEdges !important;
+}
+
+::ng-deep .y.axis path {
+  fill: none !important;
+  stroke: #000 !important;
+  shape-rendering: crispEdges !important;
+}
+
+::ng-deep .brush .extent {
+  stroke: #fff !important;
+  fill-opacity: 0.125 !important;
+  shape-rendering: crispEdges !important;
+}
+
+::ng-deep .line {
+  fill: none !important;
+}
+
+
+::ng-deep .overlay {
+  fill: none !important;
+  pointer-events: all !important;
+}
+
+::ng-deep .focus circle {
+  fill: none !important;
+}
+
+::ng-deep .focus circle.y0 {
+  stroke: var(--axisY0_line_color) !important;
+}
+
+::ng-deep .focus circle.y1 {
+  stroke: var(--axisY1_line_color) !important;
+}
+
+::ng-deep .focus circle.y2 {
+  stroke: var(--axisY2_line_color) !important; 
+}
+
+::ng-deep .focus line {
+  stroke: purple !important;
+  shape-rendering: crispEdges !important;
+}
+
+::ng-deep .focus line.y0 {
+  stroke: var(--axisY0_line_color) !important;
+  stroke-dasharray: 10 3 !important;
+  opacity: 0.5 !important;
+}
+
+::ng-deep .focus line.y1 {
+  stroke: var(--axisY1_line_color) !important;
+  stroke-dasharray: 10 3 !important;
+  opacity: 0.5 !important;
+}
+
+::ng-deep .focus line.y2 {
+  stroke: var(--axisY2_line_color) !important;
+  stroke-dasharray: 10 3 !important;
+  opacity: 0.5 !important;
+}
+
+::ng-deep .y0 text { 
+  fill: "#f4f6f9" !important;
+  color:"#f4f6f9" !important;
+}
+
+::ng-deep .divy0  {
+  fill: "#f4f6f9" !important;
+  color:"#f4f6f9" !important;
+}
+
+::ng-deep .legend {
+    font-size: 13px !important;
+    font-weight: bold !important;
+    text-anchor: middle !important;
+}
+
+::ng-deep .label {
+  font-size: 14px !important;
+  text-anchor: middle !important;
+  bottom: 26px !important;
+  position: relative !important;
+}
+
+/* Style the dots by assigning a fill and stroke */
+::ng-deep .dot_line_y0 {
+  fill:  var(--axisY0_line_color) !important; 
+}
+
+::ng-deep .dot_line_y1 {
+  fill:  var(--axisY1_line_color) !important;
+  stroke: #fff !important;
+}
+
+::ng-deep .dot_line_y2 {
+  fill:  var(--axisY2_line_color) !important;
+  stroke: #fff !important;
+}
+.tooltip {
+  position : absolute !important;
+  font-size : 9px !important;
+  font-style : bold !important;
+  color : black !important;
+  opacity : 1 !important;
+  padding : 2px !important;
+  background-color :  white !important;
+  top :0 !important;
+  left :0 !important;
+}
+
+#chart{
+  width: 100% !important;
+  height: auto !important;
+  position: absolute !important;
+  top: 10px !important;
+  left: 15px !important;
+}

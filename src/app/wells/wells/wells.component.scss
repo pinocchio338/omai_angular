@@ -1,0 +1,629 @@
+.applications-breadcrumb{
+    width: 100%;
+    height: 56px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px rgba(33, 37, 41, 0.15);
+    display: flex;
+    display: flex;
+    justify-content: left;
+    .page-title{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0px;
+        margin: auto 16px;
+        // height: 24px;
+        // margin-left: 16px;
+        // margin-top: 16px;
+        .application-page-title{
+            height: 24px;
+            font-family: Roboto;
+            display: flex;
+            align-items: center;
+            color:var(--text);
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 0px 8px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            letter-spacing: 0.7px;
+            word-spacing: 2px;
+            line-height: 24px;
+            margin-left: 0px;
+        }
+        
+        .application-page-title.prev{
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        .application-page-title.clientname{
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        // .application-page-title-seperator{
+
+        // }
+        
+    }
+    .applications-table-btns{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 8px 0px;
+        margin-right: 24px;
+        height: 40px;
+         .btn-adddata {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 8px 16px;
+            height: 40px;
+            background: #F7FBFF;
+            border: 1px solid var(--primary);
+            box-sizing: border-box;
+            border-radius: 4px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            .btn-icon{
+                width: 24px;
+                height: 24px;
+                flex: none;
+                order: 0;
+                flex-grow: 0;
+                margin-right: 8px;
+            }
+            .btn-text{
+                height: 24px;
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                display: flex;
+                align-items: center;
+                letter-spacing: 0.02em;
+                color: var(--primary);
+                flex: none;
+                order: 1;
+                flex-grow: 0;
+                margin: 8px 0px;
+            }
+        }
+        .btn-get-template{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 8px 16px;
+            height: 40px;
+            border-radius: 4px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 0px 8px;
+            .btn-text{
+                height: 24px;
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 16px;
+                line-height: 24px;
+                display: flex;
+                align-items: center;
+                color: var(--primary);
+                flex: none;
+                order: 1;
+                flex-grow: 0;
+                margin: 8px 0px;
+            }
+        }
+    }
+}
+.main-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #F8F9FA;
+    overflow: hidden!important;
+}
+.contents-wrapper{
+    display: flex;
+    flex: 1;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: auto;
+    height: 100%;
+    .wells-container{      
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        background: #FFFFFF;
+        box-sizing: border-box;
+       box-shadow: 0px 0px 4px rgba(33, 37, 41, 0.15);
+        border-radius: 8px;
+        overflow: auto;
+        max-width: 100%;
+        margin:0px auto;
+        padding: 32px;
+        box-sizing: border-box;
+        
+        .wells-title{
+            height: 40px;
+            margin: 0px;
+            .title{
+               height: 34px;
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 21px;
+                line-height: 34px;
+                display: flex;
+                align-items: center;
+                color:var(--text);
+                margin-top: 3px;
+            }
+        }
+        .wells-wrapper{
+            min-width: calc(1024px - 32px);
+            padding-right: 32px;
+            .wells-top-container{
+                width: 100%;
+                height: 56px;
+                margin: 32px 0px;
+                background: #FFFFFF;
+                box-shadow: inset 0px -1px 0px #DEE2E6;
+                .wells-info{
+                    
+                    height: 24px;
+                    margin: 16px 0px;
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color: var(--text-light);
+                    position: relative;
+                    float: left;
+                }
+                .wells-counter{
+                    height: 56px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: flex-start;
+                    position: relative;
+                    float: left;
+                    margin-left: 32px;
+                    .tab{
+                        position: relative;
+                        float: left;
+                        margin: 0px 4px;
+                        height: 56px;
+                        padding: 16px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        box-sizing: border-box;
+                        cursor: pointer;
+                        .tab-data{
+                            height: 24px;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            flex: none;
+                            order: 0;
+                            flex-grow: 0;
+                            .wells-status-label{
+                                height: 24px;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: 500;
+                                font-size: 14px;
+                                line-height: 24px;
+                                display: flex;
+                                align-items: center;
+                                letter-spacing: 0.03em;
+                                color: var(--text-light);
+                                flex: none;
+                                order: 1;
+                                flex-grow: 0;
+                                margin: 0px 4px;
+                                position: relative;
+                                float: left;
+                            }
+                            .wells-status-count{
+                                flex-direction: row;
+                                align-items: center;
+                                padding: 0px 4px;
+                                height: 24px;
+                                border-radius: 4px;
+                                flex: none;
+                                order: 2;
+                                flex-grow: 0;
+                                position: relative;
+                                float: left;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: 500;
+                                font-size: 14px;
+                                line-height: 24px;
+                                display: block;
+                                letter-spacing: 0.03em;
+                                color: #FFFFFF;
+                                min-width: 24px;
+                                text-align: center;
+                            }
+                            .wells-status-count.active{ 
+                                background: var(--succsess);
+                            }
+                            .wells-status-count.inactive{                            
+                                background: var(--error);
+                            }
+                        }
+                    }
+                    .tab.active{
+                        border-bottom: 2px solid var(--primary);
+                        .wells-status-label{
+                            color: var(--primary)!important;
+                        }
+                    }
+                }
+                .wells-searchbox-container{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 8px 16px;
+                    width: 290px;
+                    height: 40px;
+                    background: #FFFFFF;
+                    border: 1px solid #ADB5BD;
+                    box-sizing: border-box;
+                    border-radius: 4px;
+                    margin-top: 8px;
+                    position: relative;
+                    float: right;
+                    .wells-searchbox{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: flex-start;
+                        padding: 0px;
+                        width: 114px;
+                        height: 24px;
+                        flex: none;
+                        order: 0;
+                        flex-grow: 0;
+                        .wells-searchbox-icon{
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            width: 16px;
+                            height: 24px;
+                            flex: none;
+                            order: 0;
+                            align-self: flex-start;
+                            flex-grow: 0;
+                            img{
+                                height: 16px;
+                                width: 16px;
+                            }
+                        }
+                        .wells-searchbox-input{
+                            height: auto;
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 16px;
+                            line-height: 26px;
+                            color: #ADB5BD;
+                            flex: none;
+                            order: 1;
+                            align-self: center;
+                            flex-grow: 0;
+                            margin-left: 16px;
+                            input{
+                                border: none;
+                                height: 24px;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 16px;
+                                line-height: 24px;
+                                outline: none;
+                            }
+                        }
+                    }
+                }
+            }
+            .table-wells-list{
+                width: 100%;
+                table{
+                    width:100%;
+                    border-collapse: collapse;
+                    .table-cell{
+                        text-align: left;
+                        height: 48px;
+                        padding: 0px 16px;
+                        box-sizing: border-box;
+                        background: #FFFFFF;
+                        border-top: 1px solid #DEE2E6;
+                        border-left: 1px solid #DEE2E6;
+                        border-bottom: 1px solid #DEE2E6;
+                        border-right: 1px solid #DEE2E6;
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-size: 14px;
+                        line-height: 16px;
+                        letter-spacing: 0.02em;
+                        color:var(--text);
+                        .well-id{
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 16px;
+                            display: flex;
+                            align-items: center;
+                            letter-spacing: 0.02em;
+                            text-decoration-line: underline;
+                            color: var(--primary);
+                            flex: none;
+                            order: 0;
+                            align-self: stretch;
+                            flex-grow: 0;
+                        }
+                        .status-tag{
+                            width: 62px;
+                            height: 24px;
+                            box-sizing: border-box;
+                            border-radius: 4px;
+                            padding: 0px 4px;
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 14px;
+                            line-height: 24px;
+                            display: block;
+                            text-align: center;
+                            align-items: center;
+                            letter-spacing: 0.03em;
+                            color: #FFFFFF;
+                            
+                        }
+                        .well-name{
+
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 16px;
+                            display: flex;
+                            align-items: center;
+                            letter-spacing: 0.02em;
+                            color: #495057;
+                            flex: none;
+                            order: 0;
+                            align-self: stretch;
+                            flex-grow: 0;
+                        }
+                        .well-cordinates{
+                            position: static;
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 16px;
+                            display: flex;
+                            align-items: center;
+                            letter-spacing: 0.02em;
+                            color: #495057;
+                            flex: none;
+                            order: 0;
+                            align-self: stretch;
+                            flex-grow: 0;
+                        }
+
+                        .status-tag.active{
+                            background: var(--succsess);
+
+                        }
+                        .status-tag.inactive{
+                            background: #f03e3e;
+
+                        }
+                        
+                    }
+                    .bge-btn{
+                        height: 16px;
+                        width: 16px;
+                    }
+                    tr.new-well .table-cell:not(:first-child){
+                        box-shadow: inset 0px 0px 0px 1px var(--primary);
+                        font-size: 14px;
+                        line-height: 24px;
+                        
+                    }
+                    tr.new-well .table-cell.error{
+                        box-shadow: inset 0px 0px 0px 1px var(--error);
+                        }
+                    tr.new-well .table-cell input,tr.new-well .table-cell select{
+                        border: none;
+                        outline: none;
+                        color: #ADB5BD;
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 14px;
+                        line-height: 24px;
+                        letter-spacing: 0.02em;
+                        min-width: 100%;
+                    }
+                    
+                    .table-cell.edit:not(:first-child){
+                        box-shadow: inset 0px 0px 0px 1px var(--primary);
+                        font-size: 14px;
+                        line-height: 24px;
+                        
+                    }
+                    .table-cell.edit.error{
+                    box-shadow: inset 0px 0px 0px 1px var(--error);
+                    }
+                    .table-cell.edit input,.table-cell.edit select{
+                        border: none;
+                        outline: none;
+                        color: #ADB5BD;
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 14px;
+                        line-height: 24px;
+                        letter-spacing: 0.02em;
+                        min-width: 100%;
+                    }
+                    tr.add-new-well .table-cell{
+                        border-left: none;
+                        border-right: none;
+                        background: #F7FBFF;
+                        .add-new-text{
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 16px;
+                            display: flex;
+                            align-items: center;
+                            letter-spacing: 0.02em;
+                            color: var(--primary);
+                            flex: none;
+                            order: 0;
+                            align-self: stretch;
+                            flex-grow: 0;
+                        }
+                    }
+                    tr.add-new-well .table-cell:last-of-type {
+                        border-right: 1px solid #DEE2E6;
+                    }
+                    tr.add-new-well .table-cell:first-of-type {
+                        border-left: 1px solid #DEE2E6;
+                    }
+                    
+                    
+                    .cell-well-action-btn{
+                        padding: 16px;
+                        width: 47px;
+                    }
+                    .cell-well-id,.cell-well-name{
+                        width: 264px;
+                    }
+                    .cell-well-status{
+                        width: 76px;
+                    }
+                }
+            }
+            .pager{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0px;
+                position: static;
+                height: 40px;
+                flex: none;
+                flex-grow: 0;
+                margin-top: 32px;
+                .page{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 8px;
+                    margin-right: 16px;
+                    width: 42px;
+                    height: 40px;
+                    background: #FFFFFF;
+                    border: 1px solid #798088;
+                    box-sizing: border-box;
+                    border-radius: 4px;
+                    flex: none;
+                    flex-grow: 0;
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 24px;
+                    text-align: center;
+                    letter-spacing: 0.02em;
+                    color: #495057;
+                    .page-num{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        padding: 0px;
+                        width: 24px;
+                        height: 24px;
+                        flex: none;
+                        order: 0;
+                        flex-grow: 0;
+                    }
+                    .page-num.num{
+                        margin-left: 8px;
+                    }
+                }
+                .page.active{
+                    border: 1px solid var(--primary);
+                }
+                .showing-text{
+                    position: static;
+                    height: 24px;
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color: var(--text-light);
+                    flex: none;
+                    order: 5;
+                    flex-grow: 0;
+                    margin: 16px 0px;
+                }
+            }
+        }
+    }
+    
+}
+
+.slider-button{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: #F1F3F5;
+    margin: auto 16px;
+    border: unset;
+}
+
+.slider-button  img{
+    width: 24px;
+    height: 24px;
+}
+.well-inline-error{
+    font-size: 12px;
+    position: absolute;
+    margin-top: -2px;
+    line-height: 12px;
+    color: red;
+}
+.wells-info{
+    display: none;
+}
+.wells-counter{
+    margin-left: 0px!important;
+    .tab:nth-of-type(1){
+        padding-left: 0px!important;
+        margin-left: 0px!important;
+    }
+}

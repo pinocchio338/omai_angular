@@ -1,0 +1,2 @@
+user_name,email,emailtotext,phone_no,address_line_1,address_line_2,zip_code,city,state,country,dut_user,alert_level
+,,(Expected Value :Email ID),,,,,,,,(Expected Value : Yes/No),(Expected Value : High/Medium/Low)

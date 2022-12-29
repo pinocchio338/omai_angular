@@ -1,0 +1,69 @@
+#usersFileUpload{
+    display: none;
+}
+.upload_summary{
+    font-size: 16px;
+    margin-left: 16px;
+    margin-bottom: 8px;    
+}
+.error{
+    font-size: 16px;
+    margin-left: 16px;
+border-bottom: 1px solid #ccc ;
+margin-bottom: 16px;
+padding-bottom: 8px;
+
+}
+::ng-deep span.error{
+    display: block;
+    padding: 5px 0px;
+}
+.upload_summary.success{
+    color: var(--succsess);
+}
+.upload_summary.failed{
+    color: var(--error);
+}
+.users-header{
+    width: 100%;
+height: 40px;
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+.circled-icon{
+    width:40px;
+    height: 40px;
+    position: relative;
+    float: left;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.close-btn{
+    height: 24px;
+    width: 24px;
+    position: relative;
+    float: left;
+    
+}
+.header-title{
+    width:92%;
+height: 34px;
+margin-left: 16px;
+margin-top:3px;
+font-family: Roboto;
+font-style: normal;
+font-weight: bold;
+font-size: 16px;
+line-height: 34px;
+display: flex;
+align-items: center;
+color: #000000;
+position: relative;
+    float: left;
+}
+}

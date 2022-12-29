@@ -1,0 +1,7 @@
+field,datatype
+id,int
+duration,timestamp
+field1,double
+field2,double
+field3,double
+field4,string

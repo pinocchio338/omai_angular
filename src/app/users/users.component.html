@@ -1,0 +1,96 @@
+<div *ngIf="userLoaded">
+<div mat-dialog-title>
+<div class="users-header">
+    <div class="circled-icon">
+        <img src="assets/icons/users.svg" class="blue-icon">
+    </div>
+    <div class="header-title">
+        Users
+    </div>
+    <div class="close-btn bge-btn" mat-dialog-close>
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+
+<div class="user-searchbox">
+    <div class="search-container">
+        <div class="search-icon-container">
+            <div class="search-icon">
+                <img class="btn btn-icon" src="assets/icons/search.svg">
+            </div>
+            <div class="search-cat">
+                <div class="search-cat-text">
+                    <input type="text" [(ngModel)]="searchStr" placeholder="Search User" (input)="searchUsers()">
+                </div>
+                
+            </div>
+        </div>
+        <div class="search-close" (click)="searchStr='';searchUsers()">
+            <img class="btn btn-icon" src="assets/icons/x.svg">
+        </div>
+    </div>
+</div>
+<div class="add-user button-ghost-block" *ngIf="!forSite">
+    <div class="add-user-container">
+        <div class="btn-add-user">
+            Add User
+        </div>
+        <div class="shiftbtn shiftbtn-icon" (click)="addNewUser()">
+            <img src="assets/icons/plus.svg">
+        </div>
+    </div>
+</div>
+</div>
+<div mat-dialog-content>
+<div class="user-lists" *ngIf="userLoaded">
+  
+    <div class="user" [ngClass]="{'newUser':user.newUser,'exitingUser':existingUsers && existingUsers.includes(user.sortKey)}" *ngFor="let user of users; let i=index;">
+        <div class="user-container" >
+            <div class="user-data-container">
+                <div class="user-photo" *ngIf="!user.photo" [style.background-image]="'url(' + 'assets/sample-site-image.png' + ')'"></div>
+                <div class="user-photo" *ngIf="user.photo" [style.background-image]="'url(' + user.photo + ')'"></div>
+                <div class="user-data">
+                    <div class="user-name">
+                        {{user?.name}}
+                    </div>
+                    <div class="user-phone">
+                        {{user?.phone}}
+                    </div>
+                </div>
+            </div>
+            <div class="user-selectbox" >
+                <input type="checkbox" [disabled]="(isUserAdded(user.sortKey) || 
+                existingUsers && existingUsers.includes(user.sortKey)) || 
+                isUserInactive(user.sortKey)" [checked]="(existingUsers && existingUsers.includes(user.sortKey)) || isUserAdded(user.sortKey) || user.newUser " (change)="selectUser($event,user)"  class="user-checkbox">
+            </div>
+        </div>
+        <!-- <div *ngIf="user.newUser" class="user-divider"> <mat-divider></mat-divider></div> -->
+       
+    </div>
+</div>
+</div>
+
+<div mat-dialog-actions>
+    <div class="bottom-btns">
+        <div class="btn-cancel btn" mat-dialog-close>
+            <div class="btn">Cancel</div>
+        </div>
+        <button class="btn-done bge-btn">
+            <div class="btn" (click)="chooseUsers()">Choose</div> 
+        </button>
+       
+    </div>
+  </div>
+</div>
+
+<div class="loader-wrapper" *ngIf ='!userLoaded'>
+        <!-- <mat-spinner></mat-spinner> -->
+        <div class='logo'>
+        <img class='' src='assets/Vector.png'>
+        </div>
+    
+</div>
+
+<app-server-error-popup [message]="errorString"></app-server-error-popup>
+
+

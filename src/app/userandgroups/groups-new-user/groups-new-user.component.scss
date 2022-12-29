@@ -1,0 +1,253 @@
+
+.users-header{
+    width: 528px;
+height: 40px;
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+.circled-icon{
+    width:40px;
+    height: 40px;
+    position: relative;
+    float: left;
+    background: #F7FBFF;
+border-radius: 20px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.close-btn{
+    height: 24px;
+    width: 24px;
+    position: relative;
+    float: left;
+    margin-left: 32px;
+}
+.header-title{
+    width:416px;
+height: 34px;
+margin-left: 16px;
+font-family: Roboto;
+font-style: normal;
+font-weight: bold;
+font-size: 21px;
+line-height: 34px;
+display: flex;
+align-items: center;
+color: #000000;
+position: relative;
+    float: left;
+}
+}
+
+.user-form{
+    margin-top:32px;
+    width: 100%;
+    .form-fields{
+        padding: 0px 8px;
+    .in-place-field{
+        width: 100%;
+        height: 64px;
+        position: relative;
+        float: left;
+        margin: 8px 0px;
+        label{
+            position: relative;
+    width: 100%;
+    height: 24px;
+    /* left: 0px; */
+    display: block;
+    /* top: 0px; */
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #495057;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+        }
+        .label-asterisk{
+            margin-bottom: 2px;
+            margin-left: 4px;
+        }
+        input,textarea{
+            font-family: Roboto;
+            font-style: normal;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+            letter-spacing: 0.02em;
+            color: var(--text);
+           
+            background: #FFFFFF;
+            border-radius: 4px;
+            border: none;
+            width: 100%;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: none;
+    outline:none;
+    width: 100%;
+    border: 1px solid #ADB5BD;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 8px 16px;
+    margin: 8px 0px;
+        }
+        label.side{
+            width:40%;
+            float: left;
+            margin-top:16px;
+        }
+        input.side,textarea.side{
+            width:60%;
+            float: left;
+            
+        }
+        input.name{
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+        }
+       
+    }
+}
+}
+
+.mat-form-field {
+    max-height: 40px;
+}
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0;
+}
+.mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+.mat-form-field-infix{
+    width: 254px!important;
+}
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+  .scrollable{
+    position: relative;
+    float: left;
+    
+  }
+  .bottom-btns{
+    margin-top: 40px;
+    padding: 0px 32px;
+    box-sizing: border-box;
+    width: 100%;
+    position: relative;
+    float: left;
+   
+  }
+  .btn-done{
+    display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px 24px;
+float:right;
+position: relative;
+background: var(--primary);
+border-radius: 4px;
+
+flex: none;
+order: 0;
+flex-grow: 0;
+margin: 0px 0px;
+    .btn{
+        /* Button */
+
+
+position: static;
+height: 24px;
+font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+display: flex;
+align-items: center;
+letter-spacing: 0.02em;
+
+/* white */
+
+color: #FFFFFF;
+
+/* Inside Auto Layout */
+
+flex: none;
+order: 1;
+flex-grow: 0;
+    }    
+  }
+  .btn-cancel{
+    display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px 24px;
+
+position: relative;
+width: 99px;
+height: 40px;
+left: 0px;
+top: 0px;
+
+/* blue/4 */
+
+background: #F7FBFF;
+/* blue/100 */
+
+border: 1px solid var(--primary);
+box-sizing: border-box;
+border-radius: 4px;
+    .btn{
+        position: static;
+width: 51px;
+height: 24px;
+left: 24px;
+top: 8px;
+
+/* button */
+
+font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+display: flex;
+align-items: center;
+letter-spacing: 0.02em;
+
+/* blue/100 */
+
+color: var(--primary);
+
+/* Inside Auto Layout */
+
+flex: none;
+order: 1;
+flex-grow: 0;
+margin: 8px 0px;
+    }
+  }
+  .blue-icon{
+    filter: invert(52%) sepia(40%) saturate(869%) hue-rotate(172deg) brightness(95%) contrast(106%);
+}

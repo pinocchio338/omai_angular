@@ -1,0 +1,49 @@
+.toolbar{
+    background: transparent;
+    border: unset;
+    outline: navajowhite;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px;
+
+    img{
+        height: 24px;
+        margin: auto 0;
+    }
+}
+
+.toolbar-application{
+    display: flex;
+    img {
+        margin-right: 16px;
+    }
+    span{
+        margin: auto 0;
+    }
+}
+
+.close-icon{
+    cursor: pointer;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    input{
+        margin-top: 8px;
+    }
+}
+
+.error-text{
+    margin-top: 8px;
+}
+
+.confirm-button{
+    padding: 8px 24px;
+    float: right;
+    align-self: flex-end;
+}
+
+.confirm-button, .content span{
+    margin-top: 40px;
+}

@@ -1,0 +1,115 @@
+<!-- <mat-toolbar> -->
+<div class="popup-container" *ngIf="dataLoaded">
+    <div mat-dialog-title class="add-site-title">
+        <div>
+            <div class="home">
+                <img  src="assets/home-blue.png">
+            </div>
+            <span class="text-heading">Add Site</span>
+        </div>
+        <div>
+            <img class="close" src="assets/x.png" (click)="close()">
+        </div>
+    </div>
+<!-- </mat-toolbar> -->
+    <div class="form-container">
+        <form [formGroup]="siteForm" (submit)="isAddressValid()">
+        <div class="input-container">
+        <span class="text-content label">Site Name<span class="mand">*</span></span>
+        <input class="text-input"  pattern="[a-zA-Z0-9 ]*" formControlName="name" id="name" placeholder="Name">
+        <div *ngIf="isFormSubmitted && f.name.errors" class="error-block">
+            <div *ngIf="f.name.errors.required">Site Name is required</div>
+            <div *ngIf="!f.name.errors.required">{{getMessage('name',' Site Name')}}</div>
+        </div>
+        <!-- <div class="error-block">
+            {{getMessage('name','Site Name')}}
+        </div> -->
+
+        <span class="text-content label">Site ID<span class="mand">*</span></span>
+        <input class="text-input" pattern="[a-zA-Z0-9 ]*"  formControlName="id" id="id" placeholder="Site ID">
+        <div *ngIf="isFormSubmitted && f.id.errors" class="error-block">
+            <div *ngIf="f.id.errors.required">Site ID is required</div>
+            <div *ngIf="!f.id.errors.required">{{getMessage('id',' Site ID')}}</div>
+        </div>
+
+
+        <!-- <span class="text-content label">Site ID<span class="mand">*</span></span>
+        <input class="text-input" pattern="[a-zA-Z0-9 ]*"  formControlName="id" id="id" placeholder="Site ID">
+        <div *ngIf="isFormSubmitted && f.id.errors" class="error-block">
+            <div *ngIf="f.id.errors.required">Site ID is required</div>
+            <div *ngIf="!f.id.errors.required">{{getMessage('id',' Site ID')}}</div>
+        </div> -->
+
+
+          <span class="text-content label">Site Email<span class="mand">*</span></span>
+        <input class="text-input" id="siteemail"  minlength="0" maxlength="100" name="siteemail"
+        formControlName="siteemail" pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email">
+        <div *ngIf="isFormSubmitted && f.siteemail.errors" class="error-block">
+            <div *ngIf="f.siteemail.errors.required">Site Email is required</div>
+            <div *ngIf="!f.siteemail.errors.required">{{getMessage('siteemail',' Site Email')}}</div>
+        </div>
+        
+      
+            <!-- <span class="text-label">Email<span class="mand">*</span></span>
+            <input type="text"  class="form-control text-box" id="siteemail"  minlength="0" maxlength="100" name="siteemail"
+            formControlName="siteemail" pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email"> 
+            <div></div>
+            <div *ngIf="isFormSubmitted && f.siteemail.errors" class="error-block">
+                <div *ngIf="!isemailId &&  f.siteemail.errors.required">Site Email is required</div>
+                <div *ngIf="isemailId">Enter Valid Email-Id</div>
+            </div> -->
+       
+       
+        
+
+        <span class="text-content label">Address Line 1<span class="mand">*</span></span>
+        <input class="text-input " id="addressLine1" formControlName="addressLine1" placeholder="Street Address">
+        <div *ngIf="isFormSubmitted && f.addressLine1.errors" class="error-block">
+            <div *ngIf="f.addressLine1.errors.required">Site address Line 1 is required</div>
+        </div>
+
+
+        <span class="text-content label">Address Line 2</span>
+        <input class="text-input " id="addressLine2" formControlName="addressLine2"placeholder="Apartment, Suite, Unit">
+
+        <span class="text-content label">Zip Code<span class="mand">*</span></span>
+        <input class="text-input "  pattern="\d*" minlength="0" maxlength="5"  oninput="validity.valid||(value='');" id="zipCode" formControlName="zipCode" placeholder="90001">
+        <div *ngIf="isFormSubmitted && f.zipCode.errors" class="error-block">
+            <div *ngIf="f.zipCode.errors.required">Zip Code is required</div>
+        </div>
+
+        <span class="text-content label">City<span class="mand">*</span></span>
+        <input class="text-input " pattern="[a-zA-Z ]*" id="city" formControlName="city" placeholder="City">
+        <div *ngIf="isFormSubmitted && f.city.errors" class="error-block">
+            <div *ngIf="f.city.errors.required">Site City is required</div>
+            <div *ngIf="!f.city.errors.required">   {{getMessage('city','City')}} </div>
+        </div>
+       
+        
+        <span class="text-content label">State<span class="mand">*</span></span>
+        <input class="text-input " pattern="[a-zA-Z ]*" id="state" formControlName="state" placeholder="State">
+        <div *ngIf="isFormSubmitted && f.state.errors" class="error-block">
+            <div *ngIf="f.state.errors.required">Site Sate is required</div>
+            <div *ngIf="!f.state.errors.required"> {{getMessage('state','State')}} </div>
+        </div>
+      
+
+        <span class="text-content label">Country<span class="mand">*</span></span>
+        <select class="form-control text-box" formControlName="country">
+            <option value="United States Of America" selected>United States Of America</option>
+        </select>
+
+        </div>
+        <input class="raised-button" type="submit" value="Create">
+        </form>
+    </div>
+</div>
+<!-- <app-loader *ngIf="!dataLoaded"></app-loader> -->
+<div class="loader-wrapper" *ngIf ='!dataLoaded'>
+    <!-- <mat-spinner></mat-spinner> -->
+    <div class='logo'>
+    <img class='' src='assets/Vector.png'>
+    </div>
+
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

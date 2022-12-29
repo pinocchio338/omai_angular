@@ -1,0 +1,158 @@
+
+ <div class="main-container" *ngIf="dataLoaded">
+<app-toolbar></app-toolbar>
+<div class="applications-breadcrumb" style="height: 42px;">
+    <!-- <button mat-icon-button class="slider-button" (click)="goBack()">
+        <img src="assets/arrow-left.png">                
+    </button> -->
+    <div class="page-title">
+        <!-- <div class="application-page-title prev clientname">
+            {{clientInfo?.name}}
+        </div>
+        <div class="application-page-title-seperator">
+            /
+        </div>
+        
+        <div class="application-page-title prev">
+            {{siteInfo?.name}}
+        </div>
+        <div class="application-page-title-seperator">
+            /
+        </div> -->
+        <div class="application-page-title clientname">
+            Wells Information
+        </div>
+    </div>
+    <div class="applications-table-btns">
+      
+    </div>
+</div>
+<div class="contents-wrapper">
+    <div class="wells-container">
+        
+        <div class="wells-title">
+            <div class="title">
+                Wells Information
+            </div>
+        </div>
+        <div class="wells-wrapper">
+        <div class="wells-top-container">
+            <div class="wells-info">
+                <!-- <strong>{{allWells.length}}</strong> Wells In Site <strong>{{siteInfo?.name}}</strong>. <strong> {{inActiveWells.length}}</strong> InActive Wells -->
+            </div>
+            <div class="wells-counter">
+                <div class="tab" [ngClass]="{'active':wellTypeSelected=='All'}" (click)="changeWellTypeTo('All');">
+                    <div class="tab-data">
+                        <div class="wells-status-label">Total Wells ({{allWells.length}})</div>
+                    </div>
+                </div>
+                <div class="tab"  [ngClass]="{'active':wellTypeSelected=='Active'}" (click)="changeWellTypeTo('Active');">
+                    <div class="tab-data">
+                        <div class="wells-status-label">Active</div>
+                        <div class="wells-status-count active">{{activeWells.length}}</div>
+                    </div>
+                </div>
+                <div class="tab" [ngClass]="{'active':wellTypeSelected=='InActive'}" (click)="changeWellTypeTo('InActive');">
+                    <div class="tab-data">
+                        <div class="wells-status-label">InActive</div>
+                        <div class="wells-status-count inactive">{{inActiveWells.length}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="wells-searchbox-container">
+                <div class="wells-searchbox">
+                    <div class="wells-searchbox-icon"><img src="assets/icons/search.svg"></div>
+                    <div class="wells-searchbox-input">
+                        <input type="text" (input)="searchWell($event);" placeholder="Search well">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-wells-list">
+            <table>
+                <thead>
+                    <th class="table-cell cell-well-action-btn"></th>
+                    <th class="table-cell cell-well-id">Well ID</th>
+                    <th class="table-cell cell-well-status">Status</th>
+                    <th class="table-cell cell-well-name">Well Name</th>
+                    <th class="table-cell">Co-ordinates</th>
+                </thead>
+                <tbody>
+                    <tr class="add-new-well bge-btn" (click)="addNewWell()" *ngIf="!addNewCell">
+                        <td class="table-cell btn"><img class="bge-btn" src="assets/icons/plus.svg"></td>
+                        <td class="table-cell"><span class="add-new-text">Add New Well</span></td>
+                        <td class="table-cell"></td>
+                        <td class="table-cell"></td>
+                        <td class="table-cell"></td>
+                    </tr>
+                    <tr class="add-new-well bge-btn"  *ngIf="addNewCell">
+                        <td class="table-cell btn" (click)="cancelNewWell();"><img class="bge-btn" src="assets/icons/x.svg"></td>
+                        <td class="table-cell" (click)="cancelNewWell();"><span class="add-new-text">Cancel</span></td>
+                        <td class="table-cell" colspan="3">
+                            <!-- <span class="error" *ngIf="newWellError.wellid || newWellError.coordinates || newWellError.status || newWellError.name">Please Check All Required Fields Are Valid.</span><span class="error" *ngIf="newWellError.response">{{newWellError.response}}</span> -->
+                        </td>
+  
+                    </tr>
+                    <tr class="new-well" *ngIf="addNewCell">                        
+                        <td class="table-cell btn" (click)="saveNewWell()"><img class="bge-btn" src="assets/icons/check.svg"></td>
+                        <td class="table-cell" [ngClass]="{'error':newWellError.wellid}">
+                            <input type="text" (focus)="newWellError.wellid=false;" [(ngModel)]="newWell.wellid" class="wellId" id="wellId" maxlength="10"  placeholder="Well ID *">
+                            <span class="well-inline-error" *ngIf="newWellError.wellid">Please Enter Valid Well Id</span>
+                        </td>
+                        <td class="table-cell" [ngClass]="{'error':newWellError.status}">
+                            
+                                <select [(ngModel)]="newWell.status" (click)="newWellError.status=false;">
+                                    <option *ngFor="let wS of wellStatuses" [value]="wS.value">{{wS.key}}</option>
+                                </select>
+                                <span class="well-inline-error" *ngIf="newWellError.status">Please Select Well Status</span>   
+                        </td>
+                        <td class="table-cell" [ngClass]="{'error':newWellError.name}">
+                            <input type="text" (focus)="newWellError.name=false;" [(ngModel)]="newWell.name" class="wellName" id="wellName" maxlength="20" placeholder="Well Name *">
+                            <span class="well-inline-error" *ngIf="newWellError.name">Please Enter Valid Well Name</span>
+                        </td>
+                        <td class="table-cell" [ngClass]="{'error':newWellError.coordinates}">
+                            <input type="text" (focus)="newWellError.coordinates=false;" class="wellCordinates" [(ngModel)]="newWell.wellCordinates"  id="wellCordinates" maxlength="50"  placeholder="34.052235, -118.243683 *">
+                            <span class="well-inline-error" *ngIf="newWellError.coordinates">Please Enter Valid Well Coordinates</span>
+                        </td>
+                    </tr>
+             
+                   
+                    <tr *ngFor="let well of wells;" >
+                        <td class="table-cell btn" (click)="deleteWell(well)"  *ngIf="!well.edit"><img class="bge-btn" src="assets/icons/trash-2.svg"></td>
+                        <td class="table-cell edit btn" *ngIf="well.edit" ><img class="bge-btn" src="assets/icons/x.svg" (click)="cancelInlineEdit(well)" style="margin-top:5px;"><img class="bge-btn" style="margin-top:5px;" (click)="saveEditedWell(editWell)" src="assets/icons/check.svg"></td>
+                        <td class="table-cell" (click)="editInlineWell(well)"><div class="well-id">{{well.wellid}}</div></td>
+                        <td class="table-cell " *ngIf="!well.edit" (click)="editInlineWell(well)"><div class="status-tag" [ngClass]="{'active': well.status=='active','inactive': well.status=='inactive'}">{{titleCase(well.status)}}</div></td>
+                        <td class="table-cell edit" *ngIf="well.edit">
+                            <select [(ngModel)]="editWell.status">
+                                <option *ngFor="let wS of wellStatuses" [value]="wS.value">{{wS.key}}</option>
+                            </select>
+                            <span class="well-inline-error" *ngIf="editWellError.status">Please Select Well Status</span>
+                        </td>
+                        <td class="table-cell" *ngIf="!well.edit" (click)="editInlineWell(well)"><div class="well-name"></div> {{well.name}}</td>
+                        <td class="table-cell edit" [ngClass]="{'error':editWellError.name}" *ngIf="well.edit">
+                            <input type="text" (focus)="editWellError.name=false" [(ngModel)]="editWell.name" class="wellName" id="wellName" maxlength="20" placeholder="Well Name *">
+                            <span class="well-inline-error" *ngIf="editWellError.name">Please Enter Valid Well Name</span>
+                        </td>
+                        <td class="table-cell" *ngIf="!well.edit" (click)="editInlineWell(well)"><div class="well-cordinates"></div> {{well.latitude}},{{well.longitude}}</td>
+                        <td class="table-cell edit"  [ngClass]="{'error':editWellError.coordinates}" *ngIf="well.edit">
+                            <input type="text" (focus)="editWellError.coordinates=false" class="wellCordinates" [(ngModel)]="editWell.wellCordinates"  id="wellCordinates" maxlength="50"  placeholder="34.052235, -118.243683 *">
+                            <span class="well-inline-error" *ngIf="editWellError.coordinates">Please Enter Valid Well Coordinates</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pager" *ngIf="allWells.length>recordsPerPage">
+                <div class="page bge-btn" (click)="pagePrev();"><div class="page-num arrow"><img src="assets/icons/chevron-left.svg"></div></div>
+                <div class="page bge-btn" (click)="gotoPage(page);" [ngClass]="{'active': page==currentPage }" *ngFor="let page of allPages"><div class="page-num num">{{page}}</div></div>
+                <div class="page bge-btn" (click)="pageNext();"><div class="page-num arrow bge-btn"><img  src="assets/icons/chevron-right.svg"></div></div>
+                <div class="showing-text">
+                    Showing {{currentPage}} - {{allPages.length}}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+<app-loader *ngIf = '!dataLoaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

@@ -1,0 +1,434 @@
+<div class="container-fluid">
+        <div class="margin-cardbox">
+            <mat-card class=" sites-section">
+                <span class="card-label"> Users ({{ userList.length}}) </span>     
+                <button  *ngIf="isShowAddbtn" class="btn add-site-btn"  (click)="addUser()"><img src="./../../../assets/plus_icon.jpg" class="add-site-plus-icon"  >Add User</button>
+                <form  *ngIf="isShowAddsection" [formGroup]="userForm" (ngSubmit)="onSubmituserForm($event);" method="post" novalidate>
+                <mat-card  class="addSite-section">  
+                        <div class="user-item-label">
+                            <span class="sub-card-label">Add User</span>
+                        <div>       
+                            <img src="../../../assets/cross.jpg" (click)="closeForm()">
+                        </div>
+                        </div>
+                        <div class="user-item">
+                            <span class="sites-text-label">User Group<span class="mand">*</span></span>
+   
+                            <mat-form-field  class="applications-select draft-usergroup-select">
+                                <mat-select [(value)]="userForm.controls.usergroup.value" formControlName="usergroup" multiple>
+                                  <mat-select-trigger>
+                                      <div class="selected-applications selected-list">
+                                          <div class="selected-application" *ngFor="let item of userForm.controls.usergroup.value">
+                                              <div class="selection-value">
+                                                  <div class="selection-text">
+                                                    {{ item.display_name }}
+                                                  </div> 
+                                                  <div class="remove-selection"><img src="assets/icons/x.svg"></div></div>
+                                          </div>
+                                      </div>
+                                  </mat-select-trigger>
+                              
+                                  <mat-option *ngFor="let item of usergroupList" [value]="item">{{ item.display_name }}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            <div></div>
+                            <div *ngIf="isFormSubmitted && f.usergroup.errors" class="error-block">
+                                <div *ngIf="f.usergroup.errors.required">User Group is required</div>
+                            </div> 
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Name<span class="mand">*</span></span>
+                            <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text" minlength="0" maxlength="100" class="form-control text-box"  id="userName" name="userName"
+                            formControlName="userName" placeholder=" User Name"> 
+                            <div></div>
+                            <div *ngIf="isFormSubmitted && f.userName.errors" class="error-block">
+                                <div *ngIf="f.userName.errors.required">Name is required</div>
+                                <div *ngIf="!f.userName.errors.required">{{getMessage('userName','User Name')}}</div>
+                            </div> 
+                          
+                        </div>    
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">E-mail<span class="mand">*</span></span>
+                            <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="email" name="email"
+                                formControlName="email"  pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email"> 
+                                <div></div>
+                                <div *ngIf="isFormSubmitted && f.email.errors" class="error-block">
+                                    <div *ngIf="!isemailId && f.email.errors.required">Email is required</div>
+                                    <div *ngIf="isemailId">Enter Valid Email-Id</div>
+                                </div>
+                             <!-- <div *ngIf="isFormSubmitted && f.email.errors" class="error-block">
+                                <div *ngIf="!isemailId &&  f.email.errors.required">Email is required</div>
+                                <div *ngIf="isemailId">{{getMessage('email','Email')}}</div> 
+                            </div> -->
+                            <!-- <div></div>
+                            <div class="error-block">
+                                
+                            </div> -->
+                            
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Email to Text</span>
+                            <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="emailtotext" name="emailtotext"
+                                formControlName="emailtotext"  pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" placeholder="Email to Text"> 
+                                <div></div>
+                                <div *ngIf="isFormSubmitted && f.emailtotext.errors" class="error-block">
+                                    
+                                    <div *ngIf="!isemailtotextId && f.emailtotext.errors.required">Email to Text is required</div>
+                                    <div *ngIf="isemailtotextId">Enter Valid Email-Id</div>
+                                </div>
+                            
+                        </div>
+                        <div class="dividerline"></div>
+                        
+                        <div class="user-item">
+                            <span class="sites-text-label">Phone<span class="mand">*</span></span>
+                            <input type="text"  maxlength="17" appPhoneMask class="form-control text-box" id="phoneno" name="phoneno"
+                                formControlName="phoneno" (change)="anyEvent($event)" placeholder="Phone No"> 
+                            <div></div>
+                            <div *ngIf="isFormSubmitted && f.phoneno.errors" class="error-block">
+                                <div *ngIf="f.phoneno.errors.required">Phone No is required</div>
+                                <div *ngIf="!f.phoneno.errors.required && f.phoneno.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                            </div>
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Address Line 1</span>
+                            <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="address" name="address"
+                            formControlName="address" placeholder="Street, Address"> 
+                            <div></div>
+                            <div *ngIf="isFormSubmitted && f.address.errors" class="error-block">
+                                    <div *ngIf="f.address.errors.required">Address is required</div>
+                            </div> 
+                        </div>
+        
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Adress Line 2</span>
+                            <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="addressline" name="addressline"
+                                formControlName="addressline" placeholder="Apartment, Suite, Unit">
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">ZIP Code</span>
+                            <input type="text" pattern="\d*" minlength="0" maxlength="5" oninput="validity.valid||(value='');"
+                                class="form-control text-box" id="zipCode" name="zipCode" formControlName="zipCode"
+                                placeholder="90001">
+                            <div></div>
+                            <div *ngIf="isFormSubmitted && f.zipCode.errors" class="error-block">
+                                 <div *ngIf="f.zipCode.errors.required">Zip Code is required</div>
+                            </div> 
+                        </div>
+                        <div class="dividerline"></div>
+        
+                        <div class="user-item">
+                            <span class="sites-text-label">City</span>
+                            <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text" minlength="0" maxlength="25" class="form-control text-box" id="city" name="city"
+                                formControlName="city" placeholder="City">
+                                <div></div>
+                                <div *ngIf="isFormSubmitted && f.city.errors" class="error-block">
+                                    <div *ngIf="f.city.errors.required">City is required</div>
+                                    <div *ngIf="!f.city.errors.required"> {{getMessage('city','City')}}</div>
+                               </div> 
+                               
+        
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">State</span>
+                            <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text" minlength="0" maxlength="25" class="form-control text-box" id="state" name="state"
+                                formControlName="state" placeholder="State">
+                                <div></div>
+                                <div *ngIf="isFormSubmitted && f.state.errors" class="error-block">
+                                    <div *ngIf="f.state.errors.required">State is required</div>
+                                    <div *ngIf="!f.state.errors.required"> {{getMessage('state','State')}}</div>
+                               </div> 
+                                
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Country</span>
+                                <select class="form-control text-box" formControlName="country" >
+                                    <option value="United States Of America" selected>United States Of America</option>
+                                </select>
+                                <div></div>
+                                <div *ngIf="isFormSubmitted && f.country.errors" class="error-block">
+                                     <div *ngIf="f.country.errors.required">Country is required</div>
+                                </div> 
+
+        
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Photograph</span>
+                                <input type="file" id="file" accept="image/x-png,image/gif,image/jpeg" (change)="handleFileInput($event)">
+                            <div></div>
+                            <div> {{ fileToUpload }}</div>
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">DUT User</span>
+                            <div>
+                                <mat-radio-group
+                                    aria-labelledby="example-radio-group-label"
+                                    class="example-radio-group"
+                                    formControlName="dutUser">
+                                    <mat-radio-button class="example-radio-button" color="primary"  value="true">
+                                        Yes
+                                    </mat-radio-button>
+                                    <mat-radio-button class="example-radio-button" color="primary"  value="false" >
+                                        No
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="dividerline"></div>
+                        <div class="user-item">
+                            <span class="sites-text-label">Alert level</span>
+                            <div>
+                                <mat-radio-group
+                                    aria-labelledby="example-radio-group-label"
+                                    class="example-radio-group"
+                                    formControlName="alertLevel">
+                                    <mat-radio-button class="example-radio-button" *ngFor="let type of alertype" [value]="type"> 
+                                        {{type}}
+                                    </mat-radio-button>
+                            </mat-radio-group>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: inline-table;">
+                            <button type="button" (click)="isAddressValid('New')" class="btn-bg-blue">Save</button>
+
+                        </div>
+                </mat-card>
+                </form>
+                              
+                <form *ngIf="isShowUpdateAddsection" [formGroup]="updateuserForm" (ngSubmit)="onSubmituserForm($event);" method="post" novalidate>
+
+                <mat-card  class="addSite-section">  
+                    <div class="user-item-label">
+                        <span class="sub-card-label">Update User</span>
+                     <div>       
+                        <img src="../../../assets/cross.jpg" (click)="updatecloseForm()">
+                    </div>
+                    </div>
+                    <div class="user-item">
+                        <span class="sites-text-label">User Group<span class="mand">*</span></span>
+                        
+                        <mat-form-field  class="applications-select draft-usergroup-select">
+                            <mat-select [(value)]="updateuserForm.controls.editusergroup.value"  formControlName="editusergroup"  multiple>
+                          
+                              <mat-select-trigger>
+                                  <div class="selected-applications selected-list">
+                                      <div class="selected-application" *ngFor="let item of updateuserForm.controls.editusergroup.value">
+                                          <div class="selection-value">
+                                              <div class="selection-text">
+                                                {{ item.display_name }}
+                                              </div> 
+                                              <div class="remove-selection"><img src="assets/icons/x.svg"></div></div>
+                                      </div>
+                                  </div>
+                              </mat-select-trigger>
+                          
+                              <mat-option *ngFor="let item of usergroupList" [value]="item">{{ item.display_name }}</mat-option>
+                          
+                            </mat-select>
+                          </mat-form-field>
+                        <div></div>
+                          <div  *ngIf="isupdatedFormSubmitted && f1.editusergroup.errors" class="error-block">
+                            <div *ngIf="f1.editusergroup.errors.required">User Group is required</div>
+                        </div> 
+
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Name<span class="mand">*</span></span>
+                        <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text"  class="form-control text-box" id="edituserName" name="edituserName"
+                        formControlName="edituserName" placeholder="Name of the user"> 
+                        <div></div>
+                        <div *ngIf="isupdatedFormSubmitted && f1.edituserName.errors" class="error-block">
+                             <div *ngIf="f1.edituserName.errors.required">Name is required</div>
+                             <div *ngIf="!f1.edituserName.errors.required">   {{getMessageUpdate('edituserName','User Name')}} </div>
+                        </div> 
+ 
+                    </div>    
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">E-mail<span class="mand">*</span></span>
+                        <input  type="text" minlength="0" maxlength="100" class="form-control text-box" id="editemail" name="editemail"
+                            formControlName="editemail"     placeholder="E-mail of the user" [readonly]="true"> 
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editemail.errors" class="error-block">
+                                <div *ngIf="!isupdateemailId && f1.editemail.errors.required">Email is required</div>
+                                <div *ngIf="isupdateemailId">Enter Valid Email-Id</div>
+                            </div>
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Email to Text</span>
+                        <input  type="text" minlength="0" maxlength="100" class="form-control text-box" id="editemailtotext" name="editemailtotext"
+                            formControlName="editemailtotext"     placeholder="Email to Text" > 
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editemailtotext.errors" class="error-block">
+                                <div *ngIf="!isupdateemailtotextId && f1.editemailtotext.errors.required">Email to Text is required</div>
+                                <div *ngIf="isupdateemailtotextId">Enter Valid Email-Id</div>
+                            </div>
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Phone    <span class="mand">*</span></span>
+                        <input type="text" maxlength="17" appPhoneMask class="form-control text-box" id="editphoneno" name="editphoneno"
+                            formControlName="editphoneno" (change)="editanyEvent($event)"  placeholder="Phone No"> 
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editphoneno.errors" class="error-block">
+                                 <div *ngIf="f1.editphoneno.errors.required">Phone no is required</div>
+                                 <div *ngIf="!f1.editphoneno.errors.required &&  f1.editphoneno.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+
+                            </div> 
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Address Line 1</span>
+                        <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="editaddress" name="editaddress"
+                        formControlName="editaddress" placeholder="Street, Locality">
+                        <div></div>
+                        <div *ngIf="isupdatedFormSubmitted && f1.editaddress.errors" class="error-block">
+                             <div *ngIf="f1.editaddress.errors.required">Address is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Adress Line 2</span>
+                        <input type="text" minlength="0" maxlength="100" class="form-control text-box" id="editaddressline" name="editaddressline"
+                            formControlName="editaddressline" placeholder=" Area">
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">ZIP Code</span>
+                        <input type="text"  pattern="\d*" minlength="0" maxlength="5" oninput="validity.valid||(value='');"
+                            class="form-control text-box" id="zipCode" name="zipCode" formControlName="editzipCode"
+                            placeholder="90001">
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editzipCode.errors" class="error-block">
+                                 <div *ngIf="f1.editzipCode.errors.required">Zip Code is required</div>
+                            </div>
+                    </div>
+                    <div class="dividerline"></div>
+    
+                    <div class="user-item">
+                        <span class="sites-text-label">City</span>
+                        <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text" minlength="0" maxlength="25" class="form-control text-box" id="editcity" name="editcity"
+                            formControlName="editcity" placeholder="Enter City">
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editcity.errors" class="error-block">
+                                 <div *ngIf="f1.editcity.errors.required">City is required</div>
+                                 <div *ngIf="!f1.editcity.errors.required">  {{getMessageUpdate('editcity','City')}} </div>
+
+                            </div>
+                            
+    
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">State</span>
+                        <input (focus)="showVal()" (focusout)="showVal()" (keyup)="showVal()" pattern="[a-zA-Z ]*" autocomplete="off" type="text" minlength="0" maxlength="25" class="form-control text-box" id="editstate" name="editstate"
+                            formControlName="editstate" placeholder="Enter State">
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editstate.errors" class="error-block">
+                                 <div *ngIf="f1.editstate.errors.required">State is required</div>
+                                 <div *ngIf="!f1.editstate.errors.required">  {{getMessageUpdate('editstate','State')}} </div>
+                            </div>
+                         
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Country</span>
+                            <select class="form-control text-box" formControlName="editcountry">
+                                <option value="United States Of America" selected>United States Of America</option>
+                            </select>
+                            <div></div>
+                            <div *ngIf="isupdatedFormSubmitted && f1.editcountry.errors" class="error-block">
+                                 <div *ngIf="f1.editcountry.errors.required">Country is required</div>
+                            </div>
+    
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Photograph</span>
+                            <input type="file" id="file" accept="image/x-png,image/gif,image/jpeg" (change)="handleFileInput($event)">
+
+                        <div></div>
+                        <!-- <div> {{ fileToUpload }}</div> -->
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">DUT User</span>
+                        <div>
+                            <mat-radio-group
+                                aria-labelledby="example-radio-group-label"
+                                class="example-radio-group"
+                                formControlName="editdutUser">
+                                <!-- <mat-radio-button class="example-radio-button" *ngFor="let item of dutUserList"   [value]="item">
+                                    {{item}}
+                                </mat-radio-button> -->
+                                <mat-radio-button class="example-radio-button" color="primary"  value="true">
+                                    Yes
+                                </mat-radio-button>
+                                <mat-radio-button class="example-radio-button" color="primary"  value="false">
+                                    No
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="dividerline"></div>
+                    <div class="user-item">
+                        <span class="sites-text-label">Alert level</span>
+                        <div>
+                            <mat-radio-group
+                                aria-labelledby="example-radio-group-label"
+                                class="example-radio-group"
+                                formControlName="editalertLevel">
+                                <mat-radio-button class="example-radio-button" *ngFor="let type of alertype" [value]="type"> 
+                                    {{type}}
+                                </mat-radio-button>
+                        </mat-radio-group>
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: inline-table;">
+                        <button type="button" (click)="isAddressValid('update')" class="btn-bg-blue">Save</button>
+
+                    </div>
+            </mat-card>
+            </form>
+
+                <!-- list of users -->
+                  <div *ngIf="userlength === 0" class="emptybox">
+                    <span class="empty-box-text"> No User added yet.</span>  
+                  </div>
+                  <div    class="user-item" *ngFor="let item of userList" (click)="updateUser(item)" style="margin-bottom: 20px;padding: 16px;">
+                    <img *ngIf="item.photo!= ''" src="{{ item.photo }}" class="site_img">
+                    <img *ngIf="item.photo== ''" src="assets/sample-site-image.png" class="site_img">
+
+                    <div style="    margin-left: 14px;">
+                        <div class="user-name"> {{ item.name }}</div>
+                        <div class="user-email" ><a>{{ item.email }}</a></div>
+                        <div class="user-phone" >{{ item.phone }} </div>
+                        <div class="user-type"> </div>
+                    </div>
+                </div>
+            </mat-card>
+    </div>
+    <div class="margin-cardbox" >
+            <mat-card  class="sites-section-skip">
+                <div class="selected-site-stats-item">
+                    <button class="btn-border" (click)="goBack()">Cancel</button>
+                    <button class="btn-bg-blue"  (click)="openFinishForm()">Next</button>
+                </div>  
+            </mat-card>
+        </div>
+</div>
+<app-loader *ngIf = 'dataLoaded'></app-loader>
+<app-server-error-popup></app-server-error-popup>

@@ -1,0 +1,199 @@
+
+            <div class="rca-title" mat-dialog-title>
+                <div class="circled-icon title-close bge-btn" mat-dialog-close>
+                    <!-- <img src="assets/icons/arrow-left.svg"> -->
+                </div>
+                <div class="title-text">Error Details</div>
+                <div class="title-close bge-btn" mat-dialog-close><img src="assets/icons/x.svg"></div>
+            </div>
+            <div class="datarca" mat-dialog-content>
+                <div class="alert-error-details-container">
+                    <div class="details">
+                        <div class="lft">
+                            <div class="label">Entity : </div>
+                            <div class="val"> {{alertData.entity}}</div>
+                        </div>
+                        <div class="rht">
+                            <div class="label">Timestamp : </div>
+                            <div class="val"> {{alertData.timestamp | date:'dd/MM/yyyy h:mm:ss a'}}</div>
+                        </div>
+                        
+                    </div>
+                    <div class="details">
+                        <div class="lft" *ngIf="alertData.name">
+                            <div class="label">Name : </div>
+                            <div class="val"> {{alertData.name}}</div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="details">
+                        <div class="lft">
+                            <div class="label">Service : </div>
+                            <div class="val"> {{alertData.service}}</div>
+                        </div>
+                        <div class="rht" style="margin-left: 16px;">
+                            <div class="label" style="min-width: 50px;">Level : </div>
+                            <div class="val">
+                                <div *ngIf="alertData.level" class="alert-type {{alertData.level}}">{{alertData.level|titlecase }}</div>
+                                <div *ngIf="!alertData.level" class="alert-type high">High</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="details">
+                        <div class="lft">
+                            <div class="label">Error Code : </div>
+                            <div class="val">{{alertData.errorCode}}</div>
+                           
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="details">
+                        <div class="lft dt">
+                            <div class="label">Details : </div>
+                            <div class="val"> {{alertData.errorDetail}}</div>
+                        </div>
+                       
+                        
+                    </div>
+                </div>
+                <div [@.disabled]="disableAnimation">
+          <mat-expansion-panel  hideToggle class="rca-frm-container">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Root Cause Analysis
+              </mat-panel-title>
+             
+            </mat-expansion-panel-header>
+           
+          
+           
+            <form [formGroup]="frmRca" #rcaForm='ngForm' (submit)="saveRca()">
+                <div class="rca-container">
+                    
+                    <div class="event-type-container">
+                        <div class="event-type-title">Event Type</div>
+                        <div style="width: 100%;">
+                            <div class="etype-container">
+                                <div class="etype-text">Startup</div>
+                                <div class="etype-btn"> <mat-slide-toggle [checked]="eventType.value=='Startup'" (change)="eventTypeChange($event,'Startup')" class="example-margin"></mat-slide-toggle></div>
+                            </div>
+                            <div class="dividerline">
+                                <mat-divider></mat-divider>
+                            </div>
+                            
+                        </div>
+                       
+                        <div style="width: 100%;">
+                            <div class="etype-container">
+                                <div class="etype-text">Shutdown</div>
+                                <div class="etype-btn"> <mat-slide-toggle [checked]="eventType.value=='Shutdown'" (change)="eventTypeChange($event,'Shutdown')" class="example-margin"></mat-slide-toggle></div>
+                            </div>
+                            <div class="dividerline">
+                                <mat-divider></mat-divider>
+                            </div>
+                            
+                        </div>
+                        <div style="width: 100%;">
+                            <div class="etype-container">
+                                <div class="etype-text">Malfunction</div>
+                                <div class="etype-btn"> <mat-slide-toggle [checked]="eventType.value=='Malfunction'" (change)="eventTypeChange($event,'Malfunction')" class="example-margin"></mat-slide-toggle></div>
+                            </div>
+                            <div class="dividerline">
+                                <mat-divider class="lg-devider" style="margin-top: 8px;margin-bottom: 8px;"></mat-divider>
+                            </div>
+                            <div class="error" *ngIf="rcaSubmitted && eventType.invalid || (eventType.touched && eventType.invalid)">Please Select Event type</div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="event-duration">
+                        <div class="event-duration-title">Duration</div>
+                        
+                        <div class="duration-date-container">
+                            <div class="duration-from">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>From</mat-label>
+                                    <input matInput #dFrom formControlName="durationFrom" (dateInput)="dFromValueChange(dFrom.value)" readonly   [matDatepicker]="pickerDurationFrom" id="durationFrom" class="form-control"
+                                    name="durationFrom" >
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDurationFrom" ></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDurationFrom  ></mat-datepicker>
+                                </mat-form-field>
+                                <div class="error" *ngIf="rcaSubmitted && durationFrom.invalid || (durationFrom.touched && durationFrom.invalid)">Please Select From Duration</div>
+                            </div>
+                            <div class="duration-to">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>To</mat-label>
+                                    <input matInput formControlName="durationTo" readonly [min]="durationFrom.value" [matDatepicker]="pickerDurationTo" id="durationTo" class="form-control"
+                                    name="durationTo" >
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDurationTo" ></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDurationTo  ></mat-datepicker>
+                                </mat-form-field>
+                                <div class="error" *ngIf="rcaSubmitted && durationTo.invalid || (durationTo.touched && durationTo.invalid)">Please Select To Duration</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="dividerline">
+                        <mat-divider class="lg-devider"></mat-divider>
+                    </div>
+                    <div class="affected-equipment">
+                        <div class="title">Affected Equipments</div>
+                        <div class="field-block">
+                            <div class="field-title">Flare No.</div>
+                            <div class="field-input"><input type="number" formControlName="flareNo" placeholder="e.g. 1234"></div>
+                            <div class="error in" *ngIf="rcaSubmitted && flareNo.invalid || (flareNo.touched && flareNo.invalid)">Please Enter Valid Flare No</div>
+                        </div>
+                        <div class="field-block">
+                            <div class="field-title">Cause Description</div>
+                            <div class="field-input-textarea"><textarea formControlName="causeDescription" placeholder="Describe the reason in details"></textarea></div>
+                            <div class="error in" *ngIf="rcaSubmitted && causeDescription.invalid || (causeDescription.touched && causeDescription.invalid)">Please Enter Valid Cause Description</div>
+                        </div>
+                        
+                    </div>
+                    <div class="dividerline">
+                        <mat-divider class="lg-devider"></mat-divider>
+                    </div>
+                    <div class="answer-container">
+                        <div class="title">Answer the Followings</div>
+                        <div class="question" *ngFor="let question of questions.value">
+                            <div class="question-container">
+                                <div class="subtitle">{{question.question}}</div>
+                                <div class="chk-container">
+                                    <mat-checkbox color="primary" name="yes" [checked]="question.answer=='Yes'" (change)="questionAnsChanged($event,question,'Yes')"   class="check-event-type" >Yes</mat-checkbox>
+                                    <mat-checkbox color="primary" name="no" [checked]="question.answer=='No'" (change)="questionAnsChanged($event,question,'No')" class="check-event-type" >No</mat-checkbox>
+                                </div>
+                                
+                            </div>
+                            <div class="error" *ngIf="rcaSubmitted && !question.answer">Please Answer The Question</div>
+                            <div class="dividerline"><mat-divider></mat-divider></div>
+                        </div>
+                     
+                    </div>
+                  
+                    <div class="bottom-note">
+                        <div class="field-block">
+                            <div class="field-title"> Describe the emission standard that was exceeded below</div>
+                            <div class="field-input-textarea"><textarea formControlName="description" placeholder="Your Comment"></textarea></div>
+                            <div class="error in" *ngIf="rcaSubmitted && description.invalid || (description.touched && description.invalid)">Please Enter Valid Comments</div>
+                        </div>
+                       
+                    </div>
+                    <div class="submitbtn bge-btn">
+                        <button type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+            
+
+
+          </mat-expansion-panel>
+        </div>
+        </div>
+    
+<app-loader *ngIf = '!dataloaded'></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>
+
+

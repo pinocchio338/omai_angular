@@ -1,0 +1,191 @@
+<div mat-dialog-title *ngIf ='!inProcess'>
+    <div class="users-header">
+    <div class="circled-icon bge-btn" mat-dialog-close>
+        <img src="assets/icons/arrow-left.svg">
+    </div>
+    <div class="header-title">
+        Add User
+    </div>
+    <div class="close-btn bge-btn" mat-dialog-close>
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+</div>
+<form [formGroup]="frmUser" #userForm='ngForm' (submit)="validateUser()" *ngIf ='!inProcess'>
+<div mat-dialog-content>
+<div class="user-form" >
+    
+        <div class="user-image-container" [ngClass]="{'noImage':!imageUrl}" (click)="changeImage()">
+            <img *ngIf="imageUrl"  [src]="imageUrl" alt="user-image" class="user-image">
+            <input type="file" hidden #userImage (change)="uploadPhoto($event)">
+        </div>
+        <div class="form-fields">
+            <div class="in-place-field">
+                <label for="name">Name <span class="mand">*</span></label>
+                <input type="text"  pattern="[a-zA-Z ]*" class="name" id="name"  formControlName="name" autocomplete="off" placeholder="Name">
+                
+            </div>
+            <div class="error" *ngIf="(name.invalid && userForm.submitted) || (name.touched && name.invalid)">Enter Valid Name</div>
+            <div class="in-place-field">
+                <label for="email">Email <span class="mand">*</span></label>
+                <input type="text" class="email" id="email"  autocomplete="off" pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" formControlName="email" placeholder="Email">
+                
+            </div>
+            <div class="error" *ngIf="(email.invalid && userForm.submitted) || (email.touched && email.invalid)">Enter Valid Email</div>
+            <div class="in-place-field">
+                <label for="email">Email to Text </label>
+                <input type="text" class="email" id="emailtotext"  autocomplete="off" pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" formControlName="emailtotext" placeholder="Email to Text">
+                
+            </div>
+            <div class="error" *ngIf="(emailtotext.invalid && userForm.submitted) || (emailtotext.touched && emailtotext.invalid)">Enter Valid Email</div>
+            <div class="in-place-field phonenumber">
+                <label for="phone">Phone <span class="mand">*</span></label>
+                <input type="text" class="phone" id="phone" appPhoneMask maxlength="17"  (change)="anyEvent($event)"  autocomplete="off" formControlName="phone" placeholder="Phone Number" >
+               
+            </div>
+            <div *ngIf="phone.invalid && userForm.submitted" class="error-block">
+                <div *ngIf="phone.invalid">10 digit Phone No is required</div>
+                <!-- <div *ngIf="!phone.invalid && phone.errors..minlength.requiredLength">Enter 10 digit Phone No </div> -->
+            </div>
+            <!-- <div *ngIf="phone.invalid && phone.errors" class="error-block">
+                <div *ngIf=" phone.invalid &&  phone.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                <div *ngIf="phone.errors.minlength">Enter 10 digit Phone No </div>
+            </div>  -->
+            <!-- <div class="error" *ngIf="(phone.invalid && userForm.submitted) || (phone.touched && phone.invalid)">Enter Valid Phone</div> -->
+            <div class="address-section ">
+               
+                <div class="in-place-field addresline1">
+                    <label class="side" for="address"> Address Line 1 </label>
+                    <div class="address1 input">
+                        <input type="text" class="address" id="address" autocomplete="off" name="address"
+                        formControlName="address" placeholder="Street Address">
+                       
+                    </div>     
+                </div>
+                <div class="error" *ngIf="(address.invalid && userForm.submitted) || (address.touched && address.invalid)"> Enter Valid Address Line 1</div>
+                <div class="in-place-field">
+                    <label class="side" for="addressline"> Address line 2</label>
+                    <div class="addressline input">
+                        <input type="text" class="address-line-2" autocomplete="off" id="addressline" name="addressline"
+                        formControlName="addressline" placeholder="Apartment,Suite,Unit">
+                    </div>               
+                </div>
+                <div class="in-place-field">
+                    <label class="side" for="zipCode"> ZIP Code</label>
+                    <div class="zipCode input">
+                        <input type="text"  pattern="\d*" minlength="0" maxlength="5"  oninput="validity.valid||(value='');"  class="zip-code" id="zipCode" name="zipCode" formControlName="zipCode"
+                        placeholder="Zip Code">
+                        
+                    </div>               
+                </div>
+                <div class="error" *ngIf="(zipCode.invalid && userForm.submitted) || (zipCode.touched && zipCode.invalid)"> Enter Valid Zip Code</div>
+                <div class="in-place-field">
+                    <label class="side" for="city"> City</label>
+                    <div class="city input">
+                        <input type="text"  pattern="[a-zA-Z ]*" class="inputcity" id="city" name="city"
+                        formControlName="city" placeholder="City">
+                       
+                    </div>               
+                </div>
+                <div class="error" *ngIf="(city.invalid && userForm.submitted) || (city.touched && city.invalid)"> Enter Valid City</div>
+                <div class="in-place-field">
+                    <label class="side" for="state"> State</label>
+                    <div class="state input">
+                        <input type="text"  pattern="[a-zA-Z ]*"  class="inputstate" id="state" name="state"
+                        formControlName="state" placeholder="State">
+                    </div>               
+                </div>
+                <div class="error" *ngIf="(state.invalid && userForm.submitted) || (state.touched && state.invalid)"> Enter Valid State</div>
+                
+                <div class="in-place-field">
+                    <label class="side" for="country"> Country</label>
+                    <div class="country input">
+                        <select class="inputcountry" formControlName="country">
+                            <option value="United States Of America" selected>United States Of America</option>
+                        </select>
+                    </div>               
+                </div>
+                <div class="error" *ngIf="country.touched && country.invalid">Enter Country</div>
+            </div>
+            <!-- <div class="in-place-field" style="margin-top:16px;">
+                <mat-divider></mat-divider>
+                <label for="address" class="side site-associated" style="margin-top:24px;">Sites Associated With</label>
+                <mat-form-field appearance="outline" style="width: 256px;padding-top:8px;">
+                    <mat-label>Site Associated</mat-label>
+                    <mat-select [formControl]="siteAssociated" multiple>
+                      <mat-select-trigger>
+                        {{siteAssociated.value ? siteAssociated.value[0] : ''}}
+                        <span *ngIf="siteAssociated.value?.length > 1" class="example-additional-selection">
+                          (+{{siteAssociated.value.length - 1}} {{siteAssociated.value?.length === 2 ? 'other' : 'others'}})
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option *ngFor="let site of siteList" [value]="site.name">{{site.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <span class="error" *ngIf="siteAssociated.touched && siteAssociated.invalid">Please Enter Valid SiteAssociated.</span>
+                
+            </div> -->
+            <div class="in-place-field radio-dut-user">
+                <mat-divider></mat-divider>
+                <label class="side" for="address">DUT User</label>
+                <div class="radios">
+                    <mat-radio-group
+                    aria-labelledby="example-radio-group-label"
+                    class="example-radio-group"
+                    formControlName="dutUser">
+                    <mat-radio-button class="example-radio-button" color="primary"  value="Yes">
+                        Yes
+                    </mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary"  value="No">
+                        No
+                    </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <mat-divider></mat-divider>                
+            </div>
+            <div class="in-place-field radio-alert-level">
+                <label class="side" for="address">Alert Level</label>
+                <div class="radios">
+                    <mat-radio-group
+                    aria-labelledby="example-radio-group-label"
+                    class="example-radio-group" formControlName="alertLevel">
+                    <mat-radio-button class="example-radio-button" color="primary"  value="High">
+                        High
+                    </mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" value="Medium">
+                        Medium
+                    </mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary"  value="Low">
+                        Low
+                    </mat-radio-button>
+                    </mat-radio-group>
+                </div>               
+            </div>
+        </div>
+        
+    
+</div>
+</div>
+
+<div mat-dialog-actions>
+<div class="bottom-btns">
+    <div class="btn-cancel btn" mat-dialog-close>
+        <div class="btn">Cancel</div>
+    </div>
+    <div class="btn-done" >
+       <button type="submit"><div class="btn">Done</div></button> 
+    </div>
+</div>
+</div>
+</form>
+<!-- <div *ngIf="inProcess">
+    <app-loader></app-loader>
+</div> -->
+<div class="loader-wrapper" *ngIf ='inProcess'>
+    <!-- <mat-spinner></mat-spinner> -->
+    <div class='logo'>
+    <img class='' src='assets/Vector.png'>
+    </div>
+
+</div>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>

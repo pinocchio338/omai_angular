@@ -1,0 +1,11 @@
+<div class="error-wrapper" *ngIf="isErrorMessageValid()">
+    <div class="left-section">
+        <img src="assets/error.png">
+        <span class="error-message text-content">{{errorMessage}}</span>
+    </div>
+   
+    <div class="right-section">
+        <img src="assets/x.png" class="close-button" (click)="close()">
+    </div>
+</div>
+<!-- <p  id="error-message">{{message}}</p> -->

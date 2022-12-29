@@ -1,0 +1,1052 @@
+<div class="main-container usergroups" *ngIf = 'dataLoaded'>
+    <app-toolbar currentPage="userandgroups"></app-toolbar>
+
+    <mat-toolbar style="height: 42px !important; min-height:unset!important;">
+        <mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+            <span>
+                <!-- <button mat-icon-button *ngIf="!token" class="slider-button" (click)="goBack()">
+                    <img src="assets/arrow-left.png">
+                </button> -->
+                <!-- <span class="selected-client-name">
+                  {{selectedSite}} 
+                </span>
+                <span class="sites-label"> / </span> -->
+                <span class="selected-client-name">Users & Groups </span>
+            </span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+        <div class="contents-wrapper">
+            <div class="usergroups-container">
+                <div *ngIf="isAllowed('users','view')" class="user-container" style='grid-column:1/ span 1;min-width: 353px;'>
+                    <div class="users-top">
+                        <div class="users-title">Users</div>
+                        
+                        <div class="users-btns">
+                            <div [ngClass]="{ 'disabled': !isAllowed('users','add')}" class="users-btn btn-upload bge-btn" (click)="uploadUsers()">
+                                <img src="assets/icons/upload.svg" class="blue-icon">
+                                <input type="file" #csvReader name="Upload CSV"  id="usersFileUpload"  (change)="importUsersListener($event)" accept=".csv" /> 
+                            </div>
+                            <div class="users-btn btn-search bge-btn" (click)="showSearch=!showSearch">
+                                <img src="assets/icons/search.svg">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="users-top">
+                        <div class="btn-get-template bge-btn">
+                            <div class="btn-text"><a href="assets/user_import_sample.csv" download="user_import_sample.csv">Get Template</a></div>
+                        </div>
+                    </div>
+                    <div   [ngClass]="{ 'disabled': !isAllowed('users','add')}"    class="new-user bge-btn" (click)="addNewUser()">
+                        <div class="btn-icon">
+                            <div class="btn">
+                                <img src="assets/icons/plus.svg" class="blue-icon">
+                                
+                            </div>
+                            
+                        </div>
+                        <div class="btn-text">
+                            New User 
+                        </div>
+                    </div>
+                    <div *ngIf="showSearch"  [ngClass]="isSearchActive==true ? 'search-wrapper search-active' : 'search-wrapper'">
+                        <mat-icon>search</mat-icon>
+                        <input #searchbox type="text" placeholder="Search User" 
+                        (focus)='isSearchActive=true' (focusout)='isSearchActive=false'
+                        (keyup)="searchUser(searchbox.value)">
+                    </div>
+                    <div class="user-list-btns">
+                        <div class="selected" *ngIf="selectUsersToAddGroup.length">{{selectUsersToAddGroup.length}} Selected</div>
+                        <div class="btn-clear bge-btn" *ngIf="selectUsersToAddGroup.length" (click)="clearSelectUsers()">Clear</div>
+                    </div>
+                    <div class=" userlist-height user-lists">
+  
+                        <div class="user" [ngClass]="{'selected':selectedUser?.sortKey==user.sortKey}" *ngFor="let user of allUsers; let i=index;">
+                            <div class="user-item-container" (click)="selectUser(user)">
+                                <div class="user-data-container">
+                                    <div class="user-photo" *ngIf="!user.photo" [style.background-image]="'url(' + 'assets/sample-site-image.png' + ')'"></div>
+                                    <div class="user-photo" *ngIf="user.photo" [style.background-image]="'url(' + user.photo + ')'"></div>
+                                    <div class="user-data">
+                                        <div class="user-name">
+                                            {{user?.name}}
+                                        </div>
+                                        <div class="user-phone">
+                                            {{user?.phone}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="user-selectbox">
+                                    <label class="container">
+                                        <input type="checkbox" [disabled]="user.status=='suspended'" [checked]="selectUsersToAddGroup.includes(user)" (change)="selectUserToAddGroup($event,user)" class="user-checkbox">
+                                        <span class="checkmark"></span>
+                                      </label>
+                                    
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="user.newUser" class="user-divider"> <mat-divider></mat-divider></div> -->
+                           
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="new-user-select-container" *ngIf="selectedUser" >
+                    <div [ngClass]="{ 'disabled': !isAllowed('users','edit')}" class="user-img-container" (click)="changeImage();">
+                        <div class="image" [style.background-image]="'url(' + editedUser.photo + ')'"></div>
+                        <input type="file" hidden #userImage (change)="uploadPhoto($event)">
+                       
+                    </div>
+                    <div class="inline-edit-btn-wrapper" style="width: 100%;" *ngIf="selectedUser.edit.photo && userImage.value">
+                        <button class="image-button" (click)="cancelInlineEdit(editedUser,'photo')"><img src="assets/x.png"></button>
+                        <button class="image-button" (click)="inlineFieldUpdate(editedUser,'photo')"><img src="assets/check.png"></button>  
+                      </div>
+                    <div class="new-user-details"  >
+                        <div [ngClass]="{ 'disabled': !isAllowed('users','edit')}"  >
+                        <div class="new-user-field">
+                            <div class="new-user-field-title">Name</div>
+                            <div class="new-user-field-text name" (click)="selectedUser['edit']['name']=true" *ngIf="!selectedUser.edit.name">{{selectedUser.name}}</div>
+                            <div class="inline-edit-wrapper" *ngIf="selectedUser.edit.name">
+                                <input class='inline-edit text-input' pattern="[a-zA-Z ]*" [(ngModel)]="editedUser.name" name="name" #name="ngModel">
+                                <div class="inline-edit-btn-wrapper">
+                                  <button class="image-button" (click)="cancelInlineEdit(editedUser,'name')"><img src="assets/x.png"></button>
+                                  <button class="image-button" (click)="inlineFieldUpdate(editedUser,'name')"><img src="assets/check.png"></button>  
+                                </div>
+                                <div [hidden]="name.valid || name.pristine"
+                                  class="alert alert-danger">
+                                <div class="error-block" [hidden]="!name.hasError('pattern')">Entered Alphabet Value</div>
+                       </div>
+                           </div>
+   
+                        </div>
+                        <div class="new-user-field">
+                            <div class="new-user-field-title">Email</div>
+                            <div class="new-user-field-text">{{selectedUser.email}}</div>
+                        </div>
+<!-- 
+                        <div class="new-user-field">     
+                            <form   [formGroup]="userForm"  method="post" novalidate>
+                            <div class="new-user-field-title">Email To Text</div>
+                            <span class="new-user-field-text phone" style="display: block;"  (click)="inlineFieldChangeMode('emailtotext','edit', userDetailInfo)" *ngIf="userFields['emailtotext']['mode']=='view'">{{ userDetailInfo.phone }}</span>
+                            <div class="inline-edit-wrapper " *ngIf="userFields['emailtotext']['mode']=='edit'">
+                                <input type="text" minlength="14" maxlength="17" appPhoneMask   formControlName="selectedUserPhone"   class='inline-edit text-input'  >
+                                <div class="inline-edit-btn-wrapper">
+                                  <button class="image-button" (click)="inlineFieldCancel('emailtotext')"><img src="assets/x.png"></button>
+                                  <button class="image-button" (click)="inlineFieldPhoneUpdate('emailtotext' ,userDetailInfo )"><img src="assets/check.png"></button>  
+                                </div>
+                                <div *ngIf="isFormSubmitted && f.selectedUserPhone.errors" class="error-block">
+                                    <div *ngIf="f.selectedUserPhone.errors.required">Email  is required</div>
+                                    <div *ngIf="f.selectedUserPhone.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                                </div> 
+                           </div>
+        
+                          </form>
+                        </div> -->
+
+                        <div class="new-user-field">
+                            <div class="new-user-field-title">Email TO Text</div>
+                            <div class="new-user-field-text name" (click)="selectedUser['edit']['emailtotext']=true" *ngIf="!selectedUser.edit.emailtotext">{{selectedUser.emailtotext}}</div>
+                            <div class="inline-edit-wrapper" *ngIf="selectedUser.edit.emailtotext">
+                                <input class='inline-edit text-input'  type="email"  pattern="^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$" [(ngModel)]="editedUser.emailtotext" emailtotext="emailtotext" #emailtotext="ngModel">
+                                <div class="inline-edit-btn-wrapper">
+                                  <button class="image-button" (click)="cancelInlineEdit(editedUser,'emailtotext')"><img src="assets/x.png"></button>
+                                  <button class="image-button" (click)="inlineFieldUpdate(editedUser,'emailtotext')"><img src="assets/check.png"></button>  
+                                </div>
+                                <div [hidden]="emailtotext.valid || emailtotext.pristine"
+                                  class="alert alert-danger">
+                                <div class="error-block" [hidden]="!emailtotext.hasError('pattern')">Entered Alphabet Value</div>
+                       </div>
+                           </div>
+   
+                        </div>
+
+                        <div class="new-user-field">     
+                            <form   [formGroup]="userForm"  method="post" novalidate>
+                            <div class="new-user-field-title">Phone</div>
+                            <span class="new-user-field-text phone" style="display: block;"  (click)="inlineFieldChangeMode('phone','edit', userDetailInfo)" *ngIf="userFields['phone']['mode']=='view'">{{ userDetailInfo.phone }}</span>
+                            <div class="inline-edit-wrapper " *ngIf="userFields['phone']['mode']=='edit'">
+                                <input type="text" minlength="14" maxlength="17" appPhoneMask   formControlName="selectedUserPhone"   class='inline-edit text-input'  >
+                                <div class="inline-edit-btn-wrapper">
+                                  <button class="image-button" (click)="inlineFieldCancel('phone')"><img src="assets/x.png"></button>
+                                  <button class="image-button" (click)="inlineFieldPhoneUpdate('phone' ,userDetailInfo )"><img src="assets/check.png"></button>  
+                                </div>
+                                <div *ngIf="isFormSubmitted && f.selectedUserPhone.errors" class="error-block">
+                                    <div *ngIf="f.selectedUserPhone.errors.required">Phone no is required</div>
+                                    <div *ngIf="f.selectedUserPhone.errors.minlength.requiredLength">Enter 10 digit Phone No </div>
+                            </div> 
+                           </div>
+        
+                          </form>
+                        </div>
+                        <div class="new-user-field">
+                            <div class="new-user-field-title" >Address</div>
+                            <div class="new-user-field-text" (click)="selectedUser['edit']['address']=true" *ngIf="!selectedUser.edit.address">
+                                <div>  {{selectedUser.address.line1}}</div>
+                                <div>  {{selectedUser.address.line2}}</div>
+                                <div>  {{selectedUser.address.city}}</div>
+                                <div>  {{selectedUser.address.state}}   {{selectedUser.address.zipCode}}</div>
+                                <div>  {{selectedUser.address.country}} </div>
+
+<!-- 
+                                {{selectedUser.address.line2}}<br>
+                                {{selectedUser.address.city}} <br>   
+                                {{selectedUser.address.state}}  {{selectedUser.address.zipCode}}<br>
+                                {{selectedUser.address.country}}  -->
+                                </div>
+                            <div class="inline-edit-wrapper addess-section" *ngIf="selectedUser.edit.address">
+                                <input class='inline-edit text-input' [(ngModel)]="editedUser.address.line1">
+                                <input class='inline-edit text-input' [(ngModel)]="editedUser.address.line2">                                
+                                <input class='inline-edit text-input'  pattern="\d*" minlength="0" maxlength="5" oninput="validity.valid||(value='');"  [(ngModel)]="editedUser.address.zipCode">
+                                <input class='inline-edit text-input' [(ngModel)]="editedUser.address.city">
+                                <input class='inline-edit text-input' [(ngModel)]="editedUser.address.state">
+                                <select class="form-control text-box-address" [(ngModel)]="editedUser.address.country">
+                                    <option value="United States Of America" selected>United States Of America</option>
+                                </select>
+                                <div class="inline-edit-btn-wrapper">
+                                  <button class="image-button" (click)="cancelInlineEdit(editedUser,'address')"><img src="assets/x.png"></button>
+                                  <button class="image-button" (click)="isAddressValid(editedUser,'address')"><img src="assets/check.png"></button>  
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                        <div class="user-info-section">
+                            <div [ngClass]='userRole == "client-admin" && selectedUser.status == "active"? "action-wrapper" : "action-wrapper disabled"'
+                            (click)="loginAs(userDetailInfo.email)">
+                              <img src="../../assets/login-user-icon.png">
+                              <div>Login as <br>
+                                  this user</div>
+                            </div>
+                            <div class="divider"></div>
+                            <!-- <div  class="user-info-contact-section"> -->
+                              <div class='action-wrapper'>
+                                  <a  href="mailto:{{selectedUser.email}}" >
+                                    <img src="../../assets/email-icon.png">
+                                   </a>
+                                  <div>Email</div>
+                                  <!-- <a href="mailto:{{email}}">Contact via E-mail</a> -->
+                                </div>
+                                <div class='action-wrapper'>
+                                  <!-- <img src="../../assets/call_circled-icon.png">
+                                  <div>Call</div> -->
+                                </div>
+                                <div class='action-wrapper'>
+                                  <!-- <img src="../../assets/text-circled-icon.png">
+                                  <div>Text</div> -->
+                                </div>
+                                
+                            <!-- </div> -->
+                        </div>
+                        <div class="new-user-field-title">Groups</div>
+                        <div class="user-info-group"> 
+                            <span class="user-group-item" *ngFor="let group of selectedUser.userGroups">{{getGroupDetails(group)?.display_name}}</span>
+                      </div>
+                      <div class="new-user-field-title">Sites</div>
+                      <div class="user-info-group"> 
+                        <span class="user-group-item sites" *ngFor="let usersite of getUserSites(selectedUser.sortKey)">{{usersite?.name}}</span>
+                        </div>
+                      
+                      <div class="user-info-btn"> 
+                          <div  [ngClass]="{ 'disabled': !isAllowed('users','delete')}" class="info-btn-icon bge-btn" (click)="deleteUser(selectedUser)">
+                            <img src="assets/icons/trash-2.svg">
+                          </div>
+                          <div class="info-btns-container">
+                            <button [ngClass]="{ 'disabled': !isAllowed('users','edit')}" *ngIf="selectedUser.status == 'active'" class="btn-border" mat-button (click)="suspendUser(selectedUser)">Suspend </button>
+                            <button [ngClass]="{ 'disabled': !isAllowed('users','edit')}" *ngIf="selectedUser.status == 'suspended'"  class="btn-border" mat-button (click)="activeUser(selectedUser)">Activate </button>
+                          </div>
+                         
+                         
+      
+                    </div>
+                    </div>
+                </div>
+                
+                <div *ngIf="isAllowed('userGroups','view')" class="groups-container" [ngStyle]="{'grid-column':selectedUser?'3/ span 3':'2/ span 3',margin: auto ,'width':selectedUser?'calc(100% - 32px)':'calc(100% - 160px)', 'overflow': 'auto'}">
+                    <div class="">
+                        <div  class="new-group-container">
+                            <mat-accordion  class="new-group-card" >
+                                <mat-expansion-panel  [ngClass]="{ 'disabled': !isAllowed('userGroups','add')}"    style="width: -webkit-fill-available;" #mepNewGroup="matExpansionPanel" (opened)="selectedUserGroupId=null">
+                                <mat-expansion-panel-header class="btn-new-group bge-btn" (click)="cleargroup()">
+                                            <div class="btn-icon">
+                                                <img src="assets/icons/plus.svg">
+                                            </div>
+                                            <div class="btn-name" >
+                                                New Group 
+                                            </div>  
+                                        
+                                </mat-expansion-panel-header>
+                                
+
+                                     <div  class="editGroup">
+                                        <mat-card class="setting-group-section"> 
+                                           <div class="setting-group--item-label">
+                                               <span class="card-label"> Group Settings </span>  
+                                               <div class="circled-icon bge-btn" (click)="closeNewGroup(mepNewGroup)">
+                                                   <img src="assets/icons/x.svg">
+                                               </div>   
+                                           </div>
+                                           <div  class=" addSite-section" >
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Name <span  class="mand">*</span></span>
+                                                   <!-- <input type="text" #inputGroupName  pattern="[A-Za-z0-9]+" class="form-control site-text-box" id="groupName" [(ngModel)]="newGroup.name" name="groupName" (keyup)="getMessage(inputGroupName.value , 'Group Name')" placeholder="Group name"> 
+                                                   <span class="error" *ngIf="newGroupError" style="grid-column: 2;padding: 0px 5px;text-align:right;">{{newGroupError}}</span>
+                                                    -->
+                                                    <input type="text" class="form-control site-text-box" id="groupName" pattern="[A-Za-z0-9 ]+" [(ngModel)]="newGroup.display_name" name="name" #name="ngModel" placeholder="Group name">
+                                                    <span class="error" *ngIf="newGroupError && !name.hasError('pattern')" style="grid-column: 2;padding: 0px 5px;text-align:left;">{{newGroupError}}</span>
+                                                 <div></div>
+                                                 <div  [hidden]="name.valid || name.pristine"
+                                                    class="alert alert-danger">
+                                                    <div class="error-block" [hidden]="!name.hasError('pattern')">Entered alphanumeric Value</div>
+                                                </div>
+                                                    <!-- <span class="error" *ngIf="newGroupError || !name.hasError('pattern')" style="grid-column: 2;padding: 0px 5px;text-align:left;">{{newGroupError}}</span>
+                                                    <div></div>
+                                                    <div  [hidden]="name.valid || name.pristine"
+                                                       class="alert alert-danger">
+                                                       <div class="error-block" [hidden]="!name.hasError('pattern')">Entered alphanumeric Value</div>
+                                                   </div> -->
+                                                   
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label administrators">Administrators<br>
+                                                       <span>Have all the access along with can create site.</span></span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="dashboard-view" [(ngModel)]="newGroup.permissions.admin"  class="example-margin chkDashboardAccess" (change)="adminChanged(newGroup)"></mat-checkbox>
+                                                       
+                                                   </div>
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Sites</span>
+                                                   <mat-form-field  [ngClass]="{ 'disabled': newGroup.permissions.admin}" class="applications-select">
+                                                       <mat-select [(value)]="site" multiple>
+                                                         <!-- <mat-select-trigger>
+                                                             <div class="selected-applications selected-list">
+                                                                 <div class="selected-application" >
+                                                                     <div class="selection-value">
+                                                                         <div class="selection-text">
+                                                                           {{ site}} 
+                                                                         </div> 
+                                                                         <div class="remove-selection"><img src="assets/icons/x.svg"></div></div>
+                                                                 </div>
+                                                             </div>
+                                                         </mat-select-trigger> -->
+                                                         <mat-select-trigger>
+                                                           <div class="selected-applications selected-list">
+                                                               <div class="selected-application" >
+                                                                   <div class="selection-value">
+                                                                       <div class="selection-text">
+                                                                           {{site ? site[0] : ''}}
+                                                                           <span *ngIf="site?.length > 1" class="example-additional-selection">
+                                                                           (+{{site.length - 1}} {{site?.length === 2 ? 'other' : 'others'}})
+                                                                           </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                           </div>
+                                                         </mat-select-trigger>
+                                                         <mat-option *ngFor="let site of newGroupSiteList" [value]="site.name" (onSelectionChange)="change($event , site)">{{site.name}}</mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+   
+                                                
+                                                   
+   
+                                                     
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Dashboard Access</span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="dashboard-view" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.dashboard.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                       <!-- <mat-checkbox color="primary" name="dashboard-asHome" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.dashboard.asHome" class="example-margin chkDashboardAccess" >As home</mat-checkbox> -->
+                                                       <mat-checkbox color="primary" name="dashboard-add" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.dashboard.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="dashboard-edit" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.dashboard.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="dashboard-delete" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.dashboard.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                   </div>
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Dashboards</span>
+                                                   <mat-form-field   [ngClass]="{ 'disabled': newGroup.permissions.admin}" class="applications-select">
+                                                       <mat-select [(value)]="dashboard" multiple>
+                                                     
+                                                         <!-- <mat-select-trigger>
+                                                             <div class="selected-applications selected-list">
+                                                                 <div class="selected-application">
+                                                                     <div class="selection-value">
+                                                                         <div class="selection-text">
+                                                                           {{ dashboard }} 
+                                                                         </div> 
+                                                                         <div class="remove-selection"><img src="assets/icons/x.svg"></div></div>
+                                                                 </div>
+                                                             </div>
+                                                         </mat-select-trigger> -->
+                                                         <mat-select-trigger>
+                                                           <div class="selected-applications selected-list">
+                                                               <div class="selected-application" >
+                                                                   <div class="selection-value">
+                                                                       <div class="selection-text">
+                                                                           {{dashboard ? dashboard[0] : ''}}
+                                                                           <span *ngIf="dashboard?.length > 1" class="example-additional-selection">
+                                                                           (+{{dashboard.length - 1}} {{dashboard?.length === 2 ? 'other' : 'others'}})
+                                                                           </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                           </div>
+                                                         </mat-select-trigger>
+                                                     
+                                                         <mat-option *ngFor="let dashboard of siteInfoDashboardList" [value]="dashboard.sitename +'-'+ dashboard.name" (onSelectionChange)="selectedDashboard($event , dashboard)">{{ dashboard.sitename +'-'+ dashboard.name}}</mat-option>
+                                                     
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">User Groups</span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="userGroup-view" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.userGroups.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="userGroup-add"  [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.userGroups.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="userGroup-edit" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.userGroups.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="userGroup-delete" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.userGroups.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>               
+                                                   </div>
+                                               </div>
+                                               
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Users</span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="user-view" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.users.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="user-add" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.users.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="user-edit" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.users.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="user-delete" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.users.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox> 
+                                                   </div>
+                                   
+                                               </div>
+                                           
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                   
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Alerts</span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="alert-receive" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.alerts.receive" class="example-margin chkDashboardAccess" >Receive</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="alert-send" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.alerts.send" class="example-margin chkDashboardAccess" >Send</mat-checkbox>
+                                   
+                                                   </div>
+                                   
+                                               </div>
+                                         
+                                               <!-- <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Report</span>
+                                                   <mat-checkbox color="primary" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.report.generate" name="reports-generate"   class="example-margin chkDashboardAccess" >Generate</mat-checkbox>        
+                                               </div> -->
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Applications Access</span>
+                                                   <div>
+                                                       <mat-checkbox color="primary" name="applications-view" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.applications.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="applications-add" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.applications.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="applications-edit" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.applications.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                       <mat-checkbox color="primary" name="applications-delete" [disabled]="newGroup.permissions.admin" [(ngModel)]="newGroup.permissions.applications.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                   </div>
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="usergroup-item">
+                                                   <span class="sites-text-label">Applications</span>
+                                                   <mat-form-field   class="applications-select"  [ngClass]="{ 'disabled': newGroup.permissions.admin}">
+                                                       <mat-select [(value)]="application" multiple>
+                                                         <mat-select-trigger>
+                                                           <div class="selected-applications selected-list">
+                                                               <div class="selected-application" >
+                                                                   <div class="selection-value">
+                                                                       <div class="selection-text">
+                                                                           {{application ? application[0] : ''}}
+                                                                           <span *ngIf="application?.length > 1" class="example-additional-selection">
+                                                                           (+{{application.length - 1}} {{application?.length === 2 ? 'other' : 'others'}})
+                                                                           </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                           </div>
+                                                         </mat-select-trigger>
+                                                     
+                                                         <mat-option *ngFor="let application of siteInfoApplicationList" [value]=" application.sitename +'-'+application.name" (onSelectionChange)="selectedApplications($event , application)">{{ application.sitename +'-'+ application.name}}</mat-option>
+                                                     
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                               </div>
+                                               <div class="dividerline"><mat-divider></mat-divider></div>
+                                               <div class="input-group">  
+                                                   <div class="selected-site-stats-item group-btns-container">
+                                                       <div class="group-btn btn-deletegroup" (click)="closeNewGroup(mepNewGroup)">
+                                                           <div class="btn-icon"><img src="assets/icons/x.svg"></div>
+                                                           <div class="btn-label">Cancel</div>
+                                                       </div>
+                                                       <div class="group-btn btn-savegroup" color="primary" (click)="saveNewGroup(mepNewGroup)">
+                                                           <div class="btn-label">Save</div>
+                                                       </div>
+                                                   </div>   
+                                               </div>                 
+                                             </div> 
+                                           </mat-card>
+                                        </div>
+                    
+                    
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            
+                        </div>
+                        
+                    <mat-accordion class="  group-list-item mat-expanded" *ngFor=" let usergroup of allUserGroups; let i = index">
+                                <mat-expansion-panel [expanded]="usergroup.sortKey == selectedUserGroupId" (opened)="selectedUserGroupId=usergroup.sortKey">
+                                <mat-expansion-panel-header class="group-item-header">
+                                    <mat-panel-title class="group-item-title">
+                                     <span>{{ usergroup.display_name }} ({{usergroup.userList.length}}) </span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                             
+                                <div *ngIf="!groupForEdit || groupForEdit.sortKey!=usergroup.sortKey">
+                                    <div class="group-section"  > 
+                                        <div class="group-box-section">
+                                            <span class="group-box-section-name">Dashboards</span>
+                                            <div class="group-content-section">
+                                                <img src="assets/icons/home.svg">
+                                                <span  *ngIf="usergroup.permissions.dashboard.view" class="stat-icon can-view"> V</span>
+                                                <span  *ngIf="usergroup.permissions.dashboard.add"class="stat-icon can-add"> A</span>
+                                                <span  *ngIf="usergroup.permissions.dashboard.edit" class="stat-icon can-edit" > E</span>
+                                                <span  *ngIf="usergroup.permissions.dashboard.delete"  class="stat-icon can-delete" > D</span> 
+                                            </div>
+                                        </div>
+                                        <div class="group-box-section">
+                                            <span class="group-box-section-name">User Groups</span>
+                                            <div class="group-content-section"> 
+                                                <span  *ngIf="usergroup.permissions.userGroups.view" class="stat-icon can-view"> V</span>
+                                                <span  *ngIf="usergroup.permissions.userGroups.add"class="stat-icon can-add"> A</span>
+                                                <span  *ngIf="usergroup.permissions.userGroups.edit" class="stat-icon can-edit" > E</span>
+                                                <span  *ngIf="usergroup.permissions.userGroups.delete"  class="stat-icon can-delete" > D</span> 
+                                                </div>
+                                        </div>
+                                        <div class="group-box-section">
+                                            <span class="group-box-section-name">Users</span>
+                                            <div class="group-content-section">
+                                                <span  *ngIf="usergroup.permissions.users.view" class="stat-icon can-view"> V</span>
+                                                <span  *ngIf="usergroup.permissions.users.add"class="stat-icon can-add"> A</span>
+                                                <span  *ngIf="usergroup.permissions.users.edit" class="stat-icon can-edit" > E</span>
+                                                <span  *ngIf="usergroup.permissions.users.delete"  class="stat-icon can-delete" > D</span> 
+                                            </div>
+                                        </div>
+                                        <div class="group-box-section change-settings">
+                                            <div [ngClass]="{ 'disabled': groupPermissions.edit == false}"  class="setting-box bge-btn" (click)="changeGroupSetting(usergroup)" >
+                                                <img src="assets/icons/settings.svg" class="blue-icon" >
+                                                <span  class="setting-text" > Change Settings </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                        <div class="setting-group--item-label-icon">
+                                            <span  class="stat-icon can-view" > V : Can View </span>
+                                            <span  class="stat-icon can-add" > A : Can Add</span>
+                                            <span  class="stat-icon can-edit"   >E : Can Edit</span>
+                                            <span   class="stat-icon can-delete" >D : Can Delete</span>
+                                        </div>
+                                    <div class="users-container">
+                                        <div class="users-title text-subheading">Users</div>
+                                        <div class="btn-add-to-group bge-btn">
+                                            <div class="users">
+                                               <div class="user-group-users-wrapper">
+                                                <div class='pseudo-wrapper'  *ngFor = "let user of selectUsersToAddGroup; let i = index">
+                                                    <div class="user-group-users-item" *ngIf="i<5" [style.background-image]="'url('+user.photo+')'" [style.transform]="'translateX(-'+5*i+'px)'"></div>
+                                                </div>
+                                                <div class="user-group-users-item number-item"  *ngIf="selectUsersToAddGroup.length>5" [style.transform]="'translateX(-'+5*6+'px)'">+{{selectUsersToAddGroup.length-5}}</div>
+                                               </div>
+                                            </div>
+                                            <div class="selected-text" [ngClass]="{'extra':selectUsersToAddGroup.length>5}">{{selectUsersToAddGroup.length}} Selected</div>
+                                            <div class="btn-add" (click)="addUsersToGroup(usergroup)">Add To Group</div>
+                                        </div>
+                                        <div class="group-user-list">
+                                            <div class="group-user" *ngFor="let user of usergroup.userList"> 
+                                                
+
+                                                <div *ngIf="selectedClientUsers['usersObject'][user]['photo']" class="user-avatar"  [style.background-image]="'url(' + selectedClientUsers['usersObject'][user]['photo'] + ')'"></div>
+                                                <div *ngIf="selectedClientUsers['usersObject'][user]['photo']=='' || selectedClientUsers['usersObject'][user]['photo']== null " class="user-avatar"  [style.background-image]="'url(assets/sample-site-image.png)'"></div>
+                                                <div class="user-data operators">
+                                                    <div class="name">{{selectedClientUsers['usersObject'][user]['name']}}</div>
+                                                    <div class="phone">{{selectedClientUsers['usersObject'][user]['phone']}}</div>
+                                                </div>
+                                                <div class='delete-button-wrapper operators'>
+                                                    <button [ngClass]="{ 'disabled': !isAllowed('userGroups','delete')}" class='remove-button image-button' (click)="deleteUserFromGroup(user, usergroup)">
+                                                        <img src='assets/minus.png'></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="groupForEdit && groupForEdit.sortKey==usergroup.sortKey" class="editGroup">
+                                    
+                                    <mat-card class="setting-group-section"> 
+                                        <div class="setting-group--item-label">
+                                            <span class="card-label"> Group Settings </span>  
+                                            <div class="circled-icon bge-btn" (click)="closeSetting()">
+                                                <img src="assets/icons/x.svg">
+                                            </div>   
+                                        </div>
+                                        <div  class=" addSite-section" >
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Name <span  class="mand">*</span></span>
+                                                <!-- <input type="text"  class="form-control site-text-box" #inputGroupNameEdit id="groupName" [(ngModel)]="groupForEdit.name" name="groupName"  placeholder="Group name"> 
+                                                <span class="error" *ngIf="editGroupError" style="grid-column: 2;padding: 0px 5px;text-align:right;">{{editGroupError}}</span> -->
+
+                                                <input type="text" class="form-control site-text-box" id="groupName" pattern="[A-Za-z0-9 ]+" [(ngModel)]="groupForEdit.display_name" name="name" #name="ngModel" placeholder="Group name">
+                                                <span class="error" *ngIf="editGroupError && !name.hasError('pattern')" style="grid-column: 2;padding: 0px 5px;text-align:left;">{{editGroupError}}</span>
+                                                 <div></div>
+                                                 <div  [hidden]="name.valid || name.pristine"
+                                                    class="alert alert-danger">
+                                                    <div class="error-block" [hidden]="!name.hasError('pattern')">Entered alphanumeric Value</div>
+                                                </div>
+                                                
+                                                <!-- <span class="error" *ngIf="editGroupError" style="grid-column: 2;padding: 0px 5px;text-align:left;">{{editGroupError}}</span>
+                                                 <div></div>
+                                                 <div [hidden]="name.valid || name.pristine"
+                                                    class="alert alert-danger">
+                                                    <div class="error-block" [hidden]="!name.hasError('pattern')">Entered alphanumeric Value</div>
+                                                </div> -->
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            
+                                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label administrators">Administrators<br>
+                                                    <span>Have all the access along with can create site.</span></span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [(ngModel)]="groupForEdit.permissions.admin"  class="example-margin chkDashboardAccess" (change)="adminChanged(groupForEdit)"></mat-checkbox>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Sites </span>
+                                                <mat-form-field [ngClass]="{ 'disabled': groupForEdit.permissions.admin}" class="applications-select">
+                                                    <!-- <mat-select   [ngModel]="siteList"  (ngModelChane)="siteList"  multiple>
+                                                      <mat-select-trigger>
+                                                        <div class="selected-applications selected-list">
+                                                            <div class="selected-application" >
+                                                                <div class="selection-value" >
+                                                                    <div class="selection-text">
+                                                                         {{siteList ? siteList[0] : ''}}
+                                                                        <span *ngIf="siteList?.length > 1" class="example-additional-selection">
+                                                                        (+{{siteList.length - 1}} {{siteList?.length === 2 ? 'other' : 'others'}})
+                                                                         </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </mat-select-trigger> 
+                                                       <mat-option *ngFor="let site of newGroupSiteList" [value]="site.sortKey" (onSelectionChange)="editchange($event , site)" >{{site.name}}</mat-option>                                                   
+                                                     </mat-select> -->
+
+                                                     <mat-select 
+                                                            multiple
+                                                            placeholder="" 
+                                                            
+                                                            [(ngModel)]="siteList">
+                                                            <mat-option 
+                                                            *ngFor="let updatesite of newGroupSiteList" 
+                                                            [value]="updatesite.sortKey" (onSelectionChange)="editchange($event , updatesite)" >  
+                                                            
+                                                            <div class="selected-applications selected-list">
+                                                                <div class="selected-application" >
+                                                                    <div class="selection-value" >
+                                                                        <div class="selection-text">
+                                                                            {{updatesite.name}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                             </div>
+
+                                                            
+                                                            </mat-option>   
+                                                   </mat-select>
+                                                  </mat-form-field>                            
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Dashboard Access</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <!-- <mat-checkbox color="primary" name="dashboard-asHome" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.asHome" class="example-margin chkDashboardAccess" >As home</mat-checkbox> -->
+                                                    <mat-checkbox color="primary" name="dashboard-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Dashboards</span>
+                                                  <mat-form-field  class="applications-select" [ngClass]="{ 'disabled': groupForEdit.permissions.admin}" >
+                                                    <!-- <mat-select  [ngModel]="groupEditDashboardList"  (ngModelChane)="groupEditDashboardList" multiple>
+                                                       <mat-select-trigger>
+                                                            <div class="selected-applications selected-list">
+                                                                <div class="selected-application" >
+                                                                    <div class="selection-value">
+                                                                        <div class="selection-text">
+                                                                             {{groupEditDashboardList ? groupEditDashboardList[0] : ''}}
+                                                                            <span *ngIf="groupEditDashboardList?.length > 1" class="example-additional-selection">
+                                                                            (+{{groupEditDashboardList.length - 1}} {{groupEditDashboardList?.length === 2 ? 'other' : 'others'}})
+                                                                             </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-select-trigger>                                                                                                                                                 
+                                                      <mat-option *ngFor="let dashboard of siteInfoDashboardList" [value]="dashboard.sortKey"  (onSelectionChange)="editdashboard($event , dashboard)" >{{ dashboard.sitename +'-'+ dashboard.name}}</mat-option>
+                                                    </mat-select> -->
+
+                                                    <mat-select 
+                                                    multiple
+                                                    placeholder="" 
+                                                    [(ngModel)]="groupEditDashboardList">
+                                                    <mat-option 
+                                                    *ngFor="let updatedashboard of siteInfoDashboardList" 
+                                                    [value]="updatedashboard.sortKey" (onSelectionChange)="editdashboard($event , updatedashboard)" >  
+                                                    
+                                                    <div class="selected-applications selected-list">
+                                                        <div class="selected-application" >
+                                                            <div class="selection-value" >
+                                                                <div class="selection-text">
+                                                                    {{ updatedashboard.sitename +'-'+ updatedashboard.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                     </div>
+
+                                                    
+                                                    </mat-option>   
+                                           </mat-select>
+
+                                                   
+
+                                                  </mat-form-field>
+
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">User Groups</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="userGroup-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>               
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Users</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="user-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox> 
+                                                </div>
+                            
+                                            </div>
+                                        
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Alerts</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="alert-receive" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.alerts.receive" class="example-margin chkDashboardAccess" >Receive</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="alert-send" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.alerts.send" class="example-margin chkDashboardAccess" >Send</mat-checkbox>
+                            
+                                                </div>
+                            
+                                            </div>
+                                      
+                                            <!-- <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Report</span>
+                                                <mat-checkbox color="primary" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.report.generate" name="reports-generate"   class="example-margin chkDashboardAccess" >Generate</mat-checkbox>        
+                                            </div> -->
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Applications Access</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Applications</span>
+                                                
+                                                  <mat-form-field  class="applications-select" [ngClass]="{ 'disabled': groupForEdit.permissions.admin}" >
+                                                    <!-- <mat-select   [ngModel]="groupEditApllicationList"  (ngModelChane)="groupEditApllicationList" multiple>
+                                                    
+                                                      <mat-select-trigger>
+                                                        <div class="selected-applications selected-list">
+                                                            <div class="selected-application" >
+                                                                <div class="selection-value">
+                                                                    <div class="selection-text">
+                                                                        {{groupEditApllicationList ? groupEditApllicationList[0] : ''}}
+                                                                        <span *ngIf="groupEditApllicationList?.length > 1" class="example-additional-selection">
+                                                                        (+{{groupEditApllicationList.length - 1}} {{groupEditApllicationList?.length === 2 ? 'other' : 'others'}})
+                                                                        </span>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+                                                        </div>
+                                                      </mat-select-trigger>
+                                                      <mat-option *ngFor="let application of siteInfoApplicationList" [value]=" application.sortKey" (onSelectionChange)="editapplication($event , application)" >{{ application.sitename +'-'+ application.name}}</mat-option>     
+                                                    </mat-select> -->
+
+                                                    <mat-select 
+                                                    multiple
+                                                    placeholder="" 
+                                                    [(ngModel)]="groupEditApllicationList">
+                                                        <mat-option 
+                                                        *ngFor="let updateapplication of siteInfoApplicationList" 
+                                                        [value]="updateapplication.sortKey" (onSelectionChange)="editapplication($event , updateapplication)" >  
+                                                        
+                                                        <div class="selected-applications selected-list">
+                                                            <div class="selected-application" >
+                                                                <div class="selection-value" >
+                                                                    <div class="selection-text">
+                                                                        {{ updateapplication.sitename +'-'+ updateapplication.name}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </mat-option>   
+                                                     </mat-select>
+                                                  </mat-form-field>
+
+                                                  
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="input-group">  
+                                                <div class="selected-site-stats-item group-btns-container">
+                                                    <div [ngClass]="{ 'disabled': !isAllowed('users','delete')}" class="group-btn btn-deletegroup" (click)="deleteEditedGroup(groupForEdit.sortKey)">
+                                                        <div class="btn-icon"><img src="assets/icons/trash-2.svg"></div>
+                                                        <div class="btn-label">Delete Group</div>
+                                                    </div>
+                                                    <div class="group-btn btn-savegroup" color="primary" (click)="saveEditedGroup()">
+                                                        <div class="btn-label">Save</div>
+                                                    </div>
+                                                </div>   
+                                            </div>                 
+                                          </div> 
+                                        </mat-card>
+                                 
+                                    </div>
+
+                                <!-- <div *ngIf="groupForEdit && groupForEdit.sortKey==usergroup.sortKey" class="editGroup">
+                                    
+                                    <mat-card class="setting-group-section"> 
+                                        <div class="setting-group--item-label">
+                                            <span class="card-label"> Group Settings </span>  
+                                            <div class="circled-icon bge-btn" (click)="closeSetting()">
+                                                <img src="assets/icons/x.svg">
+                                            </div>   
+                                        </div>
+                                        <div  class=" addSite-section" >
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Name <span  class="mand">*</span></span>
+                                 
+                                                <input type="text" class="form-control site-text-box" id="groupName" pattern="[A-Za-z0-9 ]+" [(ngModel)]="groupForEdit.name" name="name" #name="ngModel" placeholder="Group name">
+                                                <span class="error" *ngIf="editGroupError && !name.hasError('pattern')" style="grid-column: 2;padding: 0px 5px;text-align:left;">{{editGroupError}}</span>
+                                                 <div></div>
+                                                 <div  [hidden]="name.valid || name.pristine"
+                                                    class="alert alert-danger">
+                                                    <div class="error-block" [hidden]="!name.hasError('pattern')">Entered alphanumeric Value</div>
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            
+                                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label administrators">Administrators<br>
+                                                    <span>Have all the access along with can create site.</span></span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [(ngModel)]="groupForEdit.permissions.admin"  class="example-margin chkDashboardAccess" (change)="adminChanged(groupForEdit)"></mat-checkbox>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Sites</span>
+                                                <mat-form-field  class="applications-select">
+ 
+
+                                                     <mat-select 
+                                                            multiple
+                                                            placeholder="" 
+                                                            [(ngModel)]="siteList">
+                                                            <mat-option 
+                                                            *ngFor="let site of newGroupSiteList" 
+                                                            [value]="site.sortKey" (onSelectionChange)="editchange($event , site)" >  
+                                                            
+                                                            <div class="selected-applications selected-list">
+                                                                <div class="selected-application" >
+                                                                    <div class="selection-value" >
+                                                                        <div class="selection-text">
+                                                                            {{site.name}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </mat-option>   
+                                                    </mat-select>
+                                                  </mat-form-field>                            
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Dashboard Access</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.dashboard.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Dashboards</span>
+                                                  <mat-form-field  class="applications-select">
+                                                    <mat-select 
+                                                    multiple
+                                                    placeholder="" 
+                                                    [(ngModel)]="groupEditDashboardList">
+                                                    <mat-option 
+                                                    *ngFor="let dashboard of siteInfoDashboardList" 
+                                                    [value]="dashboard.sortKey" (onSelectionChange)="editdashboard($event , dashboard)" >  
+                                                    
+                                                    <div class="selected-applications selected-list">
+                                                        <div class="selected-application" >
+                                                            <div class="selection-value" >
+                                                                <div class="selection-text">
+                                                                    {{ dashboard.sitename +'-'+ dashboard.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                     </div>
+
+                                                                </mat-option>   
+                                                    </mat-select>
+
+                                                  </mat-form-field>
+
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">User Groups</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="userGroup-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="userGroup-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.userGroups.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>               
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Users</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="user-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.view" class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="user-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.users.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox> 
+                                                </div>
+                            
+                                            </div>
+                                        
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                            
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Alerts</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="alert-receive" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.alerts.receive" class="example-margin chkDashboardAccess" >Receive</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="alert-send" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.alerts.send" class="example-margin chkDashboardAccess" >Send</mat-checkbox>
+                            
+                                                </div>
+                            
+                                            </div>
+                                      
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Report</span>
+                                                <mat-checkbox color="primary" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.report.generate" name="reports-generate"   class="example-margin chkDashboardAccess" >Generate</mat-checkbox>        
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Applications Access</span>
+                                                <div>
+                                                    <mat-checkbox color="primary" name="dashboard-view" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.view"  class="example-margin chkDashboardAccess" >View</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-add" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.add" class="example-margin chkDashboardAccess" >Add</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-edit" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.edit" class="example-margin chkDashboardAccess" >Edit</mat-checkbox>
+                                                    <mat-checkbox color="primary" name="dashboard-delete" [disabled]="groupForEdit.permissions.admin" [(ngModel)]="groupForEdit.permissions.applications.delete" class="example-margin chkDashboardAccess" >Delete</mat-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="usergroup-item">
+                                                <span class="sites-text-label">Applications</span>
+                                                
+                                                  <mat-form-field  class="applications-select">
+                                                    <mat-select 
+                                                    multiple
+                                                    placeholder="" 
+                                                    [(ngModel)]="groupEditApllicationList">
+                                                        <mat-option 
+                                                        *ngFor="let application of siteInfoDashboardList" 
+                                                        [value]="application.sortKey" (onSelectionChange)="editapplication($event , application)" >  
+                                                        
+                                                        <div class="selected-applications selected-list">
+                                                            <div class="selected-application" >
+                                                                <div class="selection-value" >
+                                                                    <div class="selection-text">
+                                                                        {{ application.sitename +'-'+ application.name}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </mat-option>   
+                                                     </mat-select>
+                                                  </mat-form-field>
+
+                                                  
+                                            </div>
+                                            <div class="dividerline"><mat-divider></mat-divider></div>
+                                            <div class="input-group">  
+                                                <div class="selected-site-stats-item group-btns-container">
+                                                    <div [ngClass]="{ 'disabled': groupPermissions.delete == false}"  class="group-btn btn-deletegroup" (click)="deleteEditedGroup(groupForEdit.sortKey)">
+                                                        <div class="btn-icon"><img src="assets/icons/trash-2.svg"></div>
+                                                        <div class="btn-label">Delete Group</div>
+                                                    </div>
+                                                    <div class="group-btn btn-savegroup" color="primary" (click)="saveEditedGroup()">
+                                                        <div class="btn-label">Save</div>
+                                                    </div>
+                                                </div>   
+                                            </div>                 
+                                          </div> 
+                                        </mat-card>
+                                 
+                                    </div> -->
+                              
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-loader *ngIf = '!dataLoaded'></app-loader>
+    <app-server-error-popup [message]="errorString"></app-server-error-popup>

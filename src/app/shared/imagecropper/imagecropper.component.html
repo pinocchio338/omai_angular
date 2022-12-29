@@ -1,0 +1,49 @@
+<div mat-dialog-title>
+    <div class="users-header">
+    <div class="circled-icon bge-btn" mat-dialog-close>
+        <img src="assets/icons/arrow-left.svg">
+    </div>
+    <div class="header-title">
+       Resize Image
+    </div>
+    <div class="close-btn bge-btn" mat-dialog-close>
+        <img src="assets/icons/x.svg">
+    </div>
+</div>
+</div>
+<div mat-dialog-content>
+  <h2 class="img-msg" *ngIf="loadingImg">Loading Image...</h2>
+  <h2 class="img-msg error" *ngIf="!isValidImage">Please Select Valid Image Type</h2>
+<image-cropper
+[imageChangedEvent]="imageChangedEvent"
+[maintainAspectRatio]="true"
+[containWithinAspectRatio]="containWithinAspectRatio"
+[aspectRatio]="asratio"
+[resizeToWidth]="256"
+[cropperMinWidth]="128"
+[onlyScaleDown]="true"
+[roundCropper]="false"
+[canvasRotation]="canvasRotation"
+[transform]="transform"
+[alignImage]="'center'"
+[style.display]="showCropper ? null : 'none'"
+format="png"
+(imageCropped)="imageCropped($event)"
+(imageLoaded)="imageLoaded()"
+(loadImageFailed)="loadImageFailed()"
+></image-cropper>
+<div class="img-preview">
+    <img [src]="croppedImage" [style.border]="croppedImage ? '2px solid #3894f8' : 'none'" [style.border-radius]="croppedImage ? '4px' : 'none'" />
+</div>
+
+</div>
+<div mat-dialog-actions>
+    <div class="bottom-btns">
+        <div class="btn-cancel btn" mat-dialog-close>
+            <div class="btn">Cancel</div>
+        </div>
+        <div class="btn-done" (click)="doneImgeCropper()">
+           <button type="button"><div class="btn">Done</div></button> 
+        </div>
+    </div>
+    </div>

@@ -1,0 +1,104 @@
+<app-toolbar *ngIf="!token" [currentPage]="dashboards"></app-toolbar>
+<mat-toolbar style="height: 42px !important; min-height:unset!important;">
+    <mat-toolbar-row class="navbar" style="height: 42px !important; min-height:unset!important;">
+        <span>
+            <!-- <button mat-icon-button *ngIf="!token" class="slider-button" (click)="goBack()">
+                <img src="assets/arrow-left.png">
+            </button> -->
+            <!-- <span class="selected-client-name">
+                {{selectedSite}} / Dashboards
+            </span>
+            <span class="sites-label"> / </span> -->
+            <span class="selected-client-name" *ngIf="mode=='create'">{{dashboardName}} </span>
+            <input [ngClass]="dashboardName && dashboardName.length ? 'text-input' : 'text-input invalid-input'"
+                *ngIf="mode=='edit'" [(ngModel)]="dashboardName">                
+        </span>
+        <span>
+            <button (click)="joinTables()" class="join-table stroked-button desktop-button" style="display: none;">
+                Join Table
+            </button>
+            <button
+                [ngClass]="(mode=='create' && (topComponent || bottomComponent) && state == 'edit-all') || 
+                (mode=='edit' && dashboardName && dashboardName.length &&(topComponent || bottomComponent) && state=='edit-all') ? 'stroked-button desktop-button' : 'stroked-button disabled desktop-button'"
+                (click)="saveDashboard()">{{mode=='edit' ? 'Update' : 'Save'}} </button>
+            <!-- </span>
+        <span class="sites-label"> / </span>
+        <span class="sites-label" *ngIf="!selectedDashboardId">{{dashboardName}} </span>
+        <input [ngClass]="dashboardName && dashboardName.length ? 'text-input' : 'text-input invalid-input'" *ngIf="selectedDashboardId" [(ngModel)]="dashboardName">
+   
+    <span>
+        <button [ngClass]="state=='edit-all' && !(!selectedDashboardId && state=='edit-all' && (!dashboardName || !dashboardName.length || (!topComponent && !bottomComponent))) ? 'stroked-button' : 'stroked-button disabled'"
+        [disabled]="!selectedDashboardId  &&(!dashboardName || !dashboardName.length || (!topComponent && !bottomComponent))" 
+        (click)="saveDashboard()">{{selectedDashboardId ? 'Update' : 'Save'}} </button> -->
+
+        <button (click)="joinTables()" class="join-table image-button stroked-button mobile-button">
+            <img src="assets/Join.png">
+        </button>
+        <button
+            [ngClass]="(mode=='create' && (topComponent || bottomComponent) && state == 'edit-all') || 
+            (mode=='edit' && dashboardName && dashboardName.length &&(topComponent || bottomComponent) && state=='edit-all') ? 'image-button stroked-button mobile-button' : 'image-button stroked-button disabled mobile-button'"
+            (click)="saveDashboard()"><img src="assets/save.png"> </button>
+        </span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="main-container">
+    <mat-card *ngIf="state!='edit-bottom'">
+        <div class="dashboard-placeholder" *ngIf="!topComponent && state=='edit-all'">
+            <div class="add-dashboard custom-card" (click)="addComponent('top')">
+                <img src='assets/plus_blue.png'>
+                <span class="text-subheading">Add Component</span>
+            </div>
+        </div>
+        <div *ngIf="topComponent && state!='edit-bottom'" class="component">
+            <!-- <div class="component-info">
+                <span><span *ngIf='state=="edit-all"'
+                        class="text-subtitle">Component Name: {{topComponent.name || '-'}} </span>
+                    <input placeholder="Component Name"
+                        *ngIf='!((topComponent["type"]!="DIAGRAM" && topComponentType!="DIAGRAM")) && state!=="edit-all"' class="text-input"
+                        [(ngModel)]="topComponent.name">
+                        <span class="text-subtext error-message">{{componentNameError}}</span>
+                </span>
+                <div class="action-buttons-wrapper">
+                    <button class="image-button" *ngIf="state=='edit-all'" (click)="addComponent('top')"><img
+                            src="assets/edit-2.png"></button>
+                    <button class="image-button" (click)="delete('top')"><img
+                            src="assets/delete_icon.png"></button>
+                    <button *ngIf="state == 'edit-top'" class="image-button"
+                        (click)="accept('top')"><img src="assets/check.png"></button>
+                </div>
+            </div> -->
+            <app-new-component></app-new-component>
+        </div>
+    </mat-card>
+    <!--<mat-card *ngIf="state!='edit-top'">
+        <div class="dashboard-placeholder" *ngIf="!bottomComponent && state=='edit-all'">
+            <div class="add-dashboard custom-card" (click)="addComponent('bottom')">
+                <img src='assets/plus_blue.png'>
+                <span class="text-subheading">Add Component</span>
+            </div>
+        </div>
+        <div *ngIf="bottomComponent && state!='edit-top'" class="component">
+            <div class="component-info">
+                <span><span *ngIf='(bottomComponent["type"]!="DIAGRAM" && bottomComponent!="DIAGRAM") || mode=="edit-all"'>Component Name:
+                        {{bottomComponent.name || '-'}}</span>                       
+                    <input placeholder="Component Name"
+                        *ngIf='(bottomComponent["type"]=="DIAGRAM" || bottomComponentType=="DIAGRAM") && mode!="edit-all"' class="text-input"
+                        [(ngModel)]="bottomComponent.name">
+                        <span class="text-subtext error-message">{{componentNameError}}</span>
+                </span>
+                <div class="action-buttons-wrapper">
+                    <button class="image-button" *ngIf="state=='edit-all'" (click)="addComponent('bottom')"><img
+                            src="assets/edit-2.png"></button>
+                    <button class="image-button" (click)="delete('bottom')"><img
+                            src="assets/delete_icon.png"></button>
+                    <button *ngIf="state == 'edit-bottom'"   class="image-button"                     
+                        (click)="accept('bottom')"><img src="assets/check.png"></button>
+                </div>
+            </div>
+            <app-new-component></app-new-component>
+        </div>
+    </mat-card>-->
+</div>
+<app-loader *ngIf="!dataLoaded"></app-loader>
+<app-server-error-popup [message]="errorString"></app-server-error-popup>
+<!-- <app-new-component></app-new-component> -->
